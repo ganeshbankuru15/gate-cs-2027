@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GATE CS 2027 — Complete Notes</title>
+<style>
+:root{--bg:#fff;--fg:#151a24;--muted:#5b6577;--card:#f5f8fc;--border:#dfe6f0;--accent:#2563eb;--accent2:#0d9488;--warn:#b45309;--warnbg:#fffbeb;--ok:#15803d;--okbg:#f0fdf4;--trapbg:#fef2f2;--trap:#b91c1c}
+[data-theme=dark]{--bg:#0e1320;--fg:#e7edf8;--muted:#98a6bd;--card:#151d2e;--border:#26314a;--accent:#7cb0ff;--accent2:#3ddbc4;--warn:#fbbf24;--warnbg:#2a2413;--ok:#5ee08a;--okbg:#11271a;--trapbg:#2c1416;--trap:#ff8f8f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top h1{margin:0;font-size:19px;line-height:1.3}
+header.top .meta{font-size:12.5px;opacity:.9;margin-top:3px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.toolbar button,.toolbar a.btn{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:6px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
+.toolbar button:hover,.toolbar a.btn:hover{background:rgba(255,255,255,.3)}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+nav.toc{width:290px;flex:0 0 290px;position:sticky;top:96px;max-height:calc(100vh - 110px);overflow-y:auto;padding:16px 10px 40px 16px;font-size:13.5px}
+nav.toc h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px}
+nav.toc a{display:block;padding:5px 8px;border-radius:6px;color:var(--fg);text-decoration:none;opacity:.85;border-left:2px solid transparent}
+nav.toc a:hover{background:var(--card);opacity:1;border-left-color:var(--accent)}
+nav.toc a.sub{padding-left:20px;font-size:12.5px;opacity:.7}
+main{flex:1;min-width:0;padding:20px 26px 80px}
+h2{font-size:23px;margin:38px 0 12px;padding-bottom:8px;border-bottom:3px solid var(--accent);scroll-margin-top:100px}
+h3{font-size:17.5px;margin:24px 0 8px;color:var(--accent);scroll-margin-top:100px}
+h4{font-size:15px;margin:18px 0 6px;color:var(--accent2)}
+p,li{font-size:15.5px}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+code{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;color:#be185d}
+[data-theme=dark] code{color:#f9a8d4}
+pre{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;overflow-x:auto;font-size:13px;line-height:1.5}
+pre code{background:none;border:none;color:inherit;padding:0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;display:block;overflow-x:auto}
+th{background:var(--accent);color:#fff;padding:8px 10px;text-align:left;white-space:nowrap}
+td{border:1px solid var(--border);padding:7px 10px;vertical-align:top}
+tr:nth-child(even) td{background:var(--card)}
+.box{border-radius:9px;padding:12px 16px;margin:14px 0;border-left:4px solid var(--accent);background:var(--card)}
+.box.formula{border-left-color:var(--accent2);background:linear-gradient(90deg,rgba(13,148,136,.09),transparent 60%)}
+.box.formula .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent2);font-weight:700;margin-bottom:6px}
+.box.trap{border-left-color:var(--trap);background:var(--trapbg)}
+.box.trap .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--trap);font-weight:700;margin-bottom:6px}
+.box.tip{border-left-color:var(--ok);background:var(--okbg)}
+.box.tip .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ok);font-weight:700;margin-bottom:6px}
+details{border:1px solid var(--border);border-radius:9px;margin:10px 0;background:var(--card);overflow:hidden}
+details summary{cursor:pointer;padding:9px 14px;font-weight:600;font-size:14.5px;background:var(--card);list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▶ ";color:var(--accent);font-size:11px}
+details[open] summary::before{content:"▼ "}
+details .dc{padding:4px 16px 14px;border-top:1px solid var(--border)}
+.kv{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12.5px}
+.chip b{color:var(--accent)}
+/* quiz */
+.quiz{border:1px solid var(--border);border-radius:11px;padding:16px;margin:18px 0;background:var(--card)}
+.q{margin:0 0 18px;padding:0 0 16px;border-bottom:1px dashed var(--border)}
+.q:last-of-type{border-bottom:none}
+.q .qt{font-weight:600;font-size:15px;margin-bottom:9px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;margin:6px 0;cursor:pointer;font-size:14.5px;color:var(--fg);font-family:inherit}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{border-color:var(--ok);background:var(--okbg);font-weight:600}
+.opt.wrong{border-color:var(--trap);background:var(--trapbg)}
+.opt:disabled{cursor:default;opacity:.92}
+.explain{display:none;margin-top:8px;font-size:13.5px;color:var(--muted);border-left:3px solid var(--accent2);padding-left:11px}
+.explain.show{display:block}
+.score{font-size:16px;font-weight:700;text-align:center;padding:12px;border-radius:9px;background:var(--card);border:1px dashed var(--border);margin-top:8px}
+.subnav{display:flex;gap:8px;flex-wrap:wrap;padding:10px 0 0}
+.subnav a{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:5px 10px;text-decoration:none;color:#fff;font-size:12.5px}
+.subnav a:hover{background:rgba(255,255,255,.3)}
+.subnav .sp{opacity:.65;font-size:12.5px;color:#fff;padding:5px 2px}
+footer{border-top:1px solid var(--border);margin-top:50px;padding:18px 0 0;font-size:12.5px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:18px 0}
+.card{border:1px solid var(--border);border-radius:11px;padding:14px;background:var(--card);text-decoration:none;color:var(--fg);display:block;transition:.15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .n{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em}
+.card .t{font-size:15.5px;font-weight:700;margin:4px 0 6px}
+.card .w{font-size:12.5px;color:var(--accent2);font-weight:600}
+.card.soon{opacity:.55}
+.card.soon .w{color:var(--muted)}
+@media(max-width:900px){nav.toc{display:none}main{padding:16px 15px 60px}h2{font-size:20px}}
+@media print{nav.toc,.toolbar{display:none}details{page-break-inside:avoid}details .dc{display:block!important}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>GATE CS 2027 — Complete Notes</h1>
+  <div class="meta">Computer Science &amp; Information Technology · IIT Madras · Exam 6–21 Feb 2027</div>
+  <div class="toolbar"><button onclick="toggleTheme()">◐ Theme</button></div>
+</header>
+<div class="wrap"><main style="max-width:1100px;margin:0 auto">
+<h2>📘 Your Subjects</h2><p>GATE CS = 65 questions / 100 marks: <b>General Aptitude 15</b> + <b>Engineering Mathematics 13</b> + <b>Core CS 72</b>. Tackle them in the order below — it front-loads the highest-yield and most foundational subjects first.</p><div class="grid"><a class="card" href="01-engineering-mathematics.html"><div class="n">S01</div><div class="t">Engineering Mathematics</div><div class="w">13 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Discrete Maths, Linear Algebra, Calculus, Probability</p></a><a class="card" href="02-digital-logic.html"><div class="n">S02</div><div class="t">Digital Logic</div><div class="w">7 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Boolean & K-map, combinational/sequential design, number systems, CMOS & timing</p></a><a class="card" href="03-coa.html"><div class="n">S03</div><div class="t">Computer Organization & Architecture</div><div class="w">8 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Instructions & addressing, ALU/data-path/control, pipelining, memory hierarchy, I/O (interrupt & DMA)</p></a><a class="card" href="04-programming-ds.html"><div class="n">S04</div><div class="t">Programming & Data Structures</div><div class="w">9 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Programming in C, recursion, arrays, stacks, queues, linked lists, trees, BSTs, heaps, graphs</p></a><a class="card" href="05-algorithms.html"><div class="n">S05</div><div class="t">Algorithms</div><div class="w">10 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Complexity, Recurrences, Sorting, Hashing, Greedy/DP/D&C, Graphs, MST, Shortest Paths</p></a><a class="card" href="06-toc.html"><div class="n">S06</div><div class="t">Theory of Computation</div><div class="w">8 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Finite automata, regex, CFG/PDA, pumping lemma, Turing machines, undecidability</p></a><a class="card" href="07-compiler-design.html"><div class="n">S07</div><div class="t">Compiler Design</div><div class="w">6 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Lexical analysis, parsing (LL/LR), SDT, runtime environments, IR, optimisation & data-flow</p></a><a class="card" href="08-operating-systems.html"><div class="n">S08</div><div class="t">Operating Systems</div><div class="w">8 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">processes & threads, CPU scheduling, synchronisation, deadlock, memory & virtual memory, file systems</p></a><a class="card" href="09-databases.html"><div class="n">S09</div><div class="t">Databases</div><div class="w">8 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">ER model, relational algebra & SQL, normal forms, B/B+ indexing, transactions & concurrency</p></a><a class="card" href="10-computer-networks.html"><div class="n">S10</div><div class="t">Computer Networks</div><div class="w">8 marks</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Layering, switching & performance, data link, routing, IP addressing/CIDR/NAT, transport (TCP/UDP/flow/congestion), application (DNS/SMTP/HTTP/FTP)</p></a></div>
+<h2>📊 Coverage</h2>
+<p>Total coverage: <b>85 of 100 marks</b> across <b>10 of 10 subjects</b>.</p>
+<h2>🗓️ Study Plan — 149 days to GATE 2027</h2>
+<p>Exam: <b>6–21 Feb 2027</b> (IIT Madras) · Registration closes <b>27 Sep 2026</b>, late fee till 5 Oct.</p>
+<table>
+<tr><th>Phase</th><th>When</th><th>Focus</th></tr>
+<tr><td><b>0 · Register</b></td><td>now → 27 Sep 2026</td><td>GATE 2027 application on GOAPS — do not miss this</td></tr>
+<tr><td><b>1 · Foundations</b></td><td>Sep–Oct 2026</td><td>S01 Eng Maths · S04 Prog &amp; DS · S02 Digital Logic</td></tr>
+<tr><td><b>2 · Heavyweights</b></td><td>Nov 2026</td><td>S05 Algorithms · S08 OS · S03 COA</td></tr>
+<tr><td><b>3 · Complete syllabus</b></td><td>Dec 2026</td><td>S06 TOC · S09 DBMS · S10 Networks · S07 Compilers</td></tr>
+<tr><td><b>4 · Revision + PYQs</b></td><td>Jan 2027</td><td>Full mocks, previous-year papers, formula sheets</td></tr>
+<tr><td><b>5 · Final sprint</b></td><td>1–5 Feb 2027</td><td>Formula sheets + weak topics only</td></tr>
+</table>
+<div class="box tip"><div class="lbl">How to use these notes</div>
+<ol>
+<li>Open a subject, read a concept box, then open the <b>Worked example</b> blocks.</li>
+<li>Take the <b>20-question quiz</b> at the end of each subject — instant feedback and a score.</li>
+<li>Tick the <b>“done”</b> checkbox on each section; your progress saves automatically.</li>
+<li>Use <b>Print / PDF</b> to make an offline copy for revision.</li>
+<li>Use the <b>← → subject</b> buttons in the header to move between subjects.</li>
+</ol>
+</div>
+<h2>📚 Other Research</h2>
+<div class="grid">
+  <a class="card" href="research/psu-guide/GATE_CS_PSU_Complete_Guide.html"><div class="n">RESEARCH</div><div class="t">PSU Recruitment Guide (GATE CS)</div><div class="w">24 PSUs</div><p style="font-size:13px;color:var(--muted);margin:8px 0 0">Cutoffs, salaries, bonds, eligibility and sources for every major PSU hiring CSE engineers through GATE. Also available as <a href="research/psu-guide/GATE_CS_PSU_Complete_Guide.pdf">PDF</a>.</p></a>
+</div>
+<div class="box trap"><div class="lbl">Be honest about the numbers</div>
+These are AI-compiled study notes. Concept explanations and formula sheets are reliable,
+but <b>verify any numerical answer against an official GATE answer key</b> before you rely on it.
+</div>
+
+</main></div>
+<script>
+(function(){
+  var t=localStorage.getItem('gatecs-theme');
+  if(t)document.documentElement.setAttribute('data-theme',t);
+})();
+function toggleTheme(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',d?'light':'dark');
+  localStorage.setItem('gatecs-theme',d?'light':'dark');
+}
+function openAll(){document.querySelectorAll('details').forEach(function(x){x.open=true});}
+function closeAll(){document.querySelectorAll('details').forEach(function(x){x.open=false});}
+function buildQuiz(){
+  var box=document.getElementById('quizbox'); if(!box||typeof QUIZ==='undefined')return;
+  var answered=0, correct=0;
+  QUIZ.forEach(function(item,i){
+    var d=document.createElement('div'); d.className='q';
+    var h='<div class="qt">Q'+(i+1)+'. '+item.q+'</div>';
+    item.opts.forEach(function(o,j){
+      h+='<button class="opt" data-q="'+i+'" data-j="'+j+'">'+String.fromCharCode(65+j)+') '+o+'</button>';
+    });
+    h+='<div class="explain" id="ex'+i+'">'+(item.ex||'')+'</div>';
+    d.innerHTML=h; box.appendChild(d);
+  });
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('.opt'); if(!b||b.disabled)return;
+    var qi=+b.dataset.q, ji=+b.dataset.j, item=QUIZ[qi];
+    var btns=box.querySelectorAll('.opt[data-q="'+qi+'"]');
+    btns.forEach(function(x){x.disabled=true;});
+    if(ji===item.a){b.classList.add('correct');correct++;}
+    else{b.classList.add('wrong');btns[item.a].classList.add('correct');}
+    answered++;
+    document.getElementById('ex'+qi).classList.add('show');
+    if(answered===QUIZ.length){
+      var s=document.getElementById('score');
+      var pct=Math.round(correct/QUIZ.length*100);
+      var msg=pct>=80?'🔥 Strong. Revise only the misses.':pct>=60?'👍 Decent. Re-read the weak sections above.':pct>=40?'📖 Needs another pass — go back to the concept boxes.':'🎯 Start over slowly. This topic needs a full re-read.';
+      s.style.display='block';
+      s.innerHTML='Score: <b>'+correct+' / '+QUIZ.length+'</b> ('+pct+'%)<br><span style="font-weight:400;font-size:14px">'+msg+'</span>';
+      s.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded',function(){
+  buildQuiz();
+  // section progress
+  var chk=document.querySelectorAll('input.prog');
+  chk.forEach(function(c,i){
+    var k='gatecs-prog-'+location.pathname+'-'+i;
+    if(localStorage.getItem(k)==='1'){c.checked=true;}
+    c.addEventListener('change',function(){localStorage.setItem(k,c.checked?'1':'0');updateBar();});
+  });
+  updateBar();
+});
+function updateBar(){
+  var chk=document.querySelectorAll('input.prog'); if(!chk.length)return;
+  var n=0; chk.forEach(function(c){if(c.checked)n++;});
+  var bar=document.getElementById('progbar');
+  if(bar)bar.style.width=Math.round(n/chk.length*100)+'%';
+  var lab=document.getElementById('proglab');
+  if(lab)lab.textContent=n+' / '+chk.length+' sections done';
+}
+</script>
+</body>
+</html>

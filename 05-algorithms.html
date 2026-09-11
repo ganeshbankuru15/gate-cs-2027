@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Algorithms — GATE CS Notes</title>
+<style>
+:root{--bg:#fff;--fg:#151a24;--muted:#5b6577;--card:#f5f8fc;--border:#dfe6f0;--accent:#2563eb;--accent2:#0d9488;--warn:#b45309;--warnbg:#fffbeb;--ok:#15803d;--okbg:#f0fdf4;--trapbg:#fef2f2;--trap:#b91c1c}
+[data-theme=dark]{--bg:#0e1320;--fg:#e7edf8;--muted:#98a6bd;--card:#151d2e;--border:#26314a;--accent:#7cb0ff;--accent2:#3ddbc4;--warn:#fbbf24;--warnbg:#2a2413;--ok:#5ee08a;--okbg:#11271a;--trapbg:#2c1416;--trap:#ff8f8f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top h1{margin:0;font-size:19px;line-height:1.3}
+header.top .meta{font-size:12.5px;opacity:.9;margin-top:3px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.toolbar button,.toolbar a.btn{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:6px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
+.toolbar button:hover,.toolbar a.btn:hover{background:rgba(255,255,255,.3)}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+nav.toc{width:290px;flex:0 0 290px;position:sticky;top:96px;max-height:calc(100vh - 110px);overflow-y:auto;padding:16px 10px 40px 16px;font-size:13.5px}
+nav.toc h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px}
+nav.toc a{display:block;padding:5px 8px;border-radius:6px;color:var(--fg);text-decoration:none;opacity:.85;border-left:2px solid transparent}
+nav.toc a:hover{background:var(--card);opacity:1;border-left-color:var(--accent)}
+nav.toc a.sub{padding-left:20px;font-size:12.5px;opacity:.7}
+main{flex:1;min-width:0;padding:20px 26px 80px}
+h2{font-size:23px;margin:38px 0 12px;padding-bottom:8px;border-bottom:3px solid var(--accent);scroll-margin-top:100px}
+h3{font-size:17.5px;margin:24px 0 8px;color:var(--accent);scroll-margin-top:100px}
+h4{font-size:15px;margin:18px 0 6px;color:var(--accent2)}
+p,li{font-size:15.5px}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+code{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;color:#be185d}
+[data-theme=dark] code{color:#f9a8d4}
+pre{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;overflow-x:auto;font-size:13px;line-height:1.5}
+pre code{background:none;border:none;color:inherit;padding:0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;display:block;overflow-x:auto}
+th{background:var(--accent);color:#fff;padding:8px 10px;text-align:left;white-space:nowrap}
+td{border:1px solid var(--border);padding:7px 10px;vertical-align:top}
+tr:nth-child(even) td{background:var(--card)}
+.box{border-radius:9px;padding:12px 16px;margin:14px 0;border-left:4px solid var(--accent);background:var(--card)}
+.box.formula{border-left-color:var(--accent2);background:linear-gradient(90deg,rgba(13,148,136,.09),transparent 60%)}
+.box.formula .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent2);font-weight:700;margin-bottom:6px}
+.box.trap{border-left-color:var(--trap);background:var(--trapbg)}
+.box.trap .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--trap);font-weight:700;margin-bottom:6px}
+.box.tip{border-left-color:var(--ok);background:var(--okbg)}
+.box.tip .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ok);font-weight:700;margin-bottom:6px}
+details{border:1px solid var(--border);border-radius:9px;margin:10px 0;background:var(--card);overflow:hidden}
+details summary{cursor:pointer;padding:9px 14px;font-weight:600;font-size:14.5px;background:var(--card);list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▶ ";color:var(--accent);font-size:11px}
+details[open] summary::before{content:"▼ "}
+details .dc{padding:4px 16px 14px;border-top:1px solid var(--border)}
+.kv{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12.5px}
+.chip b{color:var(--accent)}
+/* quiz */
+.quiz{border:1px solid var(--border);border-radius:11px;padding:16px;margin:18px 0;background:var(--card)}
+.q{margin:0 0 18px;padding:0 0 16px;border-bottom:1px dashed var(--border)}
+.q:last-of-type{border-bottom:none}
+.q .qt{font-weight:600;font-size:15px;margin-bottom:9px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;margin:6px 0;cursor:pointer;font-size:14.5px;color:var(--fg);font-family:inherit}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{border-color:var(--ok);background:var(--okbg);font-weight:600}
+.opt.wrong{border-color:var(--trap);background:var(--trapbg)}
+.opt:disabled{cursor:default;opacity:.92}
+.explain{display:none;margin-top:8px;font-size:13.5px;color:var(--muted);border-left:3px solid var(--accent2);padding-left:11px}
+.explain.show{display:block}
+.score{font-size:16px;font-weight:700;text-align:center;padding:12px;border-radius:9px;background:var(--card);border:1px dashed var(--border);margin-top:8px}
+.subnav{display:flex;gap:8px;flex-wrap:wrap;padding:10px 0 0}
+.subnav a{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:5px 10px;text-decoration:none;color:#fff;font-size:12.5px}
+.subnav a:hover{background:rgba(255,255,255,.3)}
+.subnav .sp{opacity:.65;font-size:12.5px;color:#fff;padding:5px 2px}
+footer{border-top:1px solid var(--border);margin-top:50px;padding:18px 0 0;font-size:12.5px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:18px 0}
+.card{border:1px solid var(--border);border-radius:11px;padding:14px;background:var(--card);text-decoration:none;color:var(--fg);display:block;transition:.15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .n{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em}
+.card .t{font-size:15.5px;font-weight:700;margin:4px 0 6px}
+.card .w{font-size:12.5px;color:var(--accent2);font-weight:600}
+.card.soon{opacity:.55}
+.card.soon .w{color:var(--muted)}
+@media(max-width:900px){nav.toc{display:none}main{padding:16px 15px 60px}h2{font-size:20px}}
+@media print{nav.toc,.toolbar{display:none}details{page-break-inside:avoid}details .dc{display:block!important}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Algorithms</h1>
+  <div class="meta">GATE CS 2027 · 10 marks · Complexity, Recurrences, Sorting, Hashing, Greedy/DP/D&C, Graphs, MST, Shortest Paths</div>
+  <div class="toolbar">
+    <a class="btn" href="index.html">⌂ All subjects</a>
+    <button onclick="toggleTheme()">◐ Theme</button>
+    <button onclick="openAll()">⤢ Expand all</button>
+    <button onclick="closeAll()">⤡ Collapse all</button>
+    <button onclick="window.print()">⎙ Print / PDF</button>
+  </div>
+  <div class="subnav"><a href="04-programming-ds.html">← S04 Programming & Data Structures</a><a href="index.html">⌂ All subjects</a><a href="06-toc.html">S06 Theory of Computation →</a></div>
+  <div style="margin-top:10px;background:rgba(255,255,255,.22);border-radius:20px;height:7px;overflow:hidden">
+    <div id="progbar" style="height:100%;width:0;background:#a7f3d0;transition:.3s"></div>
+  </div>
+  <div id="proglab" style="font-size:11.5px;opacity:.9;margin-top:4px">0 sections done</div>
+</header>
+<div class="wrap">
+  <nav class="toc"><h3>Contents</h3><a href="#overview">Overview & Weightage</a>
+<a href="#complexity">Asymptotic Complexity & Recurrences</a>
+<a class="sub" href="#asym">Big-O family & loop analysis</a>
+<a class="sub" href="#recur">Solving recurrences (Master theorem, substitution)</a>
+<a href="#sorting">Sorting</a>
+<a class="sub" href="#cmp">Comparison-based sorting</a>
+<a class="sub" href="#linear">Non-comparison sorting & order statistics</a>
+<a href="#search">Searching & Hashing</a>
+<a class="sub" href="#bs">Searching & binary search</a>
+<a class="sub" href="#hash">Hashing & hash tables</a>
+<a href="#dc">Divide & Conquer</a>
+<a class="sub" href="#dcp">D&C strategy & examples</a>
+<a href="#greedy">Greedy Algorithms</a>
+<a class="sub" href="#gry">Greedy strategy & classic problems</a>
+<a href="#dp">Dynamic Programming</a>
+<a class="sub" href="#dpp">DP principle: two key properties</a>
+<a href="#traversal">Graph Traversals (BFS & DFS)</a>
+<a class="sub" href="#grep">Representation & elementary facts</a>
+<a class="sub" href="#bfs">BFS</a>
+<a class="sub" href="#dfs">DFS & applications</a>
+<a href="#mst">Minimum Spanning Trees</a>
+<a class="sub" href="#mstalg">Kruskal & Prim</a>
+<a href="#sp">Shortest Paths</a>
+<a class="sub" href="#sps">Single-source: Dijkstra & Bellman–Ford</a>
+<a class="sub" href="#spa">All-pairs: Floyd–Warshall & transitive closure</a>
+<a href="#formulas">One-Page Formula Sheet (Revise Before Exam)</a>
+<a href="#strategy">Exam Strategy</a></nav>
+  <main><h2 id="overview">Overview & Weightage<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<div class="kv">
+  <span class="chip">Marks <b>10 / 100</b></span>
+  <span class="chip">Weight <b>#1 in paper</b></span>
+  <span class="chip">Typical Qs <b>5–7</b></span>
+  <span class="chip">Style <b>Mostly conceptual + small numerical</b></span>
+</div>
+<p>Algorithms is the <b>single highest-weight subject</b> in GATE CS 2027, and it is the
+<b>leverage point for the whole paper</b>: its ideas (recurrences, complexity, greedy, DP, graphs)
+power questions in Data Structures, Theory of Computation, Operating Systems and Databases.</p>
+
+<h3>Where the marks actually sit</h3>
+<table>
+<tr><th>Topic cluster</th><th>Typical marks</th><th>Exam behaviour</th><th>Priority</th></tr>
+<tr><td>Complexity &amp; Recurrences</td><td>2–3</td><td>Given T(n), pick Θ; master theorem</td><td>★★★★★</td></tr>
+<tr><td>Design techniques (Greedy / DP / D&amp;C)</td><td>2–3</td><td>Identify the technique; correctness claims</td><td>★★★★★</td></tr>
+<tr><td>Graphs (BFS/DFS, MST, shortest paths)</td><td>4–5</td><td>Run the algorithm; compare complexities</td><td>★★★★★</td></tr>
+<tr><td>Sorting, searching, hashing</td><td>1–2</td><td>Stability, complexity, worst/best case</td><td>★★★★☆</td></tr>
+</table>
+
+<div class="box tip"><div class="lbl">How to study this for GATE 2027</div>
+<ol>
+<li><b>Master theorem + substitution first</b> — 2–3 near-guaranteed marks.</li>
+<li><b>Graph algorithms next</b> — the most tested cluster; learn to <i>run</i> each (BFS, DFS, Prim, Kruskal, Dijkstra, Bellman–Ford, Floyd–Warshall) by hand.</li>
+<li><b>DP vs greedy decision</b> — examiners love asking <i>why</i> a method works or fails.</li>
+<li><b>Sorting stability/complexity table</b> — rote-learnable marks.</li>
+<li><b>Practise running algorithms</b>, not just reading them — most GATE graph questions hand you a graph and ask for the output order.</li>
+</ol>
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Most questions award marks for the <b>algorithm's property under a specific input</b>, not for
+memorised statements. A claim like "Prim's always uses the lightest edge" is true <i>for some step</i>
+but not as a blanket property. Read exactly what the question fixes (negative weights? distinct
+weights? unweighted? directed?) before choosing an option.
+</div>
+
+<h2 id="complexity">Asymptotic Complexity & Recurrences<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="asym">Big-O family & loop analysis</h3>
+
+<p>The asymptotic classes bound growth up to constants for large n. <b>Upper</b> bounds use O,
+<b>lower</b> bounds use Ω, and <b>tight</b> (both) use Θ.</p>
+<table>
+<tr><th>Notation</th><th>Means</th><th>Intuition</th></tr>
+<tr><td>f = O(g)</td><td>f(n) ≤ c·g(n) for n ≥ n₀</td><td>f grows <b>no faster than</b> g</td></tr>
+<tr><td>f = Ω(g)</td><td>f(n) ≥ c·g(n) for n ≥ n₀</td><td>f grows <b>no slower than</b> g</td></tr>
+<tr><td>f = Θ(g)</td><td>both O(g) and Ω(g)</td><td>f and g grow at <b>the same rate</b></td></tr>
+<tr><td>f = o(g)</td><td>f/g → 0</td><td>f is <b>strictly slower</b> than g</td></tr>
+<tr><td>f = ω(g)</td><td>f/g → ∞</td><td>f is <b>strictly faster</b> than g</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Growth-rate ordering (slowest → fastest)</div>
+Θ(1) &lt; Θ(log n) &lt; Θ(√n) &lt; Θ(n) &lt; Θ(n log n) &lt; Θ(n²) &lt; Θ(n³) &lt; Θ(2ⁿ) &lt; Θ(n!) &lt; Θ(nⁿ)
+<br>A <b>polynomial</b> is always slower than any <b>exponential</b>: n<sup>k</sup> = O(2<sup>n</sup>) for any constant k.
+</div>
+
+<h4>Reading complexity out of code</h4>
+<ul>
+<li><b>Single loop</b> running n times on constant work → Θ(n).</li>
+<li><b>Nested loops</b> i and j both to n → Θ(n²).</li>
+<li><b>Halving loop</b> (n, n/2, n/4, …) → Θ(log n) iterations.</li>
+<li><b>Loop with 2 pointers / binary search</b> → Θ(log n) per step.</li>
+<li>i = i·2 → ⌈log₂n⌉ iterations; i = i·3 → ⌈log₃n⌉.</li>
+<li>i² pattern (for i in 1..√n) → Θ(√n).</li>
+</ul>
+
+<div class="box formula"><div class="lbl">Handy log facts</div>
+log<sub>b</sub>a = log a / log b = 1 / log<sub>a</sub>b · a<sup>log<sub>b</sub>c</sup> = c<sup>log<sub>b</sub>a</sup> ·
+(1/2)<sup>log₂n</sup> = 1/n · log(n!) = Θ(n log n)
+</div>
+
+<details><summary>Worked example — complexity of three nested loops</summary>
+<div class="dc">
+<p>Code: <code>for i in 1..n: for j in 1..i: for k in 1..j: print(i)</code></p>
+<p>Number of prints = Σₖ Σⱼ Σᵢ = Σₖ Σⱼ (n) inside, but count exactly: the innermost body runs
+Σ<sub>i=1..n</sub> Σ<sub>j=1..i</sub> j times.</p>
+<p>Σ<sub>j=1..i</sub> j = i(i+1)/2 ≈ i²/2. Σ<sub>i=1..n</sub> i²/2 = n(n+1)(2n+1)/12 ≈ n³/6.</p>
+<p>So total work = <b>Θ(n³)</b>. Pattern to spot: i nested loops to n ⇒ often Θ(n<sup>i</sup>); verify the bounds grow.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>O and Ω are one-sided.</b> "O(n)" means at-worst n — a constant-time algorithm is also O(n).
+Question options that say "the only bound is Θ(n)" are typically wrong. Also, "best case of Insertion
+sort is O(1)" is sloppy: a single pass is O(n). Always state which case (best/worst/average) the
+complexity refers to — GATE almost always fixes this in the stem, so respect it.
+</div>
+
+<h3 id="recur">Solving recurrences (Master theorem, substitution)</h3>
+
+<h4>1. Master theorem</h4>
+<div class="box formula"><div class="lbl">T(n) = a·T(n/b) + f(n), a ≥ 1, b &gt; 1</div>
+Compare f(n) with n<sup>log<sub>b</sub>a</sup> (call it n<sup>c</sup>, c = log<sub>b</sub>a):
+<ul>
+<li><b>Case 1:</b> f(n) = O(n<sup>c−ε</sup>) → T(n) = <b>Θ(n<sup>c</sup>)</b> &nbsp;(work dominates at leaves)</li>
+<li><b>Case 2:</b> f(n) = Θ(n<sup>c</sup>) → T(n) = <b>Θ(n<sup>c</sup> log n)</b></li>
+<li><b>Case 3:</b> f(n) = Ω(n<sup>c+ε</sup>) and a·f(n/b) ≤ k·f(n) for k&lt;1 → T(n) = <b>Θ(f(n))</b> &nbsp;(work dominates at root)</li>
+</ul>
+When f(n) = Θ(n<sup>d</sup>): compare d with c = log<sub>b</sub>a → cases 1/2/3 in that order.
+</div>
+
+<h4>2. Substitution method</h4>
+<ol>
+<li><b>Guess</b> the form (e.g. T(n) = O(n log n)).</li>
+<li><b>Induct:</b> assume it holds for smaller sizes, substitute the induction hypothesis into
+T(n) = a·T(n/b) + f(n).</li>
+<li><b>Bound</b> the leftover and verify constants don't blow up.</li>
+</ol>
+
+<h4>3. Recursion tree</h4>
+<p>Draw the tree: <b>level cost × number of levels</b>. a<sup>level</sup> nodes each with cost
+f(n/b<sup>level</sup>). Sum over levels. Useful when the master theorem's conditions don't apply
+(e.g. f(n) is a "swimming" function like n/log n).</p>
+
+<details><summary>Worked example — T(n) = 3T(n/2) + n²</summary>
+<div class="dc">
+<p>a = 3, b = 2, c = log₂3 ≈ 1.585, d = 2 (from n²). <b>d &gt; c</b> → Case 3.</p>
+<p>Check regularity: a·f(n/b) = 3·(n/2)² = (3/4)n² ≤ k·n² for k = 3/4 &lt; 1 ✓.</p>
+<p>So T(n) = <b>Θ(n²)</b>. The polynomial divide cost dominates the exponential leaf count.</p>
+</div></details>
+
+<details><summary>Worked example — T(n) = 2T(n/2) + n/log n (master theorem does not apply)</summary>
+<div class="dc">
+<p>a = 2, b = 2, c = 1, f(n) = n/log n. This is Θ(n/log n), which is <i>between</i> n<sup>c−ε</sup> and n<sup>c</sup> — a "gap" the master theorem cannot handle.</p>
+<p>Recursion tree: level k has 2<sup>k</sup> nodes each costing (n/2<sup>k</sup>)/log(n/2<sup>k</sup>). Per level cost ≈ n/(log n − k).</p>
+<p>Summing ≈ n · [1/log n + 1/(log n −1) + … + 1/1] = Θ(n log log n).</p>
+<p>Lesson: <b>know when to abandon the master theorem</b> — this exact shape is a known GATE trick.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Case 3 needs the <b>regularity condition</b> a·f(n/b) ≤ c·f(n). Many questions give a recurrence like
+T(n) = 2T(n/2) + n/log²n where the two sides look comparable but the master theorem silently does
+<b>not</b> apply. Do not force it — switch to the recursion tree.
+</div>
+
+<h2 id="sorting">Sorting<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="cmp">Comparison-based sorting</h3>
+
+<table>
+<tr><th>Algorithm</th><th>Best</th><th>Worst</th><th>Avg</th><th>Stable</th><th>In-place</th><th>Notes</th></tr>
+<tr><td>Insertion</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>Yes</td><td>Yes</td><td>great on near-sorted input</td></tr>
+<tr><td>Bubble</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>Yes</td><td>Yes</td><td>rarely used</td></tr>
+<tr><td>Selection</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td><td>No</td><td>Yes</td><td>always n² even if sorted</td></tr>
+<tr><td>Merge</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>Yes</td><td>No (O(n) aux)</td><td>stable, external-friendly</td></tr>
+<tr><td>Quick</td><td>O(n log n)</td><td>O(n²)</td><td>O(n log n)</td><td>No</td><td>Yes</td><td>worst when input sorted + bad pivot</td></tr>
+<tr><td>Heap</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>No</td><td>Yes</td><td>no worst-case blow-up</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Sorting decision tree = lower bound</div>
+Any comparison-based sort must make Ω(n log n) comparisons in the worst case: a binary decision tree
+over n! outcomes needs height ≥ ⌈log₂(n!)⌉ = <b>Ω(n log n)</b>.<br>
+<b>Optimal</b> (reach the bound): Merge and Heap sort. Quick is optimal on average, not worst case.
+</div>
+
+<h4>Pivot pathologies in Quick sort</h4>
+<ul>
+<li>First element as pivot + <b>sorted/almost-sorted input</b> → worst case O(n²).</li>
+<li>First element as pivot + <b>reverse-sorted</b> → also worst case.</li>
+<li>Random pivot or <b>median-of-three</b> → expected O(n log n) on all inputs.</li>
+<li>Choosing the median as pivot for every partition → <b>always O(n log n)</b>.</li>
+</ul>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Stability is input-sensitive, not a fixed property of every implementation.</b> Quick sort is usually
+called unstable, but an implementation that partitions keys only ("key, tag" with original index) is
+stable. Also <b>Insertion sort's O(n) best case needs an already-sorted or nearly-sorted array</b> — on a
+random array it is O(n²) just like Bubble/Selection.
+</div>
+
+<details><summary>Worked example — apply Insertion sort to [5,2,4,6,1,3]</summary>
+<div class="dc">
+<p>Take each element and insert into the sorted prefix:</p>
+<p><code>[5] | 2 → [2,5] | 4 → [2,4,5] | 6 → [2,4,5,6] | 1 → [1,2,4,5,6] | 3 → [1,2,3,4,5,6]</code></p>
+<p>5 comparisons-and-shifts on this near-random list illustrate that Insertion sort is
+Θ(n²) in the worst case but only Θ(n) when the input starts sorted (each new element stays put).</p>
+</div></details>
+
+<h3 id="linear">Non-comparison sorting & order statistics</h3>
+
+<p>Linear sorts beat the n log n bound because they are <b>not comparison-based</b> — they exploit the
+structure of keys.</p>
+<table>
+<tr><th>Algorithm</th><th>Time</th><th>Space</th><th>Stable</th><th>Requirement</th></tr>
+<tr><td>Counting</td><td>O(n + k)</td><td>O(n + k)</td><td>Yes</td><td>keys in small range 0..k</td></tr>
+<tr><td>Radix</td><td>O(d·(n + k))</td><td>O(n + k)</td><td>Yes (if each pass stable)</td><td>digits d, base k</td></tr>
+<tr><td>Bucket</td><td>avg O(n)</td><td>O(n)</td><td>Yes</td><td>uniformly distributed keys</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Radix sort complexity</div>
+Sort d passes of base k: <b>O(d·(n + k))</b> time, O(n + k) space.
+For integers with b bits, d = b/k passes. With k = n and d small, it behaves like O(n).
+</div>
+
+<h4>Order statistics (selection)</h4>
+<ul>
+<li><b>Naive:</b> find k-th smallest by sorting → O(n log n).</li>
+<li><b>Quick-select</b> (randomised partition, recurse on one side): expected <b>O(n)</b>, worst O(n²).</li>
+<li><b>Median-of-medians:</b> deterministic <b>O(n)</b> worst case (partitions into 5-groups, guarantees 3n/10 drop).</li>
+</ul>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Counting/Radix are not comparisons</b> — so the Ω(n log n) lower bound does <b>not</b> apply to them.
+A question claiming "no sort can beat O(n log n)" is only true within comparison-based sorting. Also,
+Radix sort is only correct if each digit pass is a <b>stable</b> sort (usually counting sort).
+</div>
+
+<h2 id="search">Searching & Hashing<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="bs">Searching & binary search</h3>
+
+<ul>
+<li><b>Linear search:</b> O(n) worst, O(1) best; works on any array.</li>
+<li><b>Binary search:</b> O(log n), needs a <b>sorted</b> array and an ordering predicate.</li>
+<li><b>Ternary search:</b> O(log₃n) comparisons on <i>unimodal</i> functions (not for sorted search).</li>
+<li>Interpolation search: expected O(log log n) on uniform data, worst O(n).</li>
+</ul>
+
+<div class="box formula"><div class="lbl">Binary search invariants</div>
+For sorted array of size n, worst-case comparisons = ⌊log₂n⌋ + 1.
+Find largest element &lt; x / smallest ≥ x ("floor/ceiling") by adjusting hi/lo correctly —
+the classic <b>off-by-one trap</b>. Termination always at hi ≥ lo.
+</div>
+
+<details><summary>Worked example — search for 23 in [3,7,12,23,40,45,58]</summary>
+<div class="dc">
+<p>lo=0, hi=6. mid = ⌊(0+6)/2⌋ = 3 → a[3] = 23. <b>Found in 1 comparison.</b> Hitting the middle trivially is rare; run a longer one:</p>
+<p>Search 40: mid=3 (23 &lt; 40 → lo=4). mid=⌊(4+6)/2⌋=5 → a[5]=45 &gt; 40 → hi=4. mid=4 → a[4]=40 ✓. <b>3 comparisons,</b> log₂7 ≈ 2.8 ✓ consistent with ⌊log₂n⌋+1 = 3.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Binary search requires the array be sorted — but GATE often asks for the <b>number of comparisons up
+to termination including the "not found" run</b>. On an odd/even-length array the first mid can be
+mistaken; always count the failed cases too. For n = 2<sup>k</sup> the worst case is exactly k+1 comparisons.
+</div>
+
+<h3 id="hash">Hashing & hash tables</h3>
+
+<p>A hash table stores item where <code>h(key)</code> says. Performance depends on the <b>load factor</b>
+α = n/m (items / slots) and the collision policy.</p>
+
+<h4>Collision resolution</h4>
+<table>
+<tr><th>Method</th><th>Worst-case search</th><th>Typical behaviour</th><th>Notes</th></tr>
+<tr><td>Chaining (linked lists)</td><td>O(n)</td><td>O(1 + α)</td><td>all keys can collide into one chain</td></tr>
+<tr><td>Open addressing (linear probing)</td><td>O(n)</td><td>O(1 + 1/(1−α))</td><td>primary clustering problem</td></tr>
+<tr><td>Double hashing</td><td>O(n)</td><td>O(1/(1−α))</td><td>best open-addressing probing</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Hash-table facts worth memorising</div>
+Expected cost for a successful/unlucky search with chaining: <b>O(1 + α)</b>.<br>
+Linear probing degenerates and shows <b>primary clustering</b> (long runs of filled slots).<br>
+α &lt; 0.5 is typical for open addressing; tables are resized (rehash) when α exceeds a bound.<br>
+A <b>good hash</b> distributes keys uniformly; a poor one makes every operation O(n).
+</div>
+
+<details><summary>Worked example — least collisions for keys into 4 slots</summary>
+<div class="dc">
+<p>Insert 5 elements into 4-slot table with linear probing, h(k) = k mod 4. Keys 4, 8, 12, 16, 20:</p>
+<p>All map to slot 4 mod 4 = 0 → the entire array becomes one long cluster. Search for any of them is O(5), the worst case.</p>
+<p>Contrast: if the hash were h(k) = k mod 4 but keys were 0,1,2,3,4 and probing cyclic, you see how <b>the hash function, not the table, decides the worst case.</b> This is why "hashing is O(1)" is false as a blanket claim — it is O(1) <i>average</i>, O(n) worst.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Hashing average O(1), worst O(n).</b> The option "search is always O(1)" is wrong. Also, deleting an
+element in open addressing requires a <b>tombstone</b> (mark, not empty) or searches break the probe
+chain — a favourite subtle point.
+</div>
+
+<h2 id="dc">Divide & Conquer<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="dcp">D&C strategy & examples</h3>
+
+<p><b>Divide → recurse → combine.</b> The combination step decides whether the method pays off.
+Works when the problem splits into independent subproblems (so results merge cleanly).</p>
+<table>
+<tr><th>Algorithm</th><th>Recurrence</th><th>Complexity</th></tr>
+<tr><td>Merge sort</td><td>T(n) = 2T(n/2) + n</td><td>Θ(n log n)</td></tr>
+<tr><td>Quick sort (average)</td><td>T(n) = 2T(n/2) + n</td><td>Θ(n log n)</td></tr>
+<tr><td>Strassen's matrix multiply</td><td>T(n) = 7T(n/2) + n²</td><td>Θ(n<sup>log₂7</sup>) ≈ Θ(n<sup>2.807</sup>)</td></tr>
+<tr><td>Binary search</td><td>T(n) = T(n/2) + 1</td><td>Θ(log n)</td></tr>
+<tr><td>Closest pair of points</td><td>T(n) = 2T(n/2) + n</td><td>Θ(n log n)</td></tr>
+<tr><td>Karatsuba multiply</td><td>T(n) = 3T(n/2) + n</td><td>Θ(n<sup>log₂3</sup>) ≈ Θ(n<sup>1.585</sup>)</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">D&amp;C complexity heuristic</div>
+For T(n) = aT(n/b) + f(n): if you split into <b>more</b> problems than the halves can absorb
+(e.g. 7 subproblems for matrix multiply), the leaf count a<sup>logₙ</sup> = n<sup>log<sub>b</sub>a</sup>
+can <b>beat</b> the naive method. Strassen, Karatsuba and the Fast Fourier Transform (FFT,
+T(n)=2T(n/2)+n with clever combine → O(n log n)) all exploit this.
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+D&amp;C is <b>not</b> always better: for the closest-pair problem the naive combine is O(n²),
+and it only wins because the combine step is cleverly pruned to O(n). The combine step dominates —
+memorise that D&amp;C complexity is determined by <b>a</b> (leaf growth) vs <b>f(n)</b> (combine cost).
+Strassen beats naive when n is large enough for constant factors to amortise, not for tiny n.
+</div>
+
+<details><summary>Worked example — why Merge sort is stable-list at O(n log n)</summary>
+<div class="dc">
+<p>Split recursively until singletons, then merge: compare heads of the two sorted runs, taking the
+smaller. The merge of two n/2 lists is O(n), and there are log₂n levels → O(n log n).</p>
+<p>Merge is <b>stable</b> because when equal keys appear in left and right runs, we take the left one
+first, preserving input order — the reason GATE lists Merge as the go-to stable sort.</p>
+</div></details>
+
+<h2 id="greedy">Greedy Algorithms<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="gry">Greedy strategy & classic problems</h3>
+
+<p><b>Greedy</b> makes the locally optimal choice at each step and never undoes it. It works
+<b>only when</b> the problem has a <i>greedy-choice property</i> (local choice extends to a global
+optimum) plus <i>optimal substructure</i>.</p>
+<table>
+<tr><th>Problem</th><th>Greedy choice</th><th>Optimal?</th></tr>
+<tr><td>Activity selection</td><td>pick earliest-finishing</td><td>Yes (exchange argument)</td></tr>
+<tr><td>Fractional knapsack</td><td>highest value/weight ratio</td><td>Yes</td></tr>
+<tr><td>Huffman coding</td><td>merge two least-frequent</td><td>Yes (prefix codes)</td></tr>
+<tr><td><b>0/1 knapsack</b></td><td>ratio by item</td><td><b>No</b> — use DP</td></tr>
+<tr><td>Coin change</td><td>largest coin ≤ remainder</td><td>Only for canonical sets</td></tr>
+<tr><td>Minimum spanning tree</td><td>lightest safe edge</td><td>Yes (Kruskal/Prim)</td></tr>
+<tr><td>Single-source shortest path (no negative)</td><td>nearest unvisited</td><td>Yes (Dijkstra)</td></tr>
+</table>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Greedy fails exactly when the problem lacks the greedy-choice property. The two killer examples:
+<b>0/1 knapsack</b> (ratio greedy is wrong — an item you skip for size reasons may be needed for
+weight reasons) and <b>coin change</b> (greedy needs a canonical coin system — {1,5,10} works,
+{1,3,4} does not: amount 6 → greedy 4+1+1 = 3 coins, optimal 3+3 = 2). Examiners ask
+"which technique solves X correctly?" using DP for these two.
+</div>
+
+<details><summary>Worked example — Huffman coding for A, B, C, D with freqs 5, 9, 12, 13</summary>
+<div class="dc">
+<p>Merge the two lowest: (5,9) → 14. Now leaves {12,13,14}. Merge (12,13) → 25. Merge (14,25) → 39.</p>
+<p>Code lengths: A and B get depth 2 (each contributed to the 14 node), C and D depth 2, so total bits:
+2·5 + 2·9 + 2·12 + 2·13 = 78. (An equal-depth result here because freqs are close.)</p>
+<p>Rule: <code>Huffman(total) = Σ freq × depth</code> — it is <b>optimal</b> because no other prefix
+code can beat it (a greedy proof by exchange argument).</p>
+</div></details>
+
+<details><summary>Worked example — activity selection greedy proof step</summary>
+<div class="dc">
+<p>Claim: picking the interval with the <b>earliest finish time</b> is always safe.</p>
+<p>Suppose an optimal solution starts with interval J. Let I be the earliest-finishing interval.
+Since finish(I) ≤ finish(J), we can <b>swap</b> J for I without crowding out any later activity —
+I ends no later than J, so all activities after J still fit after I.</p>
+<p>This <b>exchange argument</b> (also used for MST) is the standard GATE-style proof that a greedy
+choice is safe. You'll be asked "why is this greedy correct?" — the answer is always: local choice
++ exchange argument + optimal substructure.</p>
+</div></details>
+
+<div class="box tip"><div class="lbl">Shortcut — DP vs greedy in one line</div>
+If you can take <b>fractions</b> of an item (knapsack, resource) → greedy.
+If items are <b>all-or-nothing</b>/indivisible and choices affect each other → DP.
+If the decision is an <b>ordering</b> (schedule, code) where local choice never hurts → greedy.
+</div>
+
+<h2 id="dp">Dynamic Programming<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="dpp">DP principle: two key properties</h3>
+
+<p>DP works when a problem has <b>optimal substructure</b> (optimal solution built from optimal
+solutions of subproblems) and <b>overlapping subproblems</b> (same subproblem solved repeatedly).
+Solve each subproblem once, store it, reuse.</p>
+<table>
+<tr><th>Variant</th><th>Mechanism</th><th>Space</th><th>When to choose</th></tr>
+<tr><td>Naive recursion</td><td>recompute everything</td><td>call stack</td><td>never for overlapping problems</td></tr>
+<tr><td>Memoisation (top-down)</td><td>recurse, cache results</td><td>O(dim × entry)</td><td>only some subproblems needed</td></tr>
+<tr><td>Tabulation (bottom-up)</td><td>fill table in dependency order</td><td>O(table size)</td><td>most/ all subproblems used</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Classic DP recurrences (memorise)</div>
+<b>0/1 knapsack:</b> K(i,w) = max(K(i−1,w), vᵢ + K(i−1, w−wᵢ)) — O(n·W) time &amp; space.<br>
+<b>LCS:</b> if Xᵢ = Yⱼ then L(i,j) = 1 + L(i−1,j−1), else max(L(i−1,j), L(i,j−1)) — O(m·n).<br>
+<b>Matrix-chain:</b> m[i,j] = min<sub>k</sub>(m[i,k] + m[k+1,j] + p<sub>i−1</sub>p<sub>k</sub>p<sub>j</sub>) — O(n³).<br>
+<b>Coin change (min coins):</b> dp[w] = min(dp[w − c] + 1 for c in coins) — O(n·W).<br>
+<b>Rod cutting:</b> r[n] = max(p[n], max<sub>k</sub>(r[k] + r[n−k])) — O(n²).<br>
+<b>Shortest path in DAG / Bellman–Ford:</b> DP over relaxed estimate.
+</div>
+
+<details><summary>Worked example — LCS table for X="ABCBDAB", Y="BDCABA"</summary>
+<div class="dc">
+<p>Build (m+1)×(n+1) table: L(i,0)=L(0,j)=0. Fill either 1+L above-left on match, else max(left,above).</p>
+<p>The maximum value in the bottom-right cell = <b>length 4</b> (e.g. "BCBA" or "BDAB").</p>
+<p>DP properties visible: optimal substructure (a longer common subseq extends a shorter one) and
+overlapping subproblems (same L(i,j) requested from many paths) — hence the table, not brute force
+over all subsequences (O(2<sup>m</sup>)).</p>
+</div></details>
+
+<details><summary>Worked example — 0/1 knapsack with capacity 5, items (w,v): (2,3),(3,4),(4,5),(5,6)</summary>
+<div class="dc">
+<p>DP over items × capacity. Fill K(i,w) = max(skip item i, take item i + best with remaining capacity).</p>
+<p>Items sorted: (2,3): K(1,2..5)=3. (3,4): K(2,3)=4, K(2,5)=max(4, 4+K(1,2)=7)=7. (4,5): K(3,4)=5, K(3,5)=max(5, 5+K(2,1)=5)=5. (5,6): K(4,5)=max(6, 6+K(3,0)=6)=6.</p>
+<p>Optimal = <b>7</b> (items 2+3 hold capacity 5, value 4+3). Greedy-by-ratio would instead pick (5,6)
+then be stuck → value 6 — this is why 0/1 knapsack needs DP.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Optimal substructure alone is not enough</b> — you also need overlapping subproblems for DP to help.
+Shortest path has optimal substructure but is <b>not</b> greedy-correct in general graphs (Dijkstra
+fails with negative edges) and DP is not the tool for every "compound" decision. Also the classic:
+<b>0/1 knapsack is pseudo-polynomial</b> O(n·W) — W in the table is the numeric capacity, so it is
+polynomial only when W is polynomial in the input bit-length; with W = 2ⁿ it is exponential.
+</div>
+
+<h2 id="traversal">Graph Traversals (BFS & DFS)<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="grep">Representation & elementary facts</h3>
+
+<table>
+<tr><th>Representation</th><th>Space</th><th>Edge check (u,v)</th><th>Iterate neighbours</th></tr>
+<tr><td>Adjacency matrix</td><td>O(V²)</td><td>O(1)</td><td>O(V)</td></tr>
+<tr><td>Adjacency list</td><td>O(V + E)</td><td>O(deg(u))</td><td>O(deg(u))</td></tr>
+</table>
+<div class="box formula"><div class="lbl">Memory trade-off</div>
+Adjacency matrix: O(V²) always — dense-friendly, fast edge lookup.<br>
+Adjacency list: O(V + E) — sparse-friendly, cheap neighbour iteration.<br>
+BFS/DFS cost: <b>O(V + E)</b> with an adjacency list, <b>O(V²)</b> with a matrix.
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+The traversal is O(V+E) <b>only</b> with an adjacency list. With an adjacency matrix, checking
+neighbours of every vertex is O(V) each → total <b>O(V²)</b>. Cubic algorithms on dense graphs
+(O(V²)) are usually stated with the matrix; read the representation before answering.
+</div>
+
+<h3 id="bfs">BFS</h3>
+
+<p><b>BFS</b> explores level by level using a queue. It discovers vertices in order of distance from
+the source and gives the <b>shortest-path distance in an unweighted graph</b>.</p>
+<ul>
+<li>Uses a <b>queue</b> (FIFO); marks vertices on discovery.</li>
+<li>Time O(V + E); distance d[v] = number of edges from source.</li>
+<li>Produces a BFS tree of shortest paths (unweighted).</li>
+<li>Applications: shortest path in unweighted graph, BFS layers, bipartiteness check.</li>
+</ul>
+<div class="box formula"><div class="lbl">BFS bipartite test</div>
+An undirected graph is <b>bipartite ⇔ BFS finds a BFS tree with no edge between two vertices of the
+same level parity</b> (i.e. no "cross edge" of odd length). A graph with an odd cycle is not bipartite.
+</div>
+
+<h3 id="dfs">DFS & applications</h3>
+
+<p><b>DFS</b> explores as deep as possible then backtracks, using a <b>stack</b> (explicit or recursion).</p>
+<table>
+<tr><th>Application</th><th>Requires</th><th>Result</th></tr>
+<tr><td>Cycle detection (directed)</td><td>a "grey"/on-stack mark</td><td>back edge ⇔ cycle exists</td></tr>
+<tr><td>Topological sort</td><td>DAG + reversed finish order</td><td>a valid linear order</td></tr>
+<tr><td>Connected components (undirected)</td><td>run DFS per undiscovered vertex</td><td>count of CCs</td></tr>
+<tr><td>Strongly connected components</td><td>Kosaraju (2×DFS) / Tarjan</td><td>SCC decomposition, O(V+E)</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Topological sort</div>
+Topological sort exists <b>iff</b> the graph is a <b>DAG</b>. DFS-based: output vertices in
+<b>reverse order of finishing time</b> = O(V + E). A topological order does not have to be unique.
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+In a <b>directed</b> graph, a back edge (to a vertex currently on the DFS stack) ⇔ a cycle. But in an
+<b>undirected</b> graph, an edge to any discovered vertex (back or cross) indicates a cycle —
+do not apply the directed rule blindly. Also, topological sort does <b>not</b> exist for cyclic
+graphs, and a graph can have >1 valid topological order.
+</div>
+
+<details><summary>Worked example — DFS finish times give topological order</summary>
+<div class="dc">
+<p>Graph edges: A→B, A→C, B→D, C→D. DFS from A: visit A(discover), B, D (D finishes), B finishes, C, then D already seen (cross/forward), C finishes, A finishes.</p>
+<p>Finish order (increasing): D, B, C, A. <b>Reverse finish order</b> = A, C, B, D — a valid topological sort: every edge points from earlier to later (A→B: A before B ✓, A→C ✓, B→D ✓, C→D ✓).</p>
+<p>Note C→D and B→D both finish D first because D is a sink; this is why topological order = reverse of finish time.</p>
+</div></details>
+
+<h2 id="mst">Minimum Spanning Trees<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="mstalg">Kruskal & Prim</h3>
+
+<table>
+<tr><th>Algorithm</th><th>Core idea</th><th>Data structure</th><th>Complexity</th></tr>
+<tr><td>Kruskal</td><td>take globally lightest edge not creating a cycle</td><td>Union–Find / sort edges</td><td>O(E log E) = <b>O(E log V)</b></td></tr>
+<tr><td>Prim</td><td>grow one tree by lightest edge from it</td><td>priority queue of frontier</td><td>O(E log V) with a heap; O(V²) with dense matrix</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Cut property (correctness of both)</div>
+For any cut (S, V−S), the <b>lightest crossing edge</b> is in <b>some</b> MST.<br>
+<b>Cycle property:</b> the <b>heaviest edge</b> on a cycle is never in any MST.<br>
+These two facts justify Kruskal and Prim: each only ever adds a "safe" light edge across a cut.
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>The MST is not always unique.</b> If all edge weights are <b>distinct</b>, the MST is unique.
+With ties, different MSTs are possible, but they all have the <b>same total weight</b>. Also Prim's
+grows a single tree and needs a <b>connected</b> graph; Kruskal works on disconnected graphs and yields
+a minimum spanning <i>forest</i>. "Prim needs the lightest edge of the whole graph first" is false —
+it starts from any vertex.
+</div>
+
+<details><summary>Worked example — Kruskal on a 4-node square, weights 1,1,2,2,3 (cycle)</summary>
+<div class="dc">
+<p>Vertices a,b,c,d; edges a–b=1, c–d=1, a–c=2, b–d=2, b–c=3, a–d=4 (a square with a diagonal).</p>
+<p>Sort: (a–b,1) add; (c–d,1) add; (a–c,2) add (no cycle: connects a to c); (b–d,2) — b,d already connected via a–c–…–d? a–b and c–d and a–c give path b–a–c–d, so b–d creates a cycle → <b>skip</b>; (b–c,3) creates cycle → skip; (a–d,4) skip.</p>
+<p>MST edges: a–b, c–d, a–c. Total = 1+1+2 = 4. Three edges = V−1 = 3 for 4 vertices ✓ — always check you have V−1 edges.</p>
+</div></details>
+
+<div class="box tip"><div class="lbl">Pick Prim if…</div>
+The graph is <b>dense</b> (E ≈ V²) — use the O(V²) matrix form of Prim. Pick <b>Kruskal</b> if the
+edges are already sorted or you only need the total weight (no adjacency structure needed).
+</div>
+
+<h2 id="sp">Shortest Paths<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="sps">Single-source: Dijkstra & Bellman–Ford</h3>
+
+<table>
+<tr><th>Algorithm</th><th>Cost</th><th>Edge weights</th><th>Detects neg. cycle?</th></tr>
+<tr><td>Dijkstra</td><td>O(E log V) heap / O(V²) matrix</td><td><b>non-negative only</b></td><td>No — fails outright</td></tr>
+<tr><td>Bellman–Ford</td><td>O(V·E)</td><td>any, incl. negative</td><td><b>Yes</b> (in V-th iteration)</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Dijkstra correctness premise</div>
+Dijkstra is greedy: repeatedly settle the nearest unsettled vertex. It is <b>correct iff all edge
+weights ≥ 0</b> (then a settled vertex's distance is final). Negative weights can make a <i>later</i>
+edge lower a distance that was already settled — so Dijkstra's answer becomes wrong, though it still
+<i>runs</i>.
+Bellman–Ford relaxes all edges V−1 times: after the (V−1)-th pass all reachable distances are exact;
+an edge still relaxable on pass V means a <b>negative-weight cycle</b> exists.
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Dijkstra does not "crash" on negative edges — it silently returns a wrong answer</b> (unless the
+graph has a negative cycle reachable from the source, in which case no finite shortest path exists at
+all). Many questions test exactly this: "which algorithm correctly finds shortest path with negative
+weights?" → Bellman–Ford (and ≤ no negative cycle). Negative <i>cycle</i> → no algorithm gives a
+finite path; Bellman–Ford only detects it.
+</div>
+
+<details><summary>Worked example — Dijkstra on a→b=4, a→c=1, c→b=2, c→d=3</summary>
+<div class="dc">
+<p>Start a=0. Settle a; relax b=4, c=1. Settle c (1); relax b via c = 1+2 = 3 &lt; 4 → b=3, d = 1+3 = 4. Settle b(3). Settle d(4).</p>
+<p>Final distances: a=0, c=1, b=3, d=4. Path a→c→b→d. Note how c was settled before b even though b had a direct edge — <b>the greedy choice is the nearest unsettled, not the nearest unscanned edge</b>.</p>
+</div></details>
+
+<details><summary>Worked example — Bellman–Ford detects negative cycle</summary>
+<div class="dc">
+<p>Graph: a→b=−1, b→c=−1, c→a=−1 (a 3-cycle, sum = −3 &lt; 0). Any source: relax over V−1 = 2 passes, then attempt pass 3.</p>
+<p>Distances keep decreasing every pass — there is no termination; a negative-weight cycle is present,
+so <b>no shortest path exists</b> (you can loop forever to reduce cost). Bellman–Ford reports it on the
+V-th pass. Contrast: if the same edges were +1, +1, +1 the cycle is positive and the shortest path is
+well-defined and finite.</p>
+</div></details>
+
+<h3 id="spa">All-pairs: Floyd–Warshall & transitive closure</h3>
+
+<p><b>Floyd–Warshall</b> finds shortest paths between every pair. Let D<sup>(k)</sup> be shortest paths
+using intermediates only from {1..k}.</p>
+<div class="box formula"><div class="lbl">Floyd–Warshall recurrence</div>
+D<sup>(k)</sup>[i][j] = min( D<sup>(k−1)</sup>[i][j],
+                            D<sup>(k−1)</sup>[i][k] + D<sup>(k−1)</sup>[k][j] )
+<br>Two nested inner loops over all i,j for each k → <b>O(V³)</b>; space O(V²). Handles negative
+edge weights, and a negative <i>cycle</i> shows as D[i][i] &lt; 0.
+</div>
+<p><b>Transitive closure</b> (reachability) is the same table but boolean: keep reachable[k][i][j] with
+OR instead of min → <b>O(V³)</b> time, O(V²) space.</p>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Floyd–Warshall runs in O(V³) <b>time</b> but O(V²) <b>space</b> — do not confuse them. Also it computes
+all-pairs; for a <b>single source</b> it is wasteful (Dijkstra/Bellman–Ford are better). "Which
+algorithm gives all-pairs shortest paths?" → Floyd–Warshall (or repeated Dijkstra when weights ≥ 0:
+O(V·E log V) — often the faster choice on sparse graphs).
+</div>
+
+<details><summary>Worked example — run transitive closure topologically</summary>
+<div class="dc">
+<p>Start from reach[i][j] = adjacency. For k in order, set reach[i][j] |= reach[i][k] &amp;&amp; reach[k][j].</p>
+<p>On a 3-node chain A→B→C: after k=B, reach[A][C] becomes true (A→B and B→C). The k loop must run
+increasingly so multi-hop paths compose; running k topologically is what lets reachability propagate
+through the table in-place safely.</p>
+</div></details>
+
+<h2 id="formulas">One-Page Formula Sheet (Revise Before Exam)<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<table>
+<tr><th>Area</th><th>Fact</th></tr>
+<tr><td>Merge / Heap sort</td><td>Θ(n log n) worst case; optimal comparison sorts</td></tr>
+<tr><td>Quick sort</td><td>Θ(n log n) avg, Θ(n²) worst (sorted input with bad pivot)</td></tr>
+<tr><td>Insertion best case</td><td>Θ(n) when nearly sorted; Θ(n²) avg/worst</td></tr>
+<tr><td>Sorting lower bound</td><td>comparison-based Ω(n log n)</td></tr>
+<tr><td>Radix / Counting</td><td>O(d·(n+k)) / O(n+k); stable; break the n log n bound</td></tr>
+<tr><td>Binary search</td><td>O(log n); worst comparisons ⌊log₂n⌋+1; needs sorted array</td></tr>
+<tr><td>Hashing</td><td>avg O(1+α), worst O(n); chaining / open addressing</td></tr>
+<tr><td>Master theorem</td><td>T(n)=aT(n/b)+f(n): c=log_b a; f=Θ(n<sup>d</sup>): d&lt;c→n<sup>c</sup>, d=c→n<sup>c</sup>log n, d&gt;c→n<sup>d</sup></td></tr>
+<tr><td>Strassen mat-mult</td><td>T(n)=7T(n/2)+n² → Θ(n<sup>log₂7</sup>)≈n<sup>2.807</sup></td></tr>
+<tr><td>DP vs greedy</td><td>fractional → greedy; indivisible/all-or-nothing → DP</td></tr>
+<tr><td>0/1 knapsack</td><td>O(n·W) DP; greedy ratio NOT optimal</td></tr>
+<tr><td>LCS</td><td>O(m·n) DP table; match→1+L(i−1,j−1)</td></tr>
+<tr><td>Matrix-chain</td><td>O(n³) DP</td></tr>
+<tr><td>BFS / DFS</td><td>O(V+E) list, O(V²) matrix</td></tr>
+<tr><td>BFS unweighted shortest</td><td>distance = # edges from source</td></tr>
+<tr><td>Topological sort</td><td>DAG only; reverse DFS finish time; O(V+E)</td></tr>
+<tr><td>Kruskal MST</td><td>O(E log E)=O(E log V); Union–Find; lightest safe edge</td></tr>
+<tr><td>Prim MST</td><td>O(E log V) heap; O(V²) dense; lightest frontier edge</td></tr>
+<tr><td>Cut / cycle property</td><td>lightest cut edge ∈ some MST; heaviest cycle edge ∉ any MST</td></tr>
+<tr><td>Dijkstra</td><td>O(E log V); only if weights ≥ 0</td></tr>
+<tr><td>Bellman–Ford</td><td>O(V·E); detects negative cycle on pass V</td></tr>
+<tr><td>Floyd–Warshall</td><td>O(V³) time, O(V²) space; all-pairs; D[i][i]&lt;0 ⇒ neg cycle</td></tr>
+<tr><td>Adj list vs matrix</td><td>O(V+E) vs O(V²) space; list needs O(V) to check (u,v)</td></tr>
+</table>
+<div class="box tip"><div class="lbl">Exam-day plan for Algorithms</div>
+Attack <b>recurrence + complexity</b> questions first (quickest, most reliable marks), then the
+"run this algorithm" graph questions (BFS/DFS/MST/shortest path — just execute carefully), then the
+DP/greedy identification questions. Under time pressure, skip the <b>longest work-out numerical</b>
+(e.g. full Floyd–Warshall on a 5-node graph) — it trades 2 marks for 5 minutes.
+</div>
+
+<h2 id="strategy">Exam Strategy<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<h4>How to attempt Algorithms on the day</h4>
+<table>
+<tr><th>Question type</th><th>Time budget</th><th>Tactic</th></tr>
+<tr><td>Master theorem / complexity</td><td>≤ 1 min</td><td>compute c = log_b a, compare with d, pick Θ</td></tr>
+<tr><td>Run BFS/DFS/MST/Dijkstra</td><td>2–3 min</td><td>draw adjacency, execute by hand, list the order</td></tr>
+<tr><td>"Which technique solves X?"</td><td>1 min</td><td>greedy vs DP decision (fractional? indivisible? ordering?)</td></tr>
+<tr><td>Correctness / property statements</td><td>1 min</td><td>test on a small counterexample (tie weights, negative edges)</td></tr>
+<tr><td>Full DP table / all-pairs</td><td>4–6 min</td><td><b>skip if short on time</b> — highest time-to-mark ratio</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">The GATE decision checklist for technique questions</div>
+<ol>
+<li>Can a small input break the "obvious" greedy? (0/1 knapsack, coin change) → then it's DP.</li>
+<li>Negative edge weights in a shortest-path question? → not Dijkstra → Bellman–Ford / Floyd–Warshall.</li>
+<li>Weights distinct? → MST unique. Tied? → several MSTs, same total weight.</li>
+<li>Unweighted graph &amp; path length in edges? → BFS.</li>
+<li>Reachability / all-pairs? → Floyd–Warshall O(V³) or transitive closure.</li>
+<li>In a directed graph asking for sorted order? → topological sort (DAG only).</li>
+</ol>
+</div>
+
+<div class="box trap"><div class="lbl">Common time sinks — cut these first</div>
+<ul>
+<li><b>Recomputing a full DP table</b> when the answer is the recurrence itself.</li>
+<li><b>Running Floyd–Warshall/Warshall by hand</b> on a large graph — instead test one edge case.</li>
+<li><b>Re-deriving a stability table</b> from memory instead of trusting the memorised sheet.</li>
+<li>Over-interpreting an "always/never" option — test the smallest counterexample (2 vertices, 1 edge).</li>
+</ul>
+Many 1-mark MCQs hinge on a single property (blanket "always" statements are usually false). Read the
+stem for the constraint that makes a wrong-sounding option correct.
+</div>
+
+<h2 id="quiz">Practice Quiz <span style="font-size:13px;font-weight:400;color:var(--muted)">— instant feedback</span></h2>
+<div class="quiz"><div id="quizbox"></div><div class="score" id="score" style="display:none"></div></div>
+<footer><p><b>Algorithms</b> — GATE CS 2027 · Algorithms (10 marks) · highest-weight subject</p><p>These notes are AI-generated study material compiled from standard GATE CS references. Concept explanations and formula sheets are reliable, but <b>always verify numerical answers and edge cases against a standard textbook or previous-year official answer key</b> before relying on them.</p></footer></main>
+</div>
+<script>var QUIZ=[{"q": "The worst-case time complexity of Quicksort (first element as pivot) on an already-sorted array of n elements is:", "opts": ["Θ(n log n)", "Θ(n)", "Θ(n²)", "Θ(log n)"], "a": 2, "ex": "With the first element as pivot on a sorted array, every partition is as unbalanced as possible (1 and n−1), giving Θ(n²). The Θ(n log n) average does not apply to this fixed-pivot worst case."}, {"q": "The best-case time complexity of Insertion sort on an already-sorted array of n elements is:", "opts": ["Θ(n)", "Θ(n²)", "Θ(n log n)", "Θ(1)"], "a": 0, "ex": "On a sorted array each new element is already in place, so we do a single comparison and no shift per element → Θ(n). On a random array it is Θ(n²)."}, {"q": "Which algorithm CANNOT sort in o(n log n) worst-case time?", "opts": ["Counting sort", "Radix sort", "Bucket sort (uniform data)", "Merge sort"], "a": 3, "ex": "Only non-comparison sorts (counting, radix, bucket) can beat the comparison lower bound Ω(n log n). Merge sort is comparison-based, so its worst case is Θ(n log n)."}, {"q": "In hashing with separate chaining of n items into m slots (load factor α = n/m), the expected time for an unsuccessful search is:", "opts": ["Θ(n)", "Θ(1 + α)", "Θ(α)", "Θ(log m)"], "a": 1, "ex": "Each list averages α = n/m items long, so an unsuccessful search scans one list of expected length α → Θ(1 + α). The worst case (all keys in one chain) is Θ(n)."}, {"q": "Which of the following statements about the minimum spanning tree (MST) of a graph is TRUE?", "opts": ["If all edge weights are distinct, the MST is unique", "Prim's algorithm requires a connected graph and always picks the globally smallest edge first", "The MST always has maximum possible total weight", "Kruskal cannot handle disconnected graphs"], "a": 0, "ex": "Distinct edge weights force a unique MST (no ties to break differently). Prim starts from any vertex, not necessarily the lightest edge, and yields a forest (not an MST) on disconnected input."}, {"q": "Dijkstra's algorithm produces a correct shortest-path tree for a graph if and only if:", "opts": ["the graph is directed", "the graph has no edges of weight 0", "all edge weights are non-negative", "the graph is acyclic"], "a": 2, "ex": "Dijkstra greedily settles the nearest unsettled vertex, which is only guaranteed final when no later negative edge can lower it → non-negative weights. With negative weights it runs but returns a possibly wrong answer."}, {"q": "Bellman–Ford on a graph with V vertices and E edges runs in:", "opts": ["O(E log V)", "O(V²)", "O(V·E)", "O(V³)"], "a": 2, "ex": "It relaxes all E edges V−1 times → O(V·E), and a further pass detects a negative-weight cycle. (Floyd–Warshall is the O(V³) all-pairs one.)"}, {"q": "For T(n) = 3T(n/2) + n, the asymptotic solution is:", "opts": ["Θ(n log n)", "Θ(n²)", "Θ(n^1.585)", "Θ(n^1.5)"], "a": 2, "ex": "Master theorem: a=3, b=2, c=log₂3≈1.585, f(n)=n¹ so d=1 < c → Case 1 → Θ(n^log_b a) = Θ(n^1.585)."}, {"q": "Floyd–Warshall algorithm computes all-pairs shortest paths with:", "opts": ["O(V²) time and O(V³) space", "O(V³) time and O(V²) space", "O(V·E) time and O(E) space", "O(V³) time and O(V³) space"], "a": 1, "ex": "Three nested loops → O(V³) time; it keeps a V×V distance matrix → O(V²) space. This time-vs-space split is a classic trap."}, {"q": "BFS on an undirected graph G returns the shortest path (in number of edges) from source s to every vertex…", "opts": ["only if G is a tree", "only if edge weights are non-negative", "for any graph, since edges have unit cost", "only if G is unweighted"], "a": 2, "ex": "BFS explores vertices in order of distance, and in an unweighted graph every edge has cost 1, so BFS gives true shortest paths by edge count. (Weighted graphs need Dijkstra or similar.)"}, {"q": "A topological sort of a directed graph exists if and only if:", "opts": ["the graph is a DAG", "the graph is strongly connected", "the graph has no isolated vertices", "every vertex has in-degree ≥ 1"], "a": 0, "ex": "Only a directed acyclic graph (DAG) admits a topological order. Cyclic graphs have no topological order; connectivity is not the issue."}, {"q": "The worst-case complexity of any comparison-based sorting algorithm is:", "opts": ["O(n)", "O(n log n)", "Ω(n log n)", "O(n²)"], "a": 2, "ex": "A comparison sort is a binary decision tree over n! outcomes, needing height ≥ ⌈log₂n!⌉ = Ω(n log n). This is a lower bound, so Ω."}, {"q": "Which of these problems is solved CORRECTLY by a greedy algorithm?", "opts": ["0/1 knapsack", "Fractional knapsack", "Minimum number of coins with coin set {1,3,4}", "Longest common subsequence"], "a": 1, "ex": "Fractional knapsack is solved optimally by the value/weight ratio greedy. 0/1 knapsack and LCS need DP, and coin change fails greedy for non-canonical sets like {1,3,4}. Correct anatomy of the greedy/DP split."}, {"q": "For optimal Huffman coding of a text, the algorithm:", "opts": ["merges the two least-frequent symbols repeatedly", "merges the two most-frequent symbols repeatedly", "assigns equal-length codes to all symbols", "sorts symbols alphabetically and encodes by index"], "a": 0, "ex": "Huffman repeatedly combines the two lowest-frequency nodes, building an optimal prefix code. This greedy choice is provably optimal by an exchange argument."}, {"q": "The time complexity of top-down (memoised) Fibonacci is O(n), whereas naive recursion is:", "opts": ["O(n)", "O(n log n)", "O(2ⁿ)", "O(n²)"], "a": 2, "ex": "Naive recursion recomputes the same subproblems an exponential number of times (≈2^n calls). Memoisation stores each result once → O(n); this illustrates the overlapping-subproblems payoff of DP."}, {"q": "The recurrence for Strassen's matrix-multiplication algorithm is:", "opts": ["T(n) = 8T(n/2) + n²", "T(n) = 7T(n/2) + n²", "T(n) = 2T(n/2) + n³", "T(n) = 8T(n/2) + n³"], "a": 1, "ex": "Strassen multiplies 7 submatrices of half size with O(n²) combine work → T(n)=7T(n/2)+n² → Θ(n^log₂7) ≈ Θ(n^2.807). Naive is 8 subproblems, Θ(n³)."}, {"q": "In an adjacency-matrix representation of a graph with V vertices, BFS runs in:", "opts": ["O(V + E)", "O(V²)", "O(E)", "O(V log V)"], "a": 1, "ex": "With an adjacency matrix, scanning all neighbours of each vertex costs O(V), and we visit V vertices → O(V²). The O(V+E) figure assumes an adjacency list."}, {"q": "A connected, undirected graph with n vertices has an Euler circuit if and only if:", "opts": ["every vertex has even degree", "there are exactly two vertices of odd degree", "the graph is a tree", "the minimum degree is at least 2"], "a": 0, "ex": "An Euler circuit (uses every edge once, returns to start) requires every vertex have even degree. Exactly two odd-degree vertices gives an Euler path, not a circuit."}, {"q": "The recurrence for Linear probing's average search in open addressing is asymptotically O(1) when:", "opts": ["the load factor α is close to 1", "the load factor α is sufficiently small (e.g. ≤ 0.5)", "the keys are strings", "the table size equals the number of keys"], "a": 1, "ex": "With small α, the probe sequence stays short and average search is O(1). As α → 1 the expected probes blow up and it degenerates toward O(n); primary clustering worsens this."}, {"q": "Which algorithm correctly finds the shortest path from a source when the graph has negative edge weights but NO negative-weight cycle?", "opts": ["Dijkstra with a binary heap", "Bellman–Ford", "Dijkstra with an adjacency matrix", "Floyd–Warshall (single-source use)"], "a": 1, "ex": "Bellman–Ford handles arbitrary (even negative) edge weights and detects negative cycles. Dijkstra is only correct with non-negative weights; Floyd–Warshall is for all pairs, not single source."}];
+
+(function(){
+  var t=localStorage.getItem('gatecs-theme');
+  if(t)document.documentElement.setAttribute('data-theme',t);
+})();
+function toggleTheme(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',d?'light':'dark');
+  localStorage.setItem('gatecs-theme',d?'light':'dark');
+}
+function openAll(){document.querySelectorAll('details').forEach(function(x){x.open=true});}
+function closeAll(){document.querySelectorAll('details').forEach(function(x){x.open=false});}
+function buildQuiz(){
+  var box=document.getElementById('quizbox'); if(!box||typeof QUIZ==='undefined')return;
+  var answered=0, correct=0;
+  QUIZ.forEach(function(item,i){
+    var d=document.createElement('div'); d.className='q';
+    var h='<div class="qt">Q'+(i+1)+'. '+item.q+'</div>';
+    item.opts.forEach(function(o,j){
+      h+='<button class="opt" data-q="'+i+'" data-j="'+j+'">'+String.fromCharCode(65+j)+') '+o+'</button>';
+    });
+    h+='<div class="explain" id="ex'+i+'">'+(item.ex||'')+'</div>';
+    d.innerHTML=h; box.appendChild(d);
+  });
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('.opt'); if(!b||b.disabled)return;
+    var qi=+b.dataset.q, ji=+b.dataset.j, item=QUIZ[qi];
+    var btns=box.querySelectorAll('.opt[data-q="'+qi+'"]');
+    btns.forEach(function(x){x.disabled=true;});
+    if(ji===item.a){b.classList.add('correct');correct++;}
+    else{b.classList.add('wrong');btns[item.a].classList.add('correct');}
+    answered++;
+    document.getElementById('ex'+qi).classList.add('show');
+    if(answered===QUIZ.length){
+      var s=document.getElementById('score');
+      var pct=Math.round(correct/QUIZ.length*100);
+      var msg=pct>=80?'🔥 Strong. Revise only the misses.':pct>=60?'👍 Decent. Re-read the weak sections above.':pct>=40?'📖 Needs another pass — go back to the concept boxes.':'🎯 Start over slowly. This topic needs a full re-read.';
+      s.style.display='block';
+      s.innerHTML='Score: <b>'+correct+' / '+QUIZ.length+'</b> ('+pct+'%)<br><span style="font-weight:400;font-size:14px">'+msg+'</span>';
+      s.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded',function(){
+  buildQuiz();
+  // section progress
+  var chk=document.querySelectorAll('input.prog');
+  chk.forEach(function(c,i){
+    var k='gatecs-prog-'+location.pathname+'-'+i;
+    if(localStorage.getItem(k)==='1'){c.checked=true;}
+    c.addEventListener('change',function(){localStorage.setItem(k,c.checked?'1':'0');updateBar();});
+  });
+  updateBar();
+});
+function updateBar(){
+  var chk=document.querySelectorAll('input.prog'); if(!chk.length)return;
+  var n=0; chk.forEach(function(c){if(c.checked)n++;});
+  var bar=document.getElementById('progbar');
+  if(bar)bar.style.width=Math.round(n/chk.length*100)+'%';
+  var lab=document.getElementById('proglab');
+  if(lab)lab.textContent=n+' / '+chk.length+' sections done';
+}
+</script>
+</body>
+</html>

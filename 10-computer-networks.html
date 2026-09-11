@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Computer Networks — GATE CS Notes</title>
+<style>
+:root{--bg:#fff;--fg:#151a24;--muted:#5b6577;--card:#f5f8fc;--border:#dfe6f0;--accent:#2563eb;--accent2:#0d9488;--warn:#b45309;--warnbg:#fffbeb;--ok:#15803d;--okbg:#f0fdf4;--trapbg:#fef2f2;--trap:#b91c1c}
+[data-theme=dark]{--bg:#0e1320;--fg:#e7edf8;--muted:#98a6bd;--card:#151d2e;--border:#26314a;--accent:#7cb0ff;--accent2:#3ddbc4;--warn:#fbbf24;--warnbg:#2a2413;--ok:#5ee08a;--okbg:#11271a;--trapbg:#2c1416;--trap:#ff8f8f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top h1{margin:0;font-size:19px;line-height:1.3}
+header.top .meta{font-size:12.5px;opacity:.9;margin-top:3px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.toolbar button,.toolbar a.btn{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:6px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
+.toolbar button:hover,.toolbar a.btn:hover{background:rgba(255,255,255,.3)}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+nav.toc{width:290px;flex:0 0 290px;position:sticky;top:96px;max-height:calc(100vh - 110px);overflow-y:auto;padding:16px 10px 40px 16px;font-size:13.5px}
+nav.toc h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px}
+nav.toc a{display:block;padding:5px 8px;border-radius:6px;color:var(--fg);text-decoration:none;opacity:.85;border-left:2px solid transparent}
+nav.toc a:hover{background:var(--card);opacity:1;border-left-color:var(--accent)}
+nav.toc a.sub{padding-left:20px;font-size:12.5px;opacity:.7}
+main{flex:1;min-width:0;padding:20px 26px 80px}
+h2{font-size:23px;margin:38px 0 12px;padding-bottom:8px;border-bottom:3px solid var(--accent);scroll-margin-top:100px}
+h3{font-size:17.5px;margin:24px 0 8px;color:var(--accent);scroll-margin-top:100px}
+h4{font-size:15px;margin:18px 0 6px;color:var(--accent2)}
+p,li{font-size:15.5px}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+code{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;color:#be185d}
+[data-theme=dark] code{color:#f9a8d4}
+pre{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;overflow-x:auto;font-size:13px;line-height:1.5}
+pre code{background:none;border:none;color:inherit;padding:0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;display:block;overflow-x:auto}
+th{background:var(--accent);color:#fff;padding:8px 10px;text-align:left;white-space:nowrap}
+td{border:1px solid var(--border);padding:7px 10px;vertical-align:top}
+tr:nth-child(even) td{background:var(--card)}
+.box{border-radius:9px;padding:12px 16px;margin:14px 0;border-left:4px solid var(--accent);background:var(--card)}
+.box.formula{border-left-color:var(--accent2);background:linear-gradient(90deg,rgba(13,148,136,.09),transparent 60%)}
+.box.formula .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent2);font-weight:700;margin-bottom:6px}
+.box.trap{border-left-color:var(--trap);background:var(--trapbg)}
+.box.trap .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--trap);font-weight:700;margin-bottom:6px}
+.box.tip{border-left-color:var(--ok);background:var(--okbg)}
+.box.tip .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ok);font-weight:700;margin-bottom:6px}
+details{border:1px solid var(--border);border-radius:9px;margin:10px 0;background:var(--card);overflow:hidden}
+details summary{cursor:pointer;padding:9px 14px;font-weight:600;font-size:14.5px;background:var(--card);list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▶ ";color:var(--accent);font-size:11px}
+details[open] summary::before{content:"▼ "}
+details .dc{padding:4px 16px 14px;border-top:1px solid var(--border)}
+.kv{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12.5px}
+.chip b{color:var(--accent)}
+/* quiz */
+.quiz{border:1px solid var(--border);border-radius:11px;padding:16px;margin:18px 0;background:var(--card)}
+.q{margin:0 0 18px;padding:0 0 16px;border-bottom:1px dashed var(--border)}
+.q:last-of-type{border-bottom:none}
+.q .qt{font-weight:600;font-size:15px;margin-bottom:9px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;margin:6px 0;cursor:pointer;font-size:14.5px;color:var(--fg);font-family:inherit}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{border-color:var(--ok);background:var(--okbg);font-weight:600}
+.opt.wrong{border-color:var(--trap);background:var(--trapbg)}
+.opt:disabled{cursor:default;opacity:.92}
+.explain{display:none;margin-top:8px;font-size:13.5px;color:var(--muted);border-left:3px solid var(--accent2);padding-left:11px}
+.explain.show{display:block}
+.score{font-size:16px;font-weight:700;text-align:center;padding:12px;border-radius:9px;background:var(--card);border:1px dashed var(--border);margin-top:8px}
+.subnav{display:flex;gap:8px;flex-wrap:wrap;padding:10px 0 0}
+.subnav a{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:5px 10px;text-decoration:none;color:#fff;font-size:12.5px}
+.subnav a:hover{background:rgba(255,255,255,.3)}
+.subnav .sp{opacity:.65;font-size:12.5px;color:#fff;padding:5px 2px}
+footer{border-top:1px solid var(--border);margin-top:50px;padding:18px 0 0;font-size:12.5px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:18px 0}
+.card{border:1px solid var(--border);border-radius:11px;padding:14px;background:var(--card);text-decoration:none;color:var(--fg);display:block;transition:.15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .n{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em}
+.card .t{font-size:15.5px;font-weight:700;margin:4px 0 6px}
+.card .w{font-size:12.5px;color:var(--accent2);font-weight:600}
+.card.soon{opacity:.55}
+.card.soon .w{color:var(--muted)}
+@media(max-width:900px){nav.toc{display:none}main{padding:16px 15px 60px}h2{font-size:20px}}
+@media print{nav.toc,.toolbar{display:none}details{page-break-inside:avoid}details .dc{display:block!important}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Computer Networks</h1>
+  <div class="meta">GATE CS 2027 · 8 marks · Layering, switching & performance, data link, routing, IP addressing/CIDR/NAT, transport (TCP/UDP/flow/congestion), application (DNS/SMTP/HTTP/FTP)</div>
+  <div class="toolbar">
+    <a class="btn" href="index.html">⌂ All subjects</a>
+    <button onclick="toggleTheme()">◐ Theme</button>
+    <button onclick="openAll()">⤢ Expand all</button>
+    <button onclick="closeAll()">⤡ Collapse all</button>
+    <button onclick="window.print()">⎙ Print / PDF</button>
+  </div>
+  <div class="subnav"><a href="09-databases.html">← S09 Databases</a><a href="index.html">⌂ All subjects</a><span class="sp">end →</span></div>
+  <div style="margin-top:10px;background:rgba(255,255,255,.22);border-radius:20px;height:7px;overflow:hidden">
+    <div id="progbar" style="height:100%;width:0;background:#a7f3d0;transition:.3s"></div>
+  </div>
+  <div id="proglab" style="font-size:11.5px;opacity:.9;margin-top:4px">0 sections done</div>
+</header>
+<div class="wrap">
+  <nav class="toc"><h3>Contents</h3><a href="#overview">Overview &amp; Weightage</a>
+<a href="#switching">Layering, Switching &amp; Performance</a>
+<a class="sub" href="#layering">Principles of Layering</a>
+<a class="sub" href="#switch_perf">Circuit / Packet / Virtual-Circuit Switching & Performance Metrics</a>
+<a href="#dll_error">Data Link — Error Detection</a>
+<a class="sub" href="#error_detect">Parity, Checksum, CRC &amp; Hamming Distance</a>
+<a href="#dll_mac">Data Link — MAC &amp; Ethernet</a>
+<a class="sub" href="#mac">MAC Protocols &amp; CSMA/CD</a>
+<a class="sub" href="#ethernet">Ethernet Frames &amp; Addressing</a>
+<a href="#routing">Routing Algorithms</a>
+<a class="sub" href="#distance_vector">Distance Vector (Bellman–Ford)</a>
+<a class="sub" href="#link_state">Link State (Dijkstra) &amp; Comparison</a>
+<a href="#ip">IP Addressing, CIDR, NAT &amp; Support Protocols</a>
+<a class="sub" href="#ipv4_cidr">IPv4 &amp; Classless CIDR Addressing</a>
+<a class="sub" href="#subnetting">Subnetting &amp; VLSM</a>
+<a class="sub" href="#nat_protocols">NAT, ARP, DHCP, ICMP</a>
+<a href="#transport">Transport Layer — TCP, UDP, Flow &amp; Congestion</a>
+<a class="sub" href="#tcp_udp">TCP vs UDP &amp; Ports</a>
+<a class="sub" href="#flow_control">Flow Control &amp; Sliding Window</a>
+<a class="sub" href="#congestion">Congestion Control &amp; TCP Congestion-Window Traces</a>
+<a class="sub" href="#sockets">Sockets, Ports &amp; Handshake</a>
+<a href="#app">Application Layer — DNS, SMTP, HTTP, FTP</a>
+<a class="sub" href="#dns">DNS — Naming &amp; Resolution</a>
+<a class="sub" href="#smtp_ftp">SMTP &amp; FTP</a>
+<a class="sub" href="#http">HTTP &amp; Web</a>
+<a href="#formulas">One-Page Formula Sheet (Revise Before Exam)</a>
+<a href="#strategy">Exam Strategy for Computer Networks</a></nav>
+  <main><h2 id="overview">Overview &amp; Weightage<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<div class="kv">
+  <span class="chip">Marks <b>8 / 100</b></span>
+  <span class="chip">Typical Qs <b>5–7</b></span>
+  <span class="chip">Sections <b>10</b></span>
+  <span class="chip">Scoring <b>High yield, formula-light</b></span>
+  <span class="chip">Best value <b>Subnetting + TCP + SWE</b></span>
+</div>
+<p>Computer Networks in GATE CS 2027 is a <b>compact, high-yield subject</b>: the syllabus was revised
+to emphasise <b>principles of layering</b>, <b>basics of switching and performance metrics</b>, and a
+<b>streamlined routing and data-link treatment</b>. Roughly two thirds of the marks are<i> numerical</i> —
+subnetting/CIDR, stop-and-wait and sliding-window efficiency, CSMA/CD minimum frame size, and TCP
+congestion-window traces. The rest is concept identification: "which protocol does X / which layer is Y".</p>
+
+<h3>The 2027 syllabus, mapped to marks</h3>
+<table>
+<tr><th>Area</th><th>Typical marks</th><th>Nature</th><th>Priority</th></tr>
+<tr><td>IP addressing, CIDR, subnetting, NAT</td><td>2–3</td><td>Numeric</td><td>★★★★★</td></tr>
+<tr><td>Layering, switching, performance metrics</td><td>1–2</td><td>Concept + numeric</td><td>★★★★★</td></tr>
+<tr><td>Transport: TCP/UDP, flow &amp; congestion control</td><td>1.5–2</td><td>Concept + trace</td><td>★★★★★</td></tr>
+<tr><td>Data link: error detection, MAC, Ethernet</td><td>1–1.5</td><td>Concept + numeric</td><td>★★★★☆</td></tr>
+<tr><td>Routing (DV, LS); Application (DNS, SMTP, HTTP, FTP)</td><td>1–1.5</td><td>Concept</td><td>★★★★☆</td></tr>
+</table>
+
+<div class="box tip"><div class="lbl">How to maximise network marks in 2027</div>
+<ol>
+<li><b>Subnetting/CIDR first</b> — about 1/4 of the marks, mechanical, near-certain if you practise 10 problems.</li>
+<li><b>Efficiency formulas next</b> — stop-and-wait and sliding-window appear every year with new numbers.</li>
+<li><b>TCP congestion trace</b> — one studied trace (slow start → threshold → additive increase) covers most questions.</li>
+<li><b>Concept tables last</b> — protocols, ports, OSI layers: memorise the tables in this module, not a textbook.</li>
+<li><b>Do not ignore switched networks &amp; layering</b> — the 2027 revision explicitly added "basics of switching and performance metrics".</li>
+</ol>
+</div>
+
+<div class="box trap"><div class="lbl">Marking trap</div>
+MCQs and NATs share this subject in GATE: NAT-type questions (no negative marking) are frequent in
+subnetting/TCP. If you can bound an answer in <code>2ⁿ − k</code> clean form, always attempt. But a
+wrong MCQ costs ⅓ or ⅔ of a mark — do not blind-guess concept MCQs.
+</div>
+
+<h2 id="switching">Layering, Switching &amp; Performance<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="layering">Principles of Layering</h3>
+
+<p><b>Layering</b> decomposes network functions into hierarchical <b>layers</b>, where each layer:
+(1) offers services to the layer above, (2) uses the services of the layer below, (3) communicates only
+with its <b>peer</b> on the other host using a protocol.</p>
+
+<div class="box formula"><div class="lbl">Key layering facts</div>
+<ul>
+<li><b>Service</b> = what a layer provides upward; <b>protocol</b> = how peers agree (horizontal). Service access point (SAP) = where a layer communicates with the one above.</li>
+<li><b>PDU</b> = Protocol Data Unit (segment, packet, frame…). <b>SDU</b> = Service Data Unit (payload carried inside a PDU). Encapsulation adds a <b>header</b> at each layer with <code>PDU_above</code> as payload.</li>
+<li><b>OSI 7 layers:</b> Physical → Data link → Network → Transport → Session → Presentation → Application.</li>
+<li><b>TCP/IP 4 layers:</b> Network Interface → Internet (IP) → Transport (TCP/UDP) → Application. IP + TCP/UDP + Application is what GATE actually tests.</li>
+</ul>
+</div>
+
+<table>
+<tr><th>Function</th><th>OSI layer</th><th>Typical role</th></tr>
+<tr><td>Bits on the wire, encoding</td><td>Physical</td><td>shaping, signaling, medium</td></tr>
+<tr><td>Framing, error detection, MAC (addressing of frames)</td><td>Data link</td><td>Ethernet, switches, ARP</td></tr>
+<tr><td>Logical addressing, routing, fragmentation</td><td>Network</td><td>IP, routers, ICMP</td></tr>
+<tr><td>End-to-end reliability, flow &amp; congestion control</td><td>Transport</td><td>TCP, UDP</td></tr>
+<tr><td>Dialogue/session control, data formatting, user services</td><td>Session / Presentation</td><td>rarely tested directly</td></tr>
+<tr><td>Network applications</td><td>Application</td><td>DNS, SMTP, HTTP, FTP</td></tr>
+</table>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Routing happens at the <b>network layer</b>; <i>address resolution</i> (ARP) and <i>reliable delivery /
+flow/congestion control</i> happen at transport. A per-hop switch carries the frame inside out but the
+<b>end-to-end transport PDU is untouched by intermediate routers</b> — routers modify the IP header (TTL)
+but never re-order or re-transmit TCP segments.
+</div>
+
+<h3 id="switch_perf">Circuit / Packet / Virtual-Circuit Switching & Performance Metrics</h3>
+
+<h4>Types of switching</h4>
+<table>
+<tr><th>Type</th><th>Connection setup</th><th>Resource reservation</th><th>Key property</th></tr>
+<tr><td>Circuit switching</td><td>dedicated path first</td><td>Yes — bandwidth reserved for the call</td><td>fixed delay, guaranteed bandwidth, wasteful when idle (telephony, TDM)</td></tr>
+<tr><td>Packet switching (datagram)</td><td>none</td><td>No — store-and-forward</td><td>best-effort, each packet routed independently (IP)</td></tr>
+<tr><td>Virtual-circuit (VC)</td><td>setup establishes VC number</td><td>logical, in tables</td><td>packets follow the same path with a VC label; per-call state in switches (X.25, ATM, MPLS)</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Performance metrics (used to compute transfer time)</div>
+<b>Transmission time:</b> T<sub>t</sub> = L / B (size of the message ÷ link bandwidth).<br>
+<b>Propagation delay:</b> T<sub>p</sub> = d / v (distance ÷ propagation speed).<br>
+<b>End-to-end delay</b> ≈ T<sub>t</sub> + T<sub>p</sub> + queuing + processing.<br>
+<b>Round-trip time (RTT)</b> ≈ 2·T<sub>p</sub> + 2·T<sub>t</sub> (propagation-dominated).<br>
+<b>Characteristic ratio:</b> a = T<sub>p</sub> / T<sub>t</sub>. Bandwidth–delay product = B · T<sub>p</sub> = "bits in flight".<br>
+<b>Efficiency of stop-and-wait:</b> η = T<sub>t</sub> / (T<sub>t</sub> + 2T<sub>p</sub>) = <b>1 / (1 + 2a)</b>.
+</div>
+
+<p>Always check units: convert <i>bytes to bits</i> (×8) and <i>km to metres</i> before dividing by bandwidth
+in bps and speed in m/s.</p>
+
+<details><summary>Worked example — stop-and-wait efficiency and RTT-delimited transfer</summary>
+<div class="dc">
+<p><b>Link:</b> B = 1 Mbps, one-way distance 1000 km, propagation speed 2×10⁸ m/s, frame 1000 bytes (8000 bits).</p>
+<p>T<sub>t</sub> = 8000 / 10⁶ = <b>8 ms</b>. &nbsp; T<sub>p</sub> = (1000×10³)/(2×10⁸) = <b>5 ms</b>.</p>
+<p>a = T<sub>p</sub>/T<sub>t</sub> = 5/8 = 0.625 &nbsp; ⟹ &nbsp; η = 1/(1+2×0.625) = 1/2.25 ≈ <b>0.444 (44.4%)</b>.</p>
+<p>Sanity check with the raw form: η = 8/(8 + 2×5) = 8/18 ≈ 0.444 ✓ (acknowledgements obey the same 2T<sub>p</sub> wait).</p>
+</div></details>
+
+<details><summary>Worked example — satellite link shows why sliding window is needed</summary>
+<div class="dc">
+<p><b>Geostationary satellite:</b> T<sub>p</sub> = 270 ms, frame 1000 bytes at B = 1 Mbps &nbsp; ⟹ &nbsp; T<sub>t</sub> = 8 ms, a = 270/8 = <b>33.75</b>, 1+2a = 68.5.</p>
+<p>Stop-and-wait: η = 1/68.5 ≈ <b>0.0146 (1.5%)</b> — the link is nearly idle waiting for ACKs.</p>
+<p>With a window of N = 20 frames: η = N/(1+2a) = 20/68.5 ≈ <b>0.292 (29%)</b> — a 20× improvement (until N reaches 1+2a, beyond which η caps at 1).</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Students forget <b>two</b> propagation delays for stop-and-wait: the ACK must travel back. Always use
+T<sub>t</sub>/(T<sub>t</sub>+<b>2</b>T<sub>p</sub>). Similarly, minimum TCP frame/PDU computations use
+RTT ≈ <b>2</b>T<sub>p</sub>, not T<sub>p</sub>. And conversion 1 byte = 8 bits is the single most common
+arithmetic error in the subject.
+</div>
+
+<h2 id="dll_error">Data Link — Error Detection<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="error_detect">Parity, Checksum, CRC &amp; Hamming Distance</h3>
+
+<p>The data link layer detects (and sometimes corrects) bit errors introduced by the channel. GATE tests
+the <b>detection capability</b> given a minimum Hamming distance, and the <b>CRC computation</b>.</p>
+
+<div class="box formula"><div class="lbl">Hamming distance — the one rule you need</div>
+A code with <b>minimum Hamming distance d<sub>min</sub></b>:
+<ul>
+<li>Detects up to <b>d<sub>min</sub> − 1</b> bit errors.</li>
+<li>Corrects up to ⌊(d<sub>min</sub> − 1)/2⌋ bit errors.</li>
+</ul>
+To correct <i>t</i> errors you need d<sub>min</sub> ≥ 2t+1 (Hamming bound); to detect <i>s</i> errors you need d<sub>min</sub> ≥ s+1.
+</div>
+
+<table>
+<tr><th>Scheme</th><th>How it works</th><th>Limitation</th></tr>
+<tr><td>Even/odd parity</td><td>add 1 bit so the count of 1s is even/odd</td><td>detects <b>odd</b> number of errors only; even number slips through</td></tr>
+<tr><td>Two-dimensional parity</td><td>parity per row and column</td><td>detects &amp; corrects single-bit errors</td></tr>
+<tr><td>Checksum</td><td>sum of words, one's-complement sum, carry wrapped</td><td>lightweight; can miss symmetric errors (used by TCP/IP)</td></tr>
+<tr><td>CRC</td><td>polynomial long division mod-2 by generator G(x)</td><td>detects all single-bit, double-bit, and all odd errors; burst errors up to polynomial degree</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">CRC — how to compute the appended remainder</div>
+1. Append <i>r</i> zero bits, where <i>r</i> = <b>degree</b> of the generator polynomial G(x).<br>
+2. Divide (mod-2, i.e. XOR) message+zeros by G; the <b>remainder is the CRC</b> (r bits).<br>
+3. Transmit: M + CRC. Receiver divides by G again — a <b>zero remainder ⟹ no (detectable) error</b>.<br>
+Selecting G with degree <i>r</i> guarantees detection of all bursts of length ≤ <i>r</i>.
+</div>
+
+<details><summary>Worked example — CRC-3 division, M = 11010011101100, G = 1011</summary>
+<div class="dc">
+<p>G = 1011 is x³ + x + 1, so r = <b>3</b>. Append three zeros: dividend = 11010011101100<b>000</b>.</p>
+<p>Perform mod-2 (XOR) division by 1011. The division leaves remainder <b>100</b>.</p>
+<p>Transmitted codeword = <b>11010011101100100</b>. A 3-bit generator catches every burst error of length ≤ 3 and every odd number of errors.</p>
+<p>Check principle: on the receiver side, dividing the received word by 1011 gives remainder 0 iff no detected error.</p>
+</div></details>
+
+<details><summary>Worked example — capability from Hamming distance</summary>
+<div class="dc">
+<p>A code has d<sub>min</sub> = 4.</p>
+<p>Detection: up to d<sub>min</sub> − 1 = <b>3</b> errors. Correction: up to ⌊(4−1)/2⌋ = <b>1</b> error.</p>
+<p>Because a 3-error detection and 1-error correction are <i>not</i> simultaneously guaranteed, GATE phrases it as separate capabilities.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+With <b>single parity</b>, an even number of bit flips (2, 4, …) is <i>undetected</i>. With CRC, the
+remainder is computed on <b>message + r zeros</b>, not on the message alone, and r equals the <b>degree</b>
+of the generator, not its number of bits — for "1011" r = 3, so 3 zeros appended, not 4.
+</div>
+
+<h2 id="dll_mac">Data Link — MAC &amp; Ethernet<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="mac">MAC Protocols &amp; CSMA/CD</h3>
+
+<p><b>Medium Access Control</b> decides who may transmit on a shared channel. Static (TDMA/FDMA) and
+random-access (ALOHA, CSMA, CSMA/CD) families are tested — CSMA/CD is the classic GATE focus.</p>
+
+<table>
+<tr><th>Protocol</th><th>Collision handling</th><th>Note</th></tr>
+<tr><td>Pure ALOHA</td><td>send anytime; collided frames retransmitted randomly</td><td>max throughput = 1/2e ≈ 0.18</td></tr>
+<tr><td>Slotted ALOHA</td><td>transmit only at slot boundaries</td><td>max throughput = 1/e ≈ 0.37</td></tr>
+<tr><td>CSMA (persistent/nonpersistent)</td><td>sense carrier before sending; still collide if two start together</td><td>reduces but does not remove collisions</td></tr>
+<tr><td>CSMA/CD</td><td><b>abort on collision while transmitting</b>, jam, backoff</td><td>used by Ethernet; needs min frame time ≥ 2·T<sub>p</sub></td></tr>
+<tr><td>Token ring / token bus</td><td>token gives sole right to send</td><td>collision-free, deterministic</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">CSMA/CD — minimum frame size (the one formula)</div>
+For a sender to detect a collision it must still be transmitting when the echo returns: <b>T<sub>t</sub> ≥ 2·T<sub>p</sub></b>.<br>
+Since T<sub>t</sub> = L/B: <b>L<sub>min</sub> = 2·T<sub>p</sub>·B = 2·(d/v)·B</b> bits.<br>
+The <b>slot time</b> = 2·T<sub>p</sub>. After a collision each station backs off a random number of slot times.
+</div>
+
+<details><summary>Worked example — CSMA/CD minimum frame over 2 km</summary>
+<div class="dc">
+<p>B = 10 Mbps, cable length 2 km (2000 m), propagation speed v = 2×10⁸ m/s.</p>
+<p>T<sub>p</sub> = 2000/(2×10⁸) = 10 µs &nbsp;⟹&nbsp; 2·T<sub>p</sub> = 20 µs.</p>
+<p>L<sub>min</sub> = 2·T<sub>p</sub>·B = 20×10⁻⁶ × 10⁷ = <b>200 bits</b>.</p>
+<p>If frames were shorter than 200 bits, a sender could finish before the echo of a collision arrives and never detect it.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+The minimum frame formula uses the <b>round-trip</b> (2·T<sub>p</sub>), and T<sub>p</sub> = d/v with
+<b>distance in metres</b> and <b>speed in m/s</b>. The result is in <b>bits</b> — divide by 8 if asked for bytes.
+When the exam gives the answer in bytes (Ethernet standard 64 bytes = 512 bits), that reflects a 10 Mbps,
+2.5 km cable where 2·T<sub>p</sub>·B = 512 bits.
+</div>
+
+<h3 id="ethernet">Ethernet Frames &amp; Addressing</h3>
+
+<p>Ethernet is the canonical CSMA/CD LAN. Frames are addressed by 48-bit <b>MAC addresses</b>
+(also called physical/hardware addresses, flat and unique per NIC).</p>
+
+<table>
+<tr><th>Frame part</th><th>Purpose</th></tr>
+<tr><td>Preamble + SFD</td><td>synchronise receiver before data</td></tr>
+<tr><td>Destination / Source MAC</td><td>48-bit addresses of the frame endpoints on the LAN</td></tr>
+<tr><td>Length / Type</td><td>distinguishes Ethernet II (type) vs IEEE 802.3 (length)</td></tr>
+<tr><td>Payload</td><td>upper-layer PDU (the IP packet), min 46 bytes</td></tr>
+<tr><td>FCS (CRC-32)</td><td>32-bit CRC over the frame fields</td></tr>
+</table>
+
+<ul>
+<li><b>MAC addressing domains:</b> MAC for same-switch delivery; IP for end-to-end across routers. A router strips the incoming frame and re-frames into a new frame per hop, so <b>destination MAC changes at each hop</b> while the IP destination never changes.</li>
+<li><b>Broadcast</b> (all ones) ff:ff:ff:ff:ff:ff, <b>multicast</b> (LSB of first byte set), <b>unicast</b>.</li>
+<li><b>Address resolution:</b> to send to an IP address on the same network, the host broadcasts an <b>ARP request</b> "who has IP x?"; the owner replies with its MAC, cached in an ARP table.</li>
+<li><b>Full-duplex switched Ethernet</b> has no carrier sensing and no collisions — CSMA/CD is disabled, which is why modern switches remove the minimum-frame constraint.</li>
+</ul>
+
+<div class="box tip"><div class="lbl">Quick memory</div>
+"MAC = hop-by-hop inside a LAN; IP = end-to-end across the Internet — <b>MAC changes hop to hop, IP does not</b>."
+That one sentence answers many 1-mark questions.</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+A <b>switch</b> forwards frames and learns MAC addresses (layer-2 device); a <b>router</b> forwards packets
+using IP addresses (layer-3). Do not confuse ARP (broadcast, resolved <i>within</i> a single IP network) with
+IP routing across networks — ARP never crosses a router boundary.
+</div>
+
+<h2 id="routing">Routing Algorithms<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="distance_vector">Distance Vector (Bellman–Ford)</h3>
+
+<p><b>Distance vector (DV)</b>: every router periodically sends its <b>entire routing table</b> (distance to
+every destination) only to its <b>direct neighbours</b>. Each router updates via the Bellman–Ford recurrence:</p>
+
+<div class="box formula"><div class="lbl">Bellman–Ford recurrence</div>
+d<sub>X</sub>(Y) = min over neighbours N of ( cost(X, N) + d<sub>N</sub>(Y) ).
+<br>The classic example: RIP uses hop count; Bellman–Ford guarantees convergence in ≤ V−1 iterations.
+</div>
+
+<ul>
+<li><b>Count-to-infinity problem:</b> when a link goes down, DV can slowly propagate the wrong distance (incrementing by 1 each round) — the <b>split horizon</b> (don't advertise routes back to the neighbour you learned them from) and <b>poison reverse</b> mitigate it.</li>
+<li><b>Slow convergence, small table sharing</b> — used in small networks.</li>
+</ul>
+
+<details><summary>Worked example — one distance-vector update round</summary>
+<div class="dc">
+<p>Two neighbours for router X: <b>X–A = 5</b>, <b>X–B = 20</b>. A advertises A–C = 20; B advertises B–C = 10.</p>
+<p>Candidates for X→C: via A = 5 + 20 = 25; via B = 20 + 10 = <b>30</b>.</p>
+<p>Also X advertises X–C = 20 directly (say). New best for X→C = min(20, 25, 30) = <b>20</b> — unchanged here, but had the direct path cost 30, the min would be 25 &#8594; X would route C via A.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+DV routers exchange tables only with <b>one-hop neighbours</b>; link-state (next) floods topology to
+<b>every router</b> in the network. If the question says "exchange with immediate neighbours", it is DV.
+Count-to-infinity is a <b>distance-vector-only</b> weakness.
+</div>
+
+<h3 id="link_state">Link State (Dijkstra) &amp; Comparison</h3>
+
+<div class="box formula"><div class="lbl">Link state — Floyd/Dijkstra approach</div>
+1. Each router floods the network with its own link costs (<b>link-state advertisement</b>, LSA).<br>
+2. Every router now holds the complete topology and independently runs <b>Dijkstra</b> to build its own SPF tree.<br>
+3. Fast, consistent convergence; the algorithm is O(V²) (or O(E log V)) per source. OSPF is the canonical protocol.
+</div>
+
+<details><summary>Worked example — Dijkstra from A (links: A–B 1, A–C 4, B–C 2, C–E 3, B–D 6, C–D 5, D–E 2)</summary>
+<div class="dc">
+<p>Init: dist(A)=0; others ∞.</p>
+<p><b>1.</b> Settle A; relax B=1, C=4.</p>
+<p><b>2.</b> Nearest B=1; relax C=1+2=3 (was 4 ✓ update), D=1+6=7.</p>
+<p><b>3.</b> Nearest C=3; relax D=3+5=8 (no, 7 better), E=3+3=6.</p>
+<p><b>4.</b> Nearest E=6; relax D=6+2=8 (no).</p>
+<p><b>5.</b> Nearest D=7.</p>
+<p>Result: A–B=1, A–C=3, A–D=<b>7</b>, A–E=<b>6</b>. Shortest A→D = 7 via A–B–D (1+6), not the A–C–D path (3+5=8).</p>
+</div></details>
+
+<table>
+<tr><th>Criterion</th><th>Distance vector</th><th>Link state</th></tr>
+<tr><td>Info exchanged</td><td>full table, only to neighbours</td><td>own links, flooded network-wide</td></tr>
+<tr><td>Known issue</td><td>count-to-infinity</td><td>flooding overhead, more computation</td></tr>
+<tr><td>Convergence</td><td>slow</td><td>fast</td></tr>
+<tr><td>Protocols</td><td>RIP</td><td>OSPF</td></tr>
+</table>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Dijkstra settles the <i>closest unvisited</i> node next and <b>never revisits a settled node</b> — relaxing
+through an already-settled node can never lower its distance on a positive-cost graph. If the question's
+edge weights can be negative, Dijkstra fails and you must reason with Bellman–Ford instead.
+</div>
+
+<h2 id="ip">IP Addressing, CIDR, NAT &amp; Support Protocols<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="ipv4_cidr">IPv4 &amp; Classless CIDR Addressing</h3>
+
+<ul>
+<li>IPv4 is a <b>32-bit</b> address, 8 bits per octet. Classful ranges (historical, still asked): A 1–126, B 128–191, C 192–223, D 224–239 (multicast), E 240–255 (reserved).</li>
+<li><b>CIDR</b> (Classless Inter-Domain Routing) separates the address from the class: write <code>a.b.c.d/n</code> where <b>n = number of network bits</b> (the prefix). The block has <b>2<sup>32−n</sup></b> addresses; first = <b>network</b>, last = <b>broadcast</b>, the rest are <b>usable hosts</b>.</li>
+</ul>
+
+<div class="box formula"><div class="lbl">The five CIDR facts that do 80% of numerical work</div>
+1. Block size = 2<sup>32−n</sup> addresses.<br>
+2. Usable hosts per block = 2<sup>32−n</sup> − 2 (subtract network + broadcast).<br>
+3. Network address = "address AND mask"; broadcast = network + block − 1.<br>
+4. Subnet mask octets: /24=255.255.255.0, /25=.128, /26=.192, /27=.224, /28=.240, /29=.248, /30=.252, /31=.254.<br>
+5. Last usable address = broadcast − 1 = network + block − 2.
+</div>
+
+<details><summary>Worked example — a single IPv4 host in a /26</summary>
+<div class="dc">
+<p>Host <b>192.168.10.5/26</b>.</p>
+<p>Block = 2<sup>32−26</sup> = 2⁶ = <b>64</b> addresses. The /26 networks of 192.168.10.x are 0–63, 64–127, …</p>
+<p>Address .5 falls in the first block: <b>network = 192.168.10.0</b>, broadcast = 192.168.10.63, usable hosts 192.168.10.1 – .62 (62 hosts).</p>
+<p>Subnet mask /26 = <b>255.255.255.192</b>.</p>
+</div></details>
+
+<details><summary>Worked example — how many usable addresses does a /22 give?</summary>
+<div class="dc">
+<p>Block = 2<sup>32−22</sup> = 2¹⁰ = <b>1024</b> addresses.</p>
+<p>Usable = 1024 − 2 = <b>1022</b> hosts.</p>
+<p>Mask /22 = 255.255.252.0. If an organisation needs exactly 510 usable hosts, the smallest block that fits is /23 (512 addresses, 510 usable).</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+The biggest CIDR trap is subtracting <b>2 only once</b> (network + broadcast) — right — versus subtracting
+2 <i>per subnet</i> in a VLSM question. Also: <b>usable = block − 2</b>, never block − 1. And if a question
+says "usable addresses ≥ 500", convert to the block that leaves ≥ 500 after subtracting 2 (choose /23 over /24, since /24 gives only 254).
+</div>
+
+<h3 id="subnetting">Subnetting &amp; VLSM</h3>
+
+<p><b>Subnetting</b> carves one block into several smaller blocks. Each subnet loses its own network and
+broadcast address, so <b>total usable = Σ(2<sup>block_host_bits</sup> − 2)</b> per subnet.</p>
+
+<div class="box formula"><div class="lbl">Subnetting math</div>
+If you further divide a /p block into 2<sup>k</sup> subnets, each subnet is /(p+k) with
+2<sup>32−(p+k)</sup> addresses. The mask adds k bits: block size for each subnet = 2<sup>32−(p+k)</sup>,
+usable per subnet = that minus 2.
+</div>
+
+<details><summary>Worked example — divide a /24 into four /26 subnets</summary>
+<div class="dc">
+<p>Take <b>200.1.2.0/24</b>. Four equal subnets ⟹ k = 2 (2² = 4), each becomes /26 with 2⁶ = <b>64</b> addresses and 62 usable.</p>
+<p>Subnet 1: 200.1.2.0 – .63 (network .0, broadcast .63).<br>
+Subnet 2: 200.1.2.64 – .127 (network .64, broadcast .127).<br>
+Subnet 3: 200.1.2.128 – .191.<br>
+Subnet 4: 200.1.2.192 – .255.</p>
+<p>Total usable = 4 × 62 = <b>248</b> (not 254 — the original single /24 had 254 usable). Every split costs 2 addresses per subnet in usable hosts.</p>
+</div></details>
+
+<details><summary>Worked example — VLSM with mixed sizes</summary>
+<div class="dc">
+<p>From <b>192.168.0.0/24</b> you need one /26 (64 addrs), one /27 (32 addrs), and one /28 (16 addrs).</p>
+<p>Allocate largest first: <b>192.168.0.0/26</b> (0–63), then <b>192.168.0.64/27</b> (64–95), then <b>192.168.0.96/28</b> (96–111).</p>
+<p>The wasted remainder (112–255) is <i>not</i> a valid reuse for those sizes unless recomputed — this is why careful bit layout beats guesswork.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+A /30 block has exactly <b>2 usable</b> addresses (typical point-to-point link); a /31 has 0 usable by the
+"−2" rule (though RFC 3021 exempts point-to-point). Questions love "how many subnets can /24 be split into of /27?" — answer 2<sup>3</sup> = <b>8</b>
+</div>
+
+<h3 id="nat_protocols">NAT, ARP, DHCP, ICMP</h3>
+
+<table>
+<tr><th>Protocol</th><th>Layer</th><th>Purpose</th></tr>
+<tr><td>ARP</td><td>Network / link (address resolution)</td><td>maps a next-hop IPv4 to a 48-bit MAC, by broadcast within the LAN</td></tr>
+<tr><td>DHCP</td><td>Application (UDP 67/68)</td><td>leases IP, subnet mask, default gateway, DNS to hosts automatically</td></tr>
+<tr><td>ICMP</td><td>Network (runs on top of IP, not a transport protocol)</td><td>error reporting and diagnostics — <b>echo request/reply (ping)</b>, destination unreachable, TTL exceeded</td></tr>
+<tr><td>NAT</td><td>Network</td><td>maps private ↔ public addresses at the edge router; one public IP represents many private hosts</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Private IPv4 ranges (RFC 1918) — memorise</div>
+10.0.0.0/8 &nbsp;·&nbsp; 172.16.0.0/12 &nbsp;·&nbsp; 192.168.0.0/16 &nbsp;·&nbsp; (link-local 169.254.0.0/16, loopback 127.0.0.0/8).
+<br>These never route on the public Internet; NAT translates them at the boundary.
+</div>
+
+<ul>
+<li><b>NAT with port map (NAPT/pat):</b> the NAT router keeps a table <code>(private IP:port) ↔ (public IP:port)</code>, rewriting source IP/port outbound and destination IP/port inbound, so thousands of internal hosts can share one public address.</li>
+<li><b>DHCP DORA:</b> <b>D</b>iscover (broadcast), <b>O</b>ffer, <b>R</b>equest, <b>A</b>ck. Leases carry a TTL; hosts re-request before expiry.</li>
+<li><b>ARP caching &amp; gratuitous ARP:</b> replies are cached; a host announces its new MAC by gratuitous ARP.</li>
+<li><b>ICMP is not TCP/UDP:</b> it has its own header and is carried inside IP precisely because it exists to report IP-level problems.</li>
+</ul>
+
+<div class="box tip"><div class="lbl">Ping = ICMP, not TCP</div>
+"What protocol does ping use?" is a guaranteed-style 1-mark question. <b>Ping uses ICMP echo
+(request/reply), on top of IP — no TCP port.</b> Traceroute exploits the TTL for each hop, again via ICMP.</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+NAT breaks the end-to-end argument: a NAT router is <b>stateful</b> and cannot simply forward inbound
+connections without a configured mapping — this is why incoming client–server connections to a private host
+need port forwarding. Do not claim "DHCP" when the exam means dynamic address allocation done at boot across
+a LAN versus NAT doing translation of already-assigned addresses.
+</div>
+
+<h2 id="transport">Transport Layer — TCP, UDP, Flow &amp; Congestion<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="tcp_udp">TCP vs UDP &amp; Ports</h3>
+
+<table>
+<tr><th>Property</th><th>UDP</th><th>TCP</th></tr>
+<tr><td>Connection</td><td>connectionless</td><td>connection-oriented (3-way handshake)</td></tr>
+<tr><td>Reliability</td><td>best-effort</td><td>reliable — sequence numbers, ACKs, retransmission</td></tr>
+<tr><td>Ordering</td><td>no</td><td>yes (reorder + deliver in order)</td></tr>
+<tr><td>Flow/congestion control</td><td>none</td><td>sliding window; cwnd control</td></tr>
+<tr><td>Overhead / delay</td><td>low, low</td><td>higher, higher</td></tr>
+<tr><td>Used by</td><td>DNS, DHCP, streaming, VoIP, NTP</td><td>HTTP, SMTP, FTP, SSH</td></tr>
+</table>
+
+<div class="box formula"><div class="lbl">Ports worth memorising</div>
+HTTP <b>80</b> / HTTPS <b>443</b> · DNS <b>53</b> · FTP <b>21</b> (control) &amp; <b>20</b> (data) · SMTP <b>25</b> · POP3 <b>110</b> · IMAP <b>143</b> · DHCP <b>67/68</b> · SSH <b>22</b> &amp;nbsp;·&amp;nbsp;TELNET 23.
+<br>Ports ≤ 1023 are "well-known"; 0–65535 total (16-bit). TCP and UDP port spaces are <i>separate</i>.
+</div>
+
+<ul>
+<li><b>Socket</b> = (IP address, port) — the endpoint of a connection. A TCP connection is identified by the <b>4-tuple</b> (src IP, src port, dst IP, dst port).</li>
+<li><b>3-way handshake:</b> SYN → SYN+ACK → ACK; closes with SYN/FIN + ACKs.</li>
+<li><b>Sequence numbers</b> count bytes (each byte has a seq number); ACK number = next expected byte.</li>
+</ul>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+UDP header is <b>8 bytes</b> (src port, dst port, length, checksum) vs TCP header min <b>20 bytes</b>.
+DNS <i>itself</i> is UDP unless zone transfer or a large reply forces TCP — an often-asked "transport used by DNS" question expects <b>UDP 53</b>.
+</div>
+
+<h3 id="flow_control">Flow Control &amp; Sliding Window</h3>
+
+<h4>Why flow control exists</h4>
+<p>Flow control prevents a slow receiver from being flooded by a fast sender. TCP uses a
+<b>sliding window</b> of size <b>min(cwnd, rwnd)</b> where rwnd is the receiver's advertised window and
+cwnd is the sender's congestion window.</p>
+
+<div class="box formula"><div class="lbl">Sliding-window efficiency (reuse from Section 2)</div>
+With the characteristic ratio a = T<sub>p</sub>/T<sub>t</sub> and window size N frames:<br>
+<b>η = N / (1 + 2a)</b> &nbsp;(capped at 1 when N ≥ 1+2a, i.e. the pipe is full).<br>
+Throughput = η × B. So the window ≥ 1 + 2a keeps the link 100% busy.
+</div>
+
+<ul>
+<li><b>Stop-and-wait</b> = sliding window with N = 1: send one frame, wait for ACK.</li>
+<li><b>Go-Back-N:</b> sender window ≤ 2<sup>n</sup> − 1 (n sequence-number bits); on error, retransmits from the lost frame onward (cumulative ACK).</li>
+<li><b>Selective Repeat:</b> only the missing frame is retransmitted; requires window ≤ 2<sup>n−1</sup> (half the sequence space) to disambiguate new from retransmitted frames; per-frame ACKs.</li>
+</ul>
+
+<details><summary>Worked example — sliding window on a 33.75-a satellite link</summary>
+<div class="dc">
+<p>a = 33.75, so 1 + 2a = 68.5 frames keep the pipe full.</p>
+<p>With N = 30: η = 30/68.5 ≈ <b>0.438</b> (43.8%). With N = 70 ≥ 68.5: η caps at <b>1.0</b>.</p>
+<p>A stop-and-wait link on the same line would sit at η = 1/68.5 ≈ 1.5% — windowing buys a 30×+ gain.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Sequence-number window limits: <b>Go-Back-N needs 2<sup>n</sup> − 1</b> ≤ window, but <b>Selective Repeat
+needs 2<sup>n−1</sup></b> (only half the sequence space). With 3 seq bits: GBN max window 7, SR max window 4.
+Mix these up and a numeric question is lost.
+</div>
+
+<h3 id="congestion">Congestion Control &amp; TCP Congestion-Window Traces</h3>
+
+<p>Congestion control throttles the sender when <i>network</i> buffers (not the receiver) are saturated.
+TCP uses the <b>congestion window (cwnd)</b> with two phases:</p>
+
+<div class="box formula"><div class="lbl">TCP congestion-control recipe</div>
+<ul>
+<li><b>Slow start (SS):</b> cwnd doubles <b>every RTT</b> (1 → 2 → 4 → 8 → …) until it hits <code>ssthresh</code>. </li>
+<li><b>Congestion avoidance (CA):</b> cwnd grows by <b>1 segment per RTT</b> (additive increase) after ssthresh, until loss. </li>
+<li><b>Triple duplicate ACK:</b> fast retransmit; set <code>ssthresh = cwnd/2</code>, cwnd = ssthresh, grow additively (fast recovery). </li>
+<li><b>Timeout:</b> <code>ssthresh = cwnd/2</code>, cwnd resets to <b>1 MSS</b> and restarts slow start. </li>
+</ul>
+TCP window = min(cwnd, rwnd). This is the <b>AIMD</b> behaviour — Additive Increase, Multiplicative Decrease.
+</div>
+
+<details><summary>Worked example — a complete congestion-window trace</summary>
+<div class="dc">
+<p>Start: cwnd = 1, ssthresh = 16.</p>
+<p><b>Slow start (RTTs 1–6):</b> 1 → 2 → 4 → 8 → 16. At cwnd = 16 = ssthresh, slow start ends.</p>
+<p><b>Congestion avoidance (RTTs 7–9):</b> add 1 per RTT: 17 → 18 → 19.</p>
+<p><b>Loss at cwnd = 19 (triple duplicate ACK):</b> ssthresh = 19/2 ≈ <b>9</b>, cwnd = 9, then additive: 10, 11, …</p>
+<p>Had it been a <b>timeout</b> at cwnd = 19 instead: ssthresh = 9 but cwnd = <b>1</b>, restarting slow start 1 → 2 → 4 → 8, then additive from 9.</p>
+<p>Pattern to recognise: <b>SS = doubling, CA = +1/RTT, drop = halve (ssthresh) + reset cwnd to 1 (timeout) or to ssthresh (3 dup-ACK).</b></p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+On <b>3 duplicate ACKs</b>, cwnd drops to the new <b>ssthresh</b> (fast recovery, no pipe drain). On a
+<b>timeout</b>, cwnd resets to <b>1</b> (slow start restart). Mixing these two is the highest-frequency error
+in congestion-trace questions — a double-ACK (not triple) does <i>not</i> trigger fast retransmit.
+</div>
+
+<h3 id="sockets">Sockets, Ports &amp; Handshake</h3>
+
+<p>A <b>socket</b> = <code>(IP address, port)</code> names one transport endpoint. A connection between
+two endpoints uses the <b>4-tuple</b>; the receiving end can multiplex many connections onto one (IP, port)
+via the <code>(client IP, client port)</code> pair.</p>
+
+<ul>
+<li><b>Well-known ports</b> 0–1023 for standard services; <b>ephemeral</b> 1024–65535 chosen by clients.</li>
+<li><b>TCP connection setup:</b> <b>SYN</b> (client, seq = ISN) → <b>SYN+ACK</b> (server) → <b>ACK</b> (client). Teardown uses <b>FIN</b>/<b>ACK</b> in each direction (TIME_WAIT on the closer).</li>
+<li><b>UDP socket</b> needs no connection: a datagram is sent and forgotten; a single UDP socket can talk to many peers on the same (IP, port) pair.</li>
+</ul>
+
+<div class="box formula"><div class="lbl">Handshake fact</div>
+Number of handshakes to set up <i>and</i> tear down a TCP connection = <b>3 + 4 = 7</b> messages
+(3 for SYN setup, 4 for FIN teardown — one FIN + ACK per direction), or 3 messages for setup alone.
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Port numbers identify <b>processes/services</b> at transport, not hosts. Two different TCP connections to the
+same server port are distinguished by the <b>client port</b> (and client IP) — a server's (IP, 80) alone is
+shared by thousands of concurrent HTTP clients.
+</div>
+
+<h2 id="app">Application Layer — DNS, SMTP, HTTP, FTP<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="dns">DNS — Naming &amp; Resolution</h3>
+
+<p><b>DNS</b> translates human-readable domain names to IP addresses. It is a distributed, hierarchical
+database with <b>root servers → TLD servers → authoritative servers</b>.</p>
+
+<table>
+<tr><th>Concept</th><th>Meaning</th></tr>
+<tr><td>Recursive resolution</td><td>a resolver keeps querying deeper servers itself until it has the answer</td></tr>
+<tr><td>Iterative resolution</td><td>each server replies "ask this server instead"; the client re-queries</td></tr>
+<tr><td>Resource record (RR)</td><td>A (IPv4), AAAA (IPv6), CNAME (alias), MX (mail exchange), NS (name server)</td></tr>
+<tr><td>Caching &amp; TTL</td><td>resolvers cache answers until the TTL expires to cut load/latency</td></tr>
+</table>
+
+<div class="box tip"><div class="lbl">DNS is UDP by default</div>
+Normal DNS queries use <b>UDP port 53</b>. TCP 53 is used only for large replies (zone transfers) or when
+a response exceeds a UDP datagram — a standing GATE favourite.</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+DNS is <b>not</b> one central server — it is hierarchical and distributed. MX records point to <b>mail
+servers</b>, not web servers; CNAME is an alias to another name. Never answer "a single flat table" for how
+DNS finds an address.
+</div>
+
+<h3 id="smtp_ftp">SMTP &amp; FTP</h3>
+
+<p><b>SMTP</b> (Simple Mail Transfer Protocol) delivers mail <b>from client to server</b> and
+<b>server to server</b>, over <b>TCP port 25</b>. Retrieval of mail from a mailbox uses POP3 (110) or IMAP (143).
+Email on the wire is <b>7-bit ASCII</b> (MIME adds encoding for binaries/attachments).</p>
+
+<p><b>FTP</b> (File Transfer Protocol, ports <b>21 control + 20 data</b>) uses <b>two parallel connections</b>:
+one for commands (control) and one for the actual file transfer (data). It is <b>stateful</b> (login stays open).</p>
+
+<table>
+<tr><th>Protocol</th><th>Port</th><th>Transport</th><th>Role</th></tr>
+<tr><td>SMTP</td><td>25</td><td>TCP</td><td>sending mail</td></tr>
+<tr><td>POP3 / IMAP</td><td>110 / 143</td><td>TCP</td><td>retrieving mail</td></tr>
+<tr><td>FTP</td><td>21, 20</td><td>TCP</td><td>file transfer (two channels)</td></tr>
+</table>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+SMTP <b>sends</b> mail; it does not read mail from your inbox. FTP uses <b>two</b> TCP connections (control +
+data); HTTP uses one. "SMTP server" answers: send direction only — retrieval is POP3/IMAP.
+</div>
+
+<h3 id="http">HTTP &amp; Web</h3>
+
+<p><b>HTTP</b> (HyperText Transfer Protocol) is a request–response application protocol over <b>TCP port 80</b>
+(HTTPS 443 adds TLS). A client sends a <b>request</b> (method, URL, headers) and the server returns a
+<b>response</b> (status line, headers, body).</p>
+
+<table>
+<tr><th>Element</th><th>Notes</th></tr>
+<tr><td>Methods</td><td>GET, POST, PUT, DELETE, HEAD</td></tr>
+<tr><td>Status codes</td><td>2xx success, 3xx redirect, 4xx client error (404 not found), 5xx server error</td></tr>
+<tr><td>Stateless</td><td>each request independent — cookies/sessions add state on top</td></tr>
+<tr><td>Persistent vs non-persistent</td><td>HTTP/1.1 keeps the connection open (persistent) to reuse it for many objects, cutting per-object handshake/TCP-setup overhead</td></tr>
+</table>
+
+<p><b>Cookies</b> are small tokens a server stores via the client to fake state (session tracking).
+<b>Cache-Control</b> and ETags let proxies/clients reuse responses. HTTPS = HTTP over <b>TLS</b> (443).</p>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+HTTP is <b>stateless</b> — the server forgets between requests; state is layered on with cookies/sessions,
+not built into HTTP. Non-persistent HTTP/1.0 opened a new TCP connection per object; HTTP/1.1's persistent
+connection is why a page with many images loads faster without re-handshaking for each one.
+</div>
+
+<h2 id="formulas">One-Page Formula Sheet (Revise Before Exam)<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<table>
+<tr><th>Topic</th><th>Formula / fact</th></tr>
+<tr><td>Bits vs bytes</td><td>bytes × 8 = bits (convert first!)</td></tr>
+<tr><td>Transmission time</td><td>T<sub>t</sub> = L / B</td></tr>
+<tr><td>Propagation delay</td><td>T<sub>p</sub> = d / v</td></tr>
+<tr><td>Characteristic ratio</td><td>a = T<sub>p</sub> / T<sub>t</sub></td></tr>
+<tr><td>Stop-and-wait efficiency</td><td>η = T<sub>t</sub>/(T<sub>t</sub>+2T<sub>p</sub>) = 1/(1+2a)</td></tr>
+<tr><td>Sliding-window efficiency</td><td>η = N/(1+2a), capped at 1 (N ≥ 1+2a)</td></tr>
+<tr><td>CSMA/CD min frame</td><td>L<sub>min</sub> = 2·T<sub>p</sub>·B = 2·(d/v)·B bits; slot = 2·T<sub>p</sub></td></tr>
+<tr><td>Hamming distance d<sub>min</sub></td><td>detect ≤ d−1, correct ≤ ⌊(d−1)/2⌋</td></tr>
+<tr><td>CRC</td><td>append degree-of-G zero bits; remainder is transmitted; zero remainder = no error</td></tr>
+<tr><td>CIDR block size</td><td>2<sup>32−n</sup> addresses; usable = block − 2</td></tr>
+<tr><td>Subnet mask shortcuts</td><td>/25=.128 /26=.192 /27=.224 /28=.240 /29=.248 /30=.252</td></tr>
+<tr><td>Private ranges</td><td>10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16</td></tr>
+<tr><td>NAT</td><td>private ↔ public translation at edge; NAPT adds port mapping</td></tr>
+<tr><td>Drivers of high-yield numerics</td><td>subnetting, SWE/window efficiency, CSMA/CD frame, TCP trace</td></tr>
+<tr><td>Stop-and-wait min traffic</td><td>a RTT gap between frames: effective = L / (B·(1+2a))</td></tr>
+<tr><td>GBN window bound</td><td>≤ 2<sup>n</sup> − 1 with n seq bits</td></tr>
+<tr><td>Selective-repeat bound</td><td>≤ 2<sup>n−1</sup> (half sequence space)</td></tr>
+<tr><td>TCP slow start</td><td>cwnd doubles per RTT until ssthresh</td></tr>
+<tr><td>TCP congestion avoidance</td><td>cwnd += 1 per RTT; on drop: ssthresh = cwnd/2</td></tr>
+<tr><td>Drop response</td><td>3 dup-ACK → cwnd = ssthresh; timeout → cwnd = 1 (restart SS)</td></tr>
+<tr><td>TCP/UDP header</td><td>TCP ≥ 20 B, UDP 8 B; ports 0–65535</td></tr>
+<tr><td>Ports</td><td>HTTP 80, HTTPS 443, DNS 53, SMTP 25, FTP 21/20, POP3 110, DHCP 67/68</td></tr>
+<tr><td>TCP setup/teardown</td><td>3-way handshake (SYN, SYN+ACK, ACK); teardown 4 msgs (FIN, FIN, ACK, ACK)</td></tr>
+<tr><td>Throughput</td><td>η × B; bits-in-flight = B · T<sub>p</sub></td></tr>
+</table>
+<div class="box tip"><div class="lbl">Put this sheet first when you solve a paper</div>
+Do subnetting and SWE/window numerics before the concept questions — they are clock-arithmetic and rarely
+trick you, and they lock in the marks while your numeric thinking is sharp. Only then touch the TCP-trace
+and layering concept items.</div>
+
+<h2 id="strategy">Exam Strategy for Computer Networks<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<div class="box"><div class="lbl">Order of attack (8 marks ~ 12–15 min)</div>
+<ol>
+<li><b>Subnetting / CIDR NATs first (~3 min).</b> Convert bytes→bits upfront, subtract 2 once, use
+block = 2<sup>32−n</sup>. Highest accuracy in the subject.</li>
+<li><b>Efficiency / CSMA-CD numerics (~3 min).</b> Recall a = T<sub>p</sub>/T<sub>t</sub>; η = 1/(1+2a) or
+N/(1+2a); min frame = 2·T<sub>p</sub>·B. These are formula-plug-in questions.</li>
+<li><b>TCP congestion trace (~2 min).</b> Distinguish timeout (cwnd→1) from triple-dup-ACK (cwnd→ssthresh).</li>
+<li><b>Concept MCQs (~4 min).</b> Layer-vs-protocol, port numbers, DV vs LS, DNS/HTTP stateless — answer
+from the tables.</li>
+</ol>
+</div>
+
+<h4>Common time sinks &amp; what to skip</h4>
+<table>
+<tr><th>Situation</th><th>Advice</th></tr>
+<tr><td>Two hyper-specific protocol details in the options</td><td>skip and return — usually a 1-mark gotcha worth <i>not</i> gambling on if unsure</td></tr>
+<tr><td>Subnetting with huge ranges across octets</td><td>still just 2<sup>32−n</sup>; align octet boundaries before subtracting</td></tr>
+<tr><td>TCP trace with asymmetric loss patterns</td><td>apply the recipe mechanically; re-derive ssthresh each time</td></tr>
+<tr><td>A tricky CRC long-division</td><td>if it takes &gt;90 s, mark and come back; the answer check is "remainder 0 ⟺ no error"</td></tr>
+<tr><td>Concept where you are 50/50</td><td>MCQ: do not guess (−⅓/−⅔). NAT: bounded guess is fine (no negative)</td></tr>
+</table>
+
+<div class="box trap"><div class="lbl">Final 60-second checklist — the five automatic errors</div>
+1. Forgot ×8 (bytes→bits). 2. Used T<sub>p</sub> instead of 2·T<sub>p</sub> in SWE/CSMA-CD. 3. Subtracted 2
+hosts <i>per subnet</i> when the question wants the raw block size. 4. Confused timeout (→1) with triple
+dup-ACK (→ssthresh) in a TCP trace. 5. Marked "switch" as the device that reads IP addresses (it is layer-2).
+Catch these and the 8 marks are effectively banked.
+</div>
+
+<div class="box"><div class="lbl">Sign-off quick revision (last day)</div>
+Run the formula sheet top-to-bottom, then re-solve <b>one subnetting, one SWE/window, one CSMA-CD and one
+TCP trace</b> problem from memory. Networks is a subject where <b>retention of the 8–10 formulas</b> beats
+deep understanding on exam day.
+</div>
+
+<h2 id="quiz">Practice Quiz <span style="font-size:13px;font-weight:400;color:var(--muted)">— instant feedback</span></h2>
+<div class="quiz"><div id="quizbox"></div><div class="score" id="score" style="display:none"></div></div>
+<footer><p><b>Computer Networks</b> — GATE CS 2027 · Computer Networks (8 marks)</p><p>These notes are AI-generated study material compiled from standard GATE CS references. Concept explanations and formula sheets are reliable, but <b>always verify numerical answers and edge cases against a standard textbook or previous-year official answer key</b> before relying on them.</p></footer></main>
+</div>
+<script>var QUIZ=[{"q": "In the OSI model, end-to-end reliable delivery, flow control and congestion control for a connection belong to which layer?", "opts": ["Network", "Transport", "Data link", "Session"], "a": 1, "ex": "Transport (TCP) provides end-to-end reliability between the two hosts; data link is only hop-to-hop and network is about addressing/routing."}, {"q": "Which switching technique reserves bandwidth end-to-end for the whole call and is wasteful when the line is idle?", "opts": ["Circuit switching", "Datagram packet switching", "Virtual circuit", "Message store-and-forward"], "a": 0, "ex": "Circuit switching dedicates a path and bandwidth for the call duration; packet/datagram uses best-effort store-and-forward."}, {"q": "A link has transmission time 8 ms and one-way propagation 5 ms. The stop-and-wait efficiency is closest to:", "opts": ["0.44", "0.62", "0.72", "1.00"], "a": 0, "ex": "a = Tp/Tt = 5/8 = 0.625; η = 1/(1+2a) = 1/2.25 ≈ 0.444. The 2Tp accounts for the ACK round trip."}, {"q": "On a satellite link with a = 33.75 (1+2a = 68.5), a sliding window of N = 20 frames gives efficiency closest to:", "opts": ["0.15", "0.29", "0.73", "1.00"], "a": 1, "ex": "η = N/(1+2a) = 20/68.5 ≈ 0.292. Since N < 68.5 the pipe is not full, so efficiency is below 1."}, {"q": "A code has minimum Hamming distance 4. It can detect up to ___ errors and correct up to ___ errors:", "opts": ["3 and 1", "3 and 2", "4 and 2", "2 and 1"], "a": 0, "ex": "Detect ≤ d−1 = 3; correct ≤ ⌊(d−1)/2⌋ = 1. Detection and correction are separate capabilities."}, {"q": "In a CRC with generator polynomial of degree r, the number of zero bits appended to the message is:", "opts": ["r", "r+1", "2r", "r−1"], "a": 0, "ex": "You append r zeros where r is the degree of G(x); the resulting remainder (the CRC) is r bits. A degree-3 generator, e.g. 1011, appends 3 zeros."}, {"q": "A 10 Mbps Ethernet cable of length 2000 m (v = 2×10⁸ m/s) needs a minimum frame size (in bits) of:", "opts": ["100", "200", "400", "512"], "a": 1, "ex": "Tp = 2000/2e8 = 10 µs; Lmin = 2·Tp·B = (20×10⁻⁶)(10⁷) = 200 bits. Use round-trip, not one-way."}, {"q": "Which routing protocol exchanges its entire table only with immediate neighbours, suffering count-to-infinity?", "opts": ["Dijkstra/OSPF link state", "Bellman–Ford distance vector", "BFS flooding", "AODV"], "a": 1, "ex": "Distance vector (RIP) shares full tables hop-by-hop; link state floods topology everywhere. Count-to-infinity is a DV-only failure."}, {"q": "For the graph with A–B=1, A–C=4, B–C=2, C–E=3, B–D=6, C–D=5, D–E=2, the shortest distance from A to D is:", "opts": ["6", "7", "8", "10"], "a": 1, "ex": "A–B–D = 1+6 = 7 beats A–C–D = 3+5 = 8. Dijkstra settles B (1) then C (3) then E (6) then D (7)."}, {"q": "The host 192.168.10.5/26 belongs to the network:", "opts": ["192.168.10.0", "192.168.10.5", "192.168.10.64", "192.168.10.32"], "a": 0, "ex": "/26 has 64 addresses; 192.168.10.x blocks are 0–63, 64–127, …; .5 is in 0–63 so network = 192.168.10.0."}, {"q": "How many usable host addresses does a /29 block provide?", "opts": ["6", "8", "29", "30"], "a": 0, "ex": "Block = 2^(32−29) = 8; usable = 8 − 2 = 6 (subtract network and broadcast once)."}, {"q": "Which IPv4 range is a private (RFC 1918) address?", "opts": ["192.168.10.5", "172.32.1.1", "11.0.0.1", "203.0.113.9"], "a": 0, "ex": "Private ranges are 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. 172.32 falls in 172.16/12? No — /12 is 172.16.0.0 to 172.31.255.255, so 172.32 is public."}, {"q": "Which transport protocol is connection-oriented, offers reliable ordered delivery and congestion control?", "opts": ["UDP", "TCP", "ICMP", "IP"], "a": 1, "ex": "TCP provides connection setup, reliability, ordering and window/congestion control; UDP is connectionless best-effort."}, {"q": "After a TCP timeout, the congestion window is reset to:", "opts": ["ssthresh", "half of ssthresh", "1 MSS", "its value just before the loss"], "a": 2, "ex": "On timeout, ssthresh = cwnd/2 and cwnd = 1 MSS, then slow start restarts. On triple duplicate ACK, cwnd goes to the new ssthresh instead."}, {"q": "With 3 sequence-number bits, the maximum sliding-window size for Selective Repeat is:", "opts": ["4", "7", "8", "3"], "a": 0, "ex": "Selective Repeat needs window ≤ 2^(n−1) = 2² = 4 to disambiguate window halves; Go-Back-N allows 2ⁿ−1 = 7."}, {"q": "Which option correctly pairs a protocol with its default port?", "opts": ["HTTP 25", "FTP 80", "SMTP 25", "DNS 110"], "a": 2, "ex": "SMTP is port 25; HTTP is 80, FTP is 21/20, DNS is 53, POP3 is 110."}, {"q": "In CSMA/CD, a station detects that it collided while it is still transmitting. This requires:", "opts": ["Tt ≥ 2·Tp", "Tt ≥ Tp", "Tp ≥ 2·Tt", "Tt = Tp"], "a": 0, "ex": "The sender must still be transmitting when the collision echo returns; that gives Tt ≥ 2Tp, hence Lmin = 2·Tp·B."}, {"q": "Which protocol does 'ping' use to test reachability?", "opts": ["TCP", "UDP", "ICMP", "ARP"], "a": 2, "ex": "Ping sends ICMP echo request/reply, carried over IP — not a UDP/TCP port. ICMP is for errors and diagnostics."}, {"q": "DNS is typically carried over which transport?", "opts": ["UDP port 53", "TCP port 53 only", "UDP port 80", "TCP port 25"], "a": 0, "ex": "Normal DNS queries use UDP 53 for speed; TCP 53 is used only for zone transfers or very large replies."}, {"q": "Which statement about HTTP is TRUE?", "opts": ["HTTP is a stateful protocol", "HTTP/1.1 keeps connections persistent to reuse them", "HTTP has no status codes", "FTP uses a single connection"], "a": 1, "ex": "HTTP is stateless; HTTP/1.1 introduced persistent (keep-alive) connections to reuse for many objects. FTP uses two TCP connections (control + data)."}];
+
+(function(){
+  var t=localStorage.getItem('gatecs-theme');
+  if(t)document.documentElement.setAttribute('data-theme',t);
+})();
+function toggleTheme(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',d?'light':'dark');
+  localStorage.setItem('gatecs-theme',d?'light':'dark');
+}
+function openAll(){document.querySelectorAll('details').forEach(function(x){x.open=true});}
+function closeAll(){document.querySelectorAll('details').forEach(function(x){x.open=false});}
+function buildQuiz(){
+  var box=document.getElementById('quizbox'); if(!box||typeof QUIZ==='undefined')return;
+  var answered=0, correct=0;
+  QUIZ.forEach(function(item,i){
+    var d=document.createElement('div'); d.className='q';
+    var h='<div class="qt">Q'+(i+1)+'. '+item.q+'</div>';
+    item.opts.forEach(function(o,j){
+      h+='<button class="opt" data-q="'+i+'" data-j="'+j+'">'+String.fromCharCode(65+j)+') '+o+'</button>';
+    });
+    h+='<div class="explain" id="ex'+i+'">'+(item.ex||'')+'</div>';
+    d.innerHTML=h; box.appendChild(d);
+  });
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('.opt'); if(!b||b.disabled)return;
+    var qi=+b.dataset.q, ji=+b.dataset.j, item=QUIZ[qi];
+    var btns=box.querySelectorAll('.opt[data-q="'+qi+'"]');
+    btns.forEach(function(x){x.disabled=true;});
+    if(ji===item.a){b.classList.add('correct');correct++;}
+    else{b.classList.add('wrong');btns[item.a].classList.add('correct');}
+    answered++;
+    document.getElementById('ex'+qi).classList.add('show');
+    if(answered===QUIZ.length){
+      var s=document.getElementById('score');
+      var pct=Math.round(correct/QUIZ.length*100);
+      var msg=pct>=80?'🔥 Strong. Revise only the misses.':pct>=60?'👍 Decent. Re-read the weak sections above.':pct>=40?'📖 Needs another pass — go back to the concept boxes.':'🎯 Start over slowly. This topic needs a full re-read.';
+      s.style.display='block';
+      s.innerHTML='Score: <b>'+correct+' / '+QUIZ.length+'</b> ('+pct+'%)<br><span style="font-weight:400;font-size:14px">'+msg+'</span>';
+      s.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded',function(){
+  buildQuiz();
+  // section progress
+  var chk=document.querySelectorAll('input.prog');
+  chk.forEach(function(c,i){
+    var k='gatecs-prog-'+location.pathname+'-'+i;
+    if(localStorage.getItem(k)==='1'){c.checked=true;}
+    c.addEventListener('change',function(){localStorage.setItem(k,c.checked?'1':'0');updateBar();});
+  });
+  updateBar();
+});
+function updateBar(){
+  var chk=document.querySelectorAll('input.prog'); if(!chk.length)return;
+  var n=0; chk.forEach(function(c){if(c.checked)n++;});
+  var bar=document.getElementById('progbar');
+  if(bar)bar.style.width=Math.round(n/chk.length*100)+'%';
+  var lab=document.getElementById('proglab');
+  if(lab)lab.textContent=n+' / '+chk.length+' sections done';
+}
+</script>
+</body>
+</html>

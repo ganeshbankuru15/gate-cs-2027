@@ -1,0 +1,105 @@
+name: Build & Deploy Notes to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------
+  # CI: make sure every content module still loads, validates and
+  # rebuilds. Fails the pipeline if anything is broken.
+  # ---------------------------------------------------------------
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate every content module
+        run: |
+          cd build
+          python3 - <<'PY'
+          import importlib.util, pathlib, sys
+          mods = sorted(p.stem for p in pathlib.Path('.').glob('subject_*.py'))
+          print(f"found {len(mods)} content modules")
+          fail = 0
+          for m in mods:
+              spec = importlib.util.spec_from_file_location(m, m + '.py')
+              mod = importlib.util.module_from_spec(spec)
+              try:
+                  spec.loader.exec_module(mod)
+                  assert len(mod.S) >= 8, "expected at least 8 sections"
+                  assert len(mod.QUIZ) == 20, "expected exactly 20 quiz questions"
+                  assert all(0 <= q['a'] < len(q['opts']) == 4 for q in mod.QUIZ), "bad quiz entries"
+                  ids = [s['id'] for s in mod.S] + [c['id'] for s in mod.S for c in s.get('children', [])]
+                  assert len(ids) == len(set(ids)), "duplicate ids"
+                  print(f"  OK  {m}: {len(mod.S)} sections, {len(mod.QUIZ)} questions")
+              except Exception as e:
+                  print(f"  FAIL {m}: {e}")
+                  fail += 1
+          sys.exit(1 if fail else 0)
+          PY
+
+      - name: Rebuild the site (sanity check)
+        run: |
+          cd build
+          python3 build.py
+
+      - name: Confirm all expected pages exist
+        run: |
+          missing=0
+          for f in index.html 01-engineering-mathematics.html 02-digital-logic.html \
+                   03-coa.html 04-programming-ds.html 05-algorithms.html 06-toc.html \
+                   07-compiler-design.html 08-operating-systems.html 09-databases.html \
+                   10-computer-networks.html; do
+            if [ ! -f "$f" ]; then echo "MISSING: $f"; missing=1; fi
+          done
+          exit $missing
+
+  # ---------------------------------------------------------------
+  # CD: publish the static site to GitHub Pages
+  # ---------------------------------------------------------------
+  deploy:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble publishable site
+        run: |
+          mkdir -p _site
+          cp *.html manifest.json _site/
+          mkdir -p _site/assets
+          cp assets/* _site/assets/ 2>/dev/null || true
+          mkdir -p _site/research
+          cp -r research/* _site/research/ 2>/dev/null || true
+
+      - name: Add a .nojekyll marker
+        run: touch _site/.nojekyll
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

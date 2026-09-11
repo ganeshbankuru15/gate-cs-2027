@@ -1,0 +1,97 @@
+{
+  "built": [
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10"
+  ],
+  "total_marks_covered": 85,
+  "subjects": [
+    {
+      "code": "S01",
+      "title": "Engineering Mathematics",
+      "marks": 13,
+      "file": "01-engineering-mathematics.html",
+      "built": true,
+      "blurb": "Discrete Maths, Linear Algebra, Calculus, Probability"
+    },
+    {
+      "code": "S02",
+      "title": "Digital Logic",
+      "marks": 7,
+      "file": "02-digital-logic.html",
+      "built": true,
+      "blurb": "Boolean & K-map, combinational/sequential design, number systems, CMOS & timing"
+    },
+    {
+      "code": "S03",
+      "title": "Computer Organization & Architecture",
+      "marks": 8,
+      "file": "03-coa.html",
+      "built": true,
+      "blurb": "Instructions & addressing, ALU/data-path/control, pipelining, memory hierarchy, I/O (interrupt & DMA)"
+    },
+    {
+      "code": "S04",
+      "title": "Programming & Data Structures",
+      "marks": 9,
+      "file": "04-programming-ds.html",
+      "built": true,
+      "blurb": "Programming in C, recursion, arrays, stacks, queues, linked lists, trees, BSTs, heaps, graphs"
+    },
+    {
+      "code": "S05",
+      "title": "Algorithms",
+      "marks": 10,
+      "file": "05-algorithms.html",
+      "built": true,
+      "blurb": "Complexity, Recurrences, Sorting, Hashing, Greedy/DP/D&C, Graphs, MST, Shortest Paths"
+    },
+    {
+      "code": "S06",
+      "title": "Theory of Computation",
+      "marks": 8,
+      "file": "06-toc.html",
+      "built": true,
+      "blurb": "Finite automata, regex, CFG/PDA, pumping lemma, Turing machines, undecidability"
+    },
+    {
+      "code": "S07",
+      "title": "Compiler Design",
+      "marks": 6,
+      "file": "07-compiler-design.html",
+      "built": true,
+      "blurb": "Lexical analysis, parsing (LL/LR), SDT, runtime environments, IR, optimisation & data-flow"
+    },
+    {
+      "code": "S08",
+      "title": "Operating Systems",
+      "marks": 8,
+      "file": "08-operating-systems.html",
+      "built": true,
+      "blurb": "processes & threads, CPU scheduling, synchronisation, deadlock, memory & virtual memory, file systems"
+    },
+    {
+      "code": "S09",
+      "title": "Databases",
+      "marks": 8,
+      "file": "09-databases.html",
+      "built": true,
+      "blurb": "ER model, relational algebra & SQL, normal forms, B/B+ indexing, transactions & concurrency"
+    },
+    {
+      "code": "S10",
+      "title": "Computer Networks",
+      "marks": 8,
+      "file": "10-computer-networks.html",
+      "built": true,
+      "blurb": "Layering, switching & performance, data link, routing, IP addressing/CIDR/NAT, transport (TCP/UDP/flow/congestion), application (DNS/SMTP/HTTP/FTP)"
+    }
+  ]
+}

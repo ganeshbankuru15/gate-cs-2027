@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operating Systems — GATE CS Notes</title>
+<style>
+:root{--bg:#fff;--fg:#151a24;--muted:#5b6577;--card:#f5f8fc;--border:#dfe6f0;--accent:#2563eb;--accent2:#0d9488;--warn:#b45309;--warnbg:#fffbeb;--ok:#15803d;--okbg:#f0fdf4;--trapbg:#fef2f2;--trap:#b91c1c}
+[data-theme=dark]{--bg:#0e1320;--fg:#e7edf8;--muted:#98a6bd;--card:#151d2e;--border:#26314a;--accent:#7cb0ff;--accent2:#3ddbc4;--warn:#fbbf24;--warnbg:#2a2413;--ok:#5ee08a;--okbg:#11271a;--trapbg:#2c1416;--trap:#ff8f8f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:20;background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:14px 18px;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+header.top h1{margin:0;font-size:19px;line-height:1.3}
+header.top .meta{font-size:12.5px;opacity:.9;margin-top:3px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.toolbar button,.toolbar a.btn{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:6px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
+.toolbar button:hover,.toolbar a.btn:hover{background:rgba(255,255,255,.3)}
+.wrap{display:flex;max-width:1400px;margin:0 auto;align-items:flex-start}
+nav.toc{width:290px;flex:0 0 290px;position:sticky;top:96px;max-height:calc(100vh - 110px);overflow-y:auto;padding:16px 10px 40px 16px;font-size:13.5px}
+nav.toc h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 8px}
+nav.toc a{display:block;padding:5px 8px;border-radius:6px;color:var(--fg);text-decoration:none;opacity:.85;border-left:2px solid transparent}
+nav.toc a:hover{background:var(--card);opacity:1;border-left-color:var(--accent)}
+nav.toc a.sub{padding-left:20px;font-size:12.5px;opacity:.7}
+main{flex:1;min-width:0;padding:20px 26px 80px}
+h2{font-size:23px;margin:38px 0 12px;padding-bottom:8px;border-bottom:3px solid var(--accent);scroll-margin-top:100px}
+h3{font-size:17.5px;margin:24px 0 8px;color:var(--accent);scroll-margin-top:100px}
+h4{font-size:15px;margin:18px 0 6px;color:var(--accent2)}
+p,li{font-size:15.5px}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
+code{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;color:#be185d}
+[data-theme=dark] code{color:#f9a8d4}
+pre{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;overflow-x:auto;font-size:13px;line-height:1.5}
+pre code{background:none;border:none;color:inherit;padding:0}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;display:block;overflow-x:auto}
+th{background:var(--accent);color:#fff;padding:8px 10px;text-align:left;white-space:nowrap}
+td{border:1px solid var(--border);padding:7px 10px;vertical-align:top}
+tr:nth-child(even) td{background:var(--card)}
+.box{border-radius:9px;padding:12px 16px;margin:14px 0;border-left:4px solid var(--accent);background:var(--card)}
+.box.formula{border-left-color:var(--accent2);background:linear-gradient(90deg,rgba(13,148,136,.09),transparent 60%)}
+.box.formula .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--accent2);font-weight:700;margin-bottom:6px}
+.box.trap{border-left-color:var(--trap);background:var(--trapbg)}
+.box.trap .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--trap);font-weight:700;margin-bottom:6px}
+.box.tip{border-left-color:var(--ok);background:var(--okbg)}
+.box.tip .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--ok);font-weight:700;margin-bottom:6px}
+details{border:1px solid var(--border);border-radius:9px;margin:10px 0;background:var(--card);overflow:hidden}
+details summary{cursor:pointer;padding:9px 14px;font-weight:600;font-size:14.5px;background:var(--card);list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▶ ";color:var(--accent);font-size:11px}
+details[open] summary::before{content:"▼ "}
+details .dc{padding:4px 16px 14px;border-top:1px solid var(--border)}
+.kv{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.chip{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12.5px}
+.chip b{color:var(--accent)}
+/* quiz */
+.quiz{border:1px solid var(--border);border-radius:11px;padding:16px;margin:18px 0;background:var(--card)}
+.q{margin:0 0 18px;padding:0 0 16px;border-bottom:1px dashed var(--border)}
+.q:last-of-type{border-bottom:none}
+.q .qt{font-weight:600;font-size:15px;margin-bottom:9px}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;margin:6px 0;cursor:pointer;font-size:14.5px;color:var(--fg);font-family:inherit}
+.opt:hover{border-color:var(--accent)}
+.opt.correct{border-color:var(--ok);background:var(--okbg);font-weight:600}
+.opt.wrong{border-color:var(--trap);background:var(--trapbg)}
+.opt:disabled{cursor:default;opacity:.92}
+.explain{display:none;margin-top:8px;font-size:13.5px;color:var(--muted);border-left:3px solid var(--accent2);padding-left:11px}
+.explain.show{display:block}
+.score{font-size:16px;font-weight:700;text-align:center;padding:12px;border-radius:9px;background:var(--card);border:1px dashed var(--border);margin-top:8px}
+.subnav{display:flex;gap:8px;flex-wrap:wrap;padding:10px 0 0}
+.subnav a{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:7px;padding:5px 10px;text-decoration:none;color:#fff;font-size:12.5px}
+.subnav a:hover{background:rgba(255,255,255,.3)}
+.subnav .sp{opacity:.65;font-size:12.5px;color:#fff;padding:5px 2px}
+footer{border-top:1px solid var(--border);margin-top:50px;padding:18px 0 0;font-size:12.5px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin:18px 0}
+.card{border:1px solid var(--border);border-radius:11px;padding:14px;background:var(--card);text-decoration:none;color:var(--fg);display:block;transition:.15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .n{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em}
+.card .t{font-size:15.5px;font-weight:700;margin:4px 0 6px}
+.card .w{font-size:12.5px;color:var(--accent2);font-weight:600}
+.card.soon{opacity:.55}
+.card.soon .w{color:var(--muted)}
+@media(max-width:900px){nav.toc{display:none}main{padding:16px 15px 60px}h2{font-size:20px}}
+@media print{nav.toc,.toolbar{display:none}details{page-break-inside:avoid}details .dc{display:block!important}body{font-size:11pt}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Operating Systems</h1>
+  <div class="meta">GATE CS 2027 · 8 marks · processes & threads, CPU scheduling, synchronisation, deadlock, memory & virtual memory, file systems</div>
+  <div class="toolbar">
+    <a class="btn" href="index.html">⌂ All subjects</a>
+    <button onclick="toggleTheme()">◐ Theme</button>
+    <button onclick="openAll()">⤢ Expand all</button>
+    <button onclick="closeAll()">⤡ Collapse all</button>
+    <button onclick="window.print()">⎙ Print / PDF</button>
+  </div>
+  <div class="subnav"><a href="07-compiler-design.html">← S07 Compiler Design</a><a href="index.html">⌂ All subjects</a><a href="09-databases.html">S09 Databases →</a></div>
+  <div style="margin-top:10px;background:rgba(255,255,255,.22);border-radius:20px;height:7px;overflow:hidden">
+    <div id="progbar" style="height:100%;width:0;background:#a7f3d0;transition:.3s"></div>
+  </div>
+  <div id="proglab" style="font-size:11.5px;opacity:.9;margin-top:4px">0 sections done</div>
+</header>
+<div class="wrap">
+  <nav class="toc"><h3>Contents</h3><a href="#os-overview">Overview & Weightage</a>
+<a href="#ib-processes">Processes, Threads & IPC</a>
+<a class="sub" href="#proc">Processes, PCB & System Calls</a>
+<a class="sub" href="#thread">Threads</a>
+<a class="sub" href="#ipc">Inter-Process Communication (IPC)</a>
+<a href="#ib-sched">CPU Scheduling</a>
+<a class="sub" href="#schedpol">Scheduling Policies</a>
+<a class="sub" href="#schedmetrics">Scheduling Metrics & Worked Example</a>
+<a href="#ib-sync">Concurrency & Synchronisation</a>
+<a class="sub" href="#critsec">Critical Section & Locks</a>
+<a class="sub" href="#sem">Semaphores, Monitors & Classical Problems</a>
+<a href="#ib-deadlock">Deadlock</a>
+<a class="sub" href="#deadcond">Conditions, Handling & Resource Allocation</a>
+<a class="sub" href="#bankers">Banker's Algorithm (Avoidance)</a>
+<a href="#ib-memory">Memory Management</a>
+<a class="sub" href="#membasic">Contiguous Allocation & Paging</a>
+<a class="sub" href="#addrtrans">Address Translation — Worked Example</a>
+<a href="#ib-vmem">Virtual Memory & Page Replacement</a>
+<a class="sub" href="#vmmem">Demand Paging & VM Concepts</a>
+<a class="sub" href="#pagerepl">Page Replacement Algorithms — Worked Example</a>
+<a href="#ib-files">File Systems & Disk I/O</a>
+<a class="sub" href="#files">Files, Directories & Allocation</a>
+<a class="sub" href="#disksched">Disk Scheduling — Worked Example</a>
+<a href="#os-formulas">One-Page Formula Sheet (Revise Before Exam)</a>
+<a href="#os-exam">Exam Strategy</a></nav>
+  <main><h2 id="os-overview">Overview & Weightage<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<div class="kv">
+  <span class="chip">Marks <b>8 / 100</b></span>
+  <span class="chip">Typical Qs <b>5–6</b></span>
+  <span class="chip">Sections <b>7</b></span>
+  <span class="chip">Scoring <b>Very high yield</b></span>
+</div>
+<p>Operating Systems is one of the most <b>rewarding subjects per hour of study</b> in GATE CS.
+The numerical problems (CPU scheduling, page replacement, Banker's algorithm, disk scheduling)
+are repetitive and formula-driven, so a competent student solves them almost every year. The
+conceptual half (processes, sync/deadlock, virtual memory, file systems) rewards memorised
+<b>definitions, conditions and properties</b>.</p>
+
+<h3>What it contains</h3>
+<table>
+<tr><th>Area</th><th>Typical marks</th><th>Difficulty</th><th>Priority</th></tr>
+<tr><td>CPU scheduling (numerical)</td><td>1–2</td><td>Easy</td><td>★★★★★</td></tr>
+<tr><td>Page replacement / virtual memory (numerical)</td><td>1–2</td><td>Easy–Medium</td><td>★★★★★</td></tr>
+<tr><td>Synchronisation &amp; deadlock</td><td>1–2</td><td>Medium</td><td>★★★★★</td></tr>
+<tr><td>Processes, threads, IPC</td><td>1</td><td>Easy</td><td>★★★★☆</td></tr>
+<tr><td>Memory management</td><td>1</td><td>Medium</td><td>★★★★☆</td></tr>
+<tr><td>File systems / disk I/O</td><td>1</td><td>Medium</td><td>★★★☆☆</td></tr>
+</table>
+
+<div class="box tip"><div class="lbl">How to study this for GATE 2027</div>
+<ol>
+<li><b>Numerics first</b> — scheduling, page replacement, Banker's, disk scheduling. Same pattern every year.</li>
+<li><b>Deadlock + synchronisation next</b> — heavily asked, concept-driven, high accuracy once learned.</li>
+<li><b>Virtual memory third</b> — TLB/paging numerics plus definitions (thrashing, Belady's).</li>
+<li><b>File systems last</b> — mostly definitional; lowest mark-per-hour ratio.</li>
+<li>Practise past 10-year questions — GATE visibly repeats these numerical patterns with changed numbers.</li>
+</ol>
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap — units and assumptions</div>
+Scheduling tables are <b>the #1 place students lose marks</b> because they forget to subtract
+<b>arrival time</b> when computing waiting/turnaround time: <code>waiting = completion − arrival − burst</code>.
+Always confirm whether the question counts <i>context switches</i> and whether a time quantum is given.
+Also notice 1-mark vs 2-mark: a stated value like "average waiting time" may expect an <b>integer</b> or a
+<b>fraction</b> — read which before keying a NAT answer.
+</div>
+
+<h2 id="ib-processes">Processes, Threads & IPC<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="proc">Processes, PCB & System Calls</h3>
+
+<p>A <b>process</b> is a program in execution — its own address space, registers, and resources.
+The OS keeps each process's bookkeeping in a <b>Process Control Block (PCB)</b>.</p>
+<table>
+<tr><th>PCB field</th><th>Contents</th></tr>
+<tr><td>Process state</td><td>new, ready, running, waiting, terminated</td></tr>
+<tr><td>Program counter</td><td>address of next instruction</td></tr>
+<tr><td>CPU registers</td><td>saved when the process loses the CPU</td></tr>
+<tr><td>Scheduling info</td><td>priority, pointers to scheduling queues</td></tr>
+<tr><td>Memory &amp; I/O info</td><td>base/limit or page table pointer; open files</td></tr>
+</table>
+<p>A <b>system call</b> is the only way a user program requests a kernel service (I/O, file, process,
+memory). It causes a <b>trap/software interrupt</b>, switching the CPU from <b>user mode to kernel mode</b>;
+the mode bit (0 = kernel, 1 = user) is the hardware safeguard that prevents the user from executing
+privileged instructions directly.</p>
+
+<div class="box formula"><div class="lbl">Process state transitions to memorise</div>
+<b>Ready → Running</b> (CPU <i>dispatched</i> to the process) · <b>Running → Ready</b> (preempted / quantum expiry)<br>
+<b>Running → Waiting</b> (I/O request, waits for event) · <b>Waiting → Ready</b> (event completes)<br>
+<b>Running → Terminated</b> · <b>Ready → Waiting is IMPOSSIBLE</b> (a waiting—not ready—process cannot go straight to I/O).
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Only <b>Ready ↔ Running</b> and <b>Running → Waiting → Ready</b> are driven by the scheduler/events.
+A process in the <b>Ready</b> queue cannot perform I/O, and a process in <b>Waiting</b> is <b>not</b> using the CPU.
+The PCB does <b>not</b> store the program's source code — only its runtime context.
+</div>
+
+<h3 id="thread">Threads</h3>
+
+<p>A <b>thread</b> is a single flow of execution <b>within</b> a process. Threads of one process
+<b>share</b> the address space, open files and process resources, but each has its <b>own</b> program counter,
+register set and stack.</p>
+<table>
+<tr><th>Item</th><th>Owned by each thread</th><th>Shared by threads of a process</th></tr>
+<tr><td>Program counter</td><td>yes</td><td></td></tr>
+<tr><td>Register set</td><td>yes</td><td></td></tr>
+<tr><td>Stack</td><td>yes</td><td></td></tr>
+<tr><td>Heap / address space</td><td></td><td>yes</td></tr>
+<tr><td>Open files / resources</td><td></td><td>yes</td></tr>
+</table>
+<ul>
+<li><b>User threads</b> (thread library) are invisible to the kernel — fast but a blocking syscall blocks them all.</li>
+<li><b>Kernel threads</b> are managed by the OS — each can be dispatched independently; slower to create.</li>
+<li>Threads switch faster than processes (context is smaller, address space is shared).</li>
+</ul>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Threads of the same process <b>share memory but do NOT have their own address space</b>.
+A change to a shared variable by one thread is visible to the others — this is exactly why
+synchronisation is needed. Don't confuse a thread's private <b>stack</b> with the shared <b>heap</b>.
+</div>
+
+<h3 id="ipc">Inter-Process Communication (IPC)</h3>
+
+<p>IPC lets processes exchange data. Two fundamental models: <b>shared memory</b> (fast, user-managed
+synchronisation) and <b>message passing</b> (kernel-mediated, <code>send</code>/<code>receive</code>).</p>
+<table>
+<tr><th>Mechanism</th><th>Model</th><th>Key fact</th></tr>
+<tr><td>Shared memory</td><td>mapping a common region</td><td>no kernel copy; needs explicit sync</td></tr>
+<tr><td>Message passing</td><td>send/receive</td><td>message queues; kernel buffers involved</td></tr>
+<tr><td>Pipes</td><td>message</td><td>one-way; size-bounded buffer</td></tr>
+<tr><td>Sockets</td><td>message</td><td>used for network &amp; local IPC</td></tr>
+<tr><td>Shared-file / signals</td><td>—</td><td>signals deliver events to a process</td></tr>
+</table>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Named pipes (FIFOs)</b> persist and can connect unrelated processes; <b>anonymous pipes</b> exist only
+between parent and child. Classic <i>producer–consumer</i> and <i>bounded-buffer</i> problems are used to test
+whether you remember that the buffer, not the message-passing subsystem, is the shared resource needing locks.
+</div>
+
+<h2 id="ib-sched">CPU Scheduling<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="schedpol">Scheduling Policies</h3>
+
+<p>The scheduler chooses the next process from the <b>ready queue</b>. <b>Non-preemptive</b> = a process
+keeps the CPU until it yields (I/O or terminate); <b>preemptive</b> = the OS can take the CPU away
+(e.g. at a time quantum, or when a higher-priority process arrives).</p>
+<table>
+<tr><th>Policy</th><th>Preemptive?</th><th>Rule</th><th>Key fact</th></tr>
+<tr><td>FCFS</td><td>No</td><td>first-come first-served</td><td>convoy effect possible</td></tr>
+<tr><td>SJF (non-preemp.)</td><td>No</td><td>shortest next burst</td><td><b>optimal avg waiting time</b></td></tr>
+<tr><td>SRTF (SJF preemptive)</td><td>Yes</td><td>rem. burst, preempt on arrival</td><td>optimal avg waiting too</td></tr>
+<tr><td>Priority</td><td>Both</td><td>highest priority first</td><td>may starve low-priority tasks</td></tr>
+<tr><td>Round Robin</td><td>Yes</td><td>each ready process gets q time</td><td>fair; of q too big resembles FCFS</td></tr>
+<tr><td>Multilevel queue / MLFQ</td><td>Yes</td><td>grouping + aging</td><td>aging prevents starvation</td></tr>
+</table>
+<ul>
+<li><b>Aging</b> (increase priority with age) is the standard fix for <b>starvation</b> in priority &amp; MLFQ.</li>
+<li><b>SJF</b> requires knowing the CPU burst length, which is usually unknown — it is a theoretical optimum.</li>
+<li>Smaller time quantum q → better <b>response time</b> but more <b>context-switch overhead</b>.</li>
+</ul>
+
+<h3 id="schedmetrics">Scheduling Metrics & Worked Example</h3>
+
+<div class="box formula"><div class="lbl">The four numbers that dominate scheduling questions</div>
+<b>Turnaround</b> = Completion − Arrival &nbsp;·&nbsp; <b>Waiting</b> = Turnaround − Burst = Completion − Arrival − Burst<br>
+<b>Response</b> = First-CPU-time − Arrival &nbsp;·&nbsp; <b>CPU utilization</b> = busy/(busy + idle)
+</div>
+<div class="box tip"><div class="lbl">One-line rule</div>
+The only tricky piece is <b>waiting</b>: compute <code>completion − arrival − burst</code>, never
+<code>completion − burst</code> (that forgets the arrival-time offset the question may include).
+</div>
+
+<details><summary>Worked example — FCFS, SJF, RR(q=3) and Priority on one dataset</summary>
+<div class="dc">
+<p>Processes (arrival, burst): <b>P1(0,8), P2(1,4), P3(2,9), P4(3,5)</b>.</p>
+<h4>FCFS</h4>
+Order P1,P2,P3,P4. Completions: P1=8, P2=12, P3=21, P4=26.
+Waiting = completion−arrival−burst: 0, 7, 10, 18 → <b>avg = 35/4 = 8.75</b>.
+Turnaround: 8, 11, 19, 23 → avg 15.25.
+<h4>SJF (non-preemptive)</h4>
+P1 runs first (only one ready at t=0) → CT 8. Then shortest available: P2(4) CT12, P4(5) CT17, P3(9) CT26.
+Waiting: P1=0, P2=7, P4=9, P3=15 → <b>avg = 31/4 = 7.75</b> (better than FCFS, as theory predicts).
+<h4>Round Robin, q = 3</h4>
+Ready queue in arrival order; preempt after 3 units.<br>
+P1[0–3]→P2[3–6]→P3[6–9]→P4[9–12]→P1[12–15]→P2[15–16 done]→P3[16–19]→P4[19–21 done]→P1[21–23 done]→P3[23–26 done].
+Completions: P1=23, P2=16, P3=26, P4=21. Waiting: 15, 11, 15, 13 → <b>avg = 54/4 = 13.5</b>.
+Turnaround: 23,15,24,18 → avg 20.
+<h4>Priority (lower number = higher priority)</h4>
+Priorities P1=3, P2=1, P3=4, P4=2 (non-preemptive). P1 runs first (arrived at 0); then P2, P4, P3.
+Completions same as SJF ordering: P2=12, P4=17, P3=26; waiting avg 7.75.
+<p><b>Takeaway:</b> SJF (and priority ordering by burst here) gives the lowest waiting time. RR's wait
+time depends as much on q and arrival spread as on burst lengths.</p>
+</div></details>
+
+<h2 id="ib-sync">Concurrency & Synchronisation<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="critsec">Critical Section & Locks</h3>
+
+<p>The <b>critical section</b> is the code region touching shared data — only one process may be inside it
+at a time. Three classic requirements:</p>
+<ol>
+<li><b>Mutual exclusion</b> — at most one process in the CS at a time.</li>
+<li><b>Progress</b> — if no process is in the CS and some want to enter, one must be able to (the choice
+cannot be postponed forever by processes outside the CS).</li>
+<li><b>Bounded waiting</b> — a bound on how long a process waits to enter after requesting.</li>
+</ol>
+<div class="box formula"><div class="lbl">Hardware/software building blocks</div>
+<b>Test-and-set</b> and <b>compare-and-swap</b> are <b>atomic</b> instructions used to build a spinlock.<br>
+<b>Peterson's algorithm</b> solves the 2-process CS using flags + a turn variable (no hardware support).<br>
+A <b>spinlock</b> busy-waits (wastes CPU) — suited to short CS on multi-core; otherwise use blocking locks.
+</div>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Mutual exclusion alone is not enough.</b> A solution can allow mutual exclusion yet violate
+<i>progress</i> or <i>bounded waiting</i> (the classic two-process flag-only solution can deadlock/starve).
+GATE often gives a code snippet and asks which requirement it violates — check all three, not just mutex.
+</div>
+
+<h3 id="sem">Semaphores, Monitors & Classical Problems</h3>
+
+<div class="box formula"><div class="lbl">PV semantics</div>
+<b>wait(S)</b> / <b>P(S)</b>: if S &gt; 0 then S ← S−1, else the caller is <b>blocked</b> on S.<br>
+<b>signal(S)</b> / <b>V(S)</b>: S ← S+1; if a process was blocked on S, one is <b>woken</b>.<br>
+If the initial value is <b>1</b> it is a <b>binary semaphore</b> (mutex); value ≥ 1 is a <b>counting</b> semaphore.<br>
+A counting semaphore initialised to <b>k</b> allows at most <b>k</b> processes inside simultaneously.
+</div>
+<p><b>Monitors</b> are language-level constructs with <b>automatic</b> mutual exclusion: only one process may be
+active inside a monitor procedure at a time; <b>condition variables</b> (wait/signal on a condition) implement
+synchronisation. <b>Producer–consumer</b> uses two counting semaphores (empty, full) plus a mutex;
+<b>readers–writers</b> lets many readers in together while writers get exclusive access.</p>
+
+<details><summary>Worked example — maximum value &amp; blocking of a counting semaphore</summary>
+<div class="dc">
+<p>A counting semaphore S is initialised to <b>3</b>.</p>
+<ul>
+<li>At most <b>3</b> processes can be inside their critical section simultaneously without blocking.</li>
+<li>The semaphore value can never go negative under correct PV use — <code>P</code> decrements only when S &gt; 0,
+otherwise it blocks; so the minimum value is <b>0</b> and the number of blocked processes is <b>not</b> stored in S.</li>
+</ul>
+<p><b>Numeric:</b> start S = 5. Perform P, P, V, P, P, P, V. Then S = 5 − 3 + 2 = 4 after the three P and
+two V (net −1). Each waiting P either succeeds (S&gt;0) or blocks the caller.</p>
+</div></details>
+
+<details><summary>Worked example — classic PV mutual exclusion reasoning</summary>
+<div class="dc">
+<p>Two processes share a variable; a <b>binary semaphore mutex = 1</b>.<br>
+Entry: <code>P(mutex)</code>; Critical section; Exit: <code>V(mutex)</code>.</p>
+<p>If P1 enters the CS, mutex drops to 0. P2 executing <code>P(mutex)</code> finds S=0 and <b>blocks</b> until P1
+executes <code>V(mutex)</code>, which wakes P2 with S←1. This guarantees <b>mutual exclusion</b>.<br>
+<b>Order trap:</b> if two <code>P</code> calls are swapped (e.g. <code>P(empty); P(mutex)</code> instead of
+<code>P(mutex); P(empty)</code>), a classic <b>deadlock</b> can arise — a favourite GATE question.</p>
+</div></details>
+
+<h2 id="ib-deadlock">Deadlock<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="deadcond">Conditions, Handling & Resource Allocation</h3>
+
+<p><b>Deadlock</b> = a set of processes each holding a resource and waiting for a resource held by
+another in the set. Four <b>necessary conditions</b> (all four must hold):</p>
+<ol>
+<li><b>Mutual exclusion</b> — resources are non-sharable.</li>
+<li><b>Hold and wait</b> — holding a resource while waiting for another.</li>
+<li><b>No preemption</b> — a held resource cannot be forcibly taken.</li>
+<li><b>Circular wait</b> — a cycle of processes each waiting on the next's resource.</li>
+</ol>
+<div class="box formula"><div class="lbl">Handling strategies</div>
+<b>Prevention</b> — break one condition (e.g. request all resources at once ⇒ removes hold-and-wait).<br>
+<b>Avoidance</b> — decide <i>before</i> granting whether the resulting state is safe (Banker's).<br>
+<b>Detection &amp; recovery</b> — let it happen, then find cycles in the wait graph and abort/preempt.<br>
+<b>Ostrich</b> — ignore (the OS assumes deadlock is rare).
+</div>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Hold-and-wait prevention by "request all at once" reduces resource utilisation</b> (a process holds
+everything it might ever want). Circular-wait is broken by imposing a <b>total ordering</b> on resource
+types and requesting in that order. <b>Removing any one</b> of the four conditions prevents deadlock — GATE
+asks which single condition a given technique removes.
+</div>
+
+<h3 id="bankers">Banker's Algorithm (Avoidance)</h3>
+
+<p>Banker's uses <b>Max</b> and <b>Allocation</b> per process, plus system-wide <b>Available</b>.
+<b>Need = Max − Allocation</b>. A state is <b>safe</b> if there exists a sequence of processes that can each
+finish using the currently available resources (available + resources released by completed processes).</p>
+<div class="box formula"><div class="lbl">Safety check — how to do it under time pressure</div>
+<ol>
+<li>Compute <b>Need = Max − Allocation</b> for every process.</li>
+<li>Start <b>Work = Available</b>.</li>
+<li>Find a process whose Need ≤ Work; pretend it runs, set <b>Work += its Allocation</b>; mark it done.</li>
+<li>Repeat. All processes done ⇒ <b>safe</b> (a safe sequence exists); otherwise a cycle ⇒ unsafe (will deadlock).</li>
+</ol>
+Pass a request only if the resulting state is <b>safe</b>.
+</div>
+
+<details><summary>Worked example — full Banker's safety run</summary>
+<div class="dc">
+<p>Resources A,B,C. <b>Available = (3,3,2)</b>. Allocation / Max:</p>
+<table>
+<tr><th>Proc</th><th>Alloc</th><th>Max</th><th>Need</th></tr>
+<tr><td>P0</td><td>(0,1,0)</td><td>(7,5,3)</td><td>(7,4,3)</td></tr>
+<tr><td>P1</td><td>(2,0,0)</td><td>(3,2,2)</td><td>(1,2,2)</td></tr>
+<tr><td>P2</td><td>(3,0,2)</td><td>(9,0,2)</td><td>(6,0,0)</td></tr>
+<tr><td>P3</td><td>(2,1,1)</td><td>(2,2,2)</td><td>(0,1,1)</td></tr>
+<tr><td>P4</td><td>(0,0,2)</td><td>(4,3,3)</td><td>(4,3,1)</td></tr>
+</table>
+<p><b>Work = (3,3,2).</b><br>
+P1 need (1,2,2) ≤ Work → run, Work = (5,3,2) · P3 need (0,1,1) ≤ Work → Work = (7,4,3) ·
+P4 need (4,3,1) ≤ (7,4,3) → Work = (7,4,5) · P0 need (7,4,3) ≤ Work → Work = (7,5,5) ·
+P2 need (6,0,0) ≤ Work → Work = (9,5,7).</p>
+<p><b>Safe sequence: P1,P3,P4,P0,P2</b> — hence the current state is safe.</p>
+<p>Test a request <b>P0 asks for (0,2,0)</b>: tentative Available = (3,1,2), P0 Need becomes (7,2,3).<br>
+Work=(3,1,2): P3 (0,1,1)≤→(5,2,3) · P1 (1,2,2)≤→(7,2,3) · P0 (7,2,3)≤→(7,3,3) · P4 →
+(7,3,5) · P2 → safe. <b>Grant it.</b></p>
+</div></details>
+
+<h2 id="ib-memory">Memory Management<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="membasic">Contiguous Allocation & Paging</h3>
+
+<ul>
+<li><b>Contiguous allocation:</b> each process gets one continuous region. Fragmentation from variable-size
+holes ⇒ allocate externally (external fragmentation). <b>Base + limit</b> registers relocate a process.</li>
+<li><b>Paging:</b> physical memory split into equal <b>frames</b>, logical memory into equal <b>pages</b>. A
+<b>page table</b> maps page → frame. No external fragmentation; only <b>internal fragmentation</b> (last page
+partial).</li>
+<li><b>Segmentation</b>: variable-size segments (code, data, stack) — matches user view but reintroduces
+<b>external fragmentation</b>; uses segment table with base/length.</li>
+<li><b>TLB</b> is a fast associative cache of recent page-table entries (<b>TLB hit</b> avoids a memory access
+for the page table).</li>
+</ul>
+<div class="box formula"><div class="lbl">Address split &amp; size formulas</div>
+Logical addr = <b>page number</b> + <b>offset</b>. Offset bits = log₂(page size). Page-number bits = (addr bits) − offset bits.<br>
+Page table size = (number of pages) × (bytes per entry). &nbsp;·&nbsp; Number of frames = physical memory / frame size.<br>
+<b>TLB effective access time:</b> EAT = h·(TLB + mem) + (1−h)·(TLB + 2·mem), for TLB hit ratio h.
+</div>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Paging gives internal fragmentation; contiguous allocation and segmentation give external fragmentation.</b>
+Swapping them in a "which is true" question is an annual trap. Also, the total logical-page space can far
+exceed physical memory — that is precisely why virtual memory (subsection 7) exists.
+</div>
+
+<h3 id="addrtrans">Address Translation — Worked Example</h3>
+
+<details><summary>Worked example — page offset bits and TLB effective access time</summary>
+<div class="dc">
+<p><b>(a) Bits.</b> Logical address = 32 bits, page size = 4 KB = 2¹² bytes ⇒ <b>offset bits = 12</b>,
+page-number bits = 32 − 12 = <b>20</b>; a fully paged space has 2²⁰ logical pages.</p>
+<p><b>(b) TLB.</b> Memory access = 100 ns, TLB access = 20 ns, hit ratio = 0.95 (page always resident).<br>
+EAT = 0.95·(20+100) + 0.05·(20+100+100) = 0.95·120 + 0.05·220 = 114 + 11 = <b>125 ns</b>.</p>
+<p><b>(c) Page table memory.</b> With 2²⁰ pages and 4-byte entries, page table = 2²⁰ × 4 = <b>4 MB</b> per process.
+This is why multi-level page tables and TLB caching exist.</p>
+</div></details>
+
+<div class="box tip"><div class="lbl">Faster EAT by hand</div>
+Don't expand the TLB formula into fractions. Write <code>hit×fast + miss×slow</code> directly where
+<b>fast</b> = TLB+mem and <b>slow</b> = TLB+2·mem (page table walk). Set the hit ratio as a decimal, compute
+the two products, add. Always check your answer is between fast and slow — a common sanity test.
+</div>
+
+<h2 id="ib-vmem">Virtual Memory & Page Replacement<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="vmmem">Demand Paging & VM Concepts</h3>
+
+<p><b>Virtual memory</b> allows a process to run even if its logical space exceeds physical memory. With
+<b>demand paging</b>, a page is brought in only when referenced (a <b>page fault</b> triggers a load). The
+<b>valid/invalid bit</b> in the page table marks whether a page is resident.</p>
+<div class="box formula"><div class="lbl">Effective access time with page faults</div>
+EAT = (1 − p)·t<sub>mem</sub> + p·t<sub>fault</sub>, where p = page-fault rate, t<sub>fault</sub> = time to service a fault.<br>
+<b>Fault rate</b> = faults / total references.
+</div>
+<table>
+<tr><th>Term</th><th>Meaning</th></tr>
+<tr><td>Page fault</td><td>referenced page not in memory → load it (expensive)</td></tr>
+<tr><td>Copy-on-write</td><td>child's pages shared with parent, copied only on write — fast fork()</td></tr>
+<tr><td>Thrashing</td><td>process has fewer frames than its working set ⇒ constant faulting, near-zero CPU use</td></tr>
+<tr><td>Working set</td><td>the set of pages a process touches in the recent window</td></tr>
+<tr><td>Page size trade-off</td><td>larger pages ⇒ fewer table entries but more internal fragmentation &amp; I/O</td></tr>
+</table>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Thrashing is NOT a shortage of CPU or of memory bandwidth — it is a shortage of frames relative to the
+working set, causing a page-fault storm.</b> Increasing the <i>degree of multiprogramming</i> can make
+thrashing worse, not better. Also: an <b>LRU approximation via reference bit</b> is used in practice because
+true LRU (a stack) is too expensive to maintain.
+</div>
+
+<h3 id="pagerepl">Page Replacement Algorithms — Worked Example</h3>
+
+<p><b>Frame selection</b> on a page fault: <b>FIFO</b> evicts the oldest-loaded page; <b>LRU</b> evicts the
+<b>least-recently-used</b>; <b>Optimal</b> evicts the page whose <b>next use is farthest in the future</b>
+(needs the whole reference string — a theoretical lower bound, not implementable).</p>
+
+<div class="box formula"><div class="lbl">What GATE asks you to memorise</div>
+<b>Optimal cannot be beaten</b> (minimum possible faults) · FIFO exhibits <b>Belady's anomaly</b> (more
+frames ⇒ more faults) · LRU and Optimal are <b>stack algorithms</b> (never suffer Belady's).<br>
+Typical fault order for the same string, 3 frames: Optimal &lt; LRU &lt; FIFO.
+</div>
+
+<details><summary>Worked example — FIFO vs LRU vs OPT on one reference string</summary>
+<div class="dc">
+<p>Reference string <code>7 0 1 2 0 3 0 4 2 3 0 3 2 1 2 0 1 7 0 1</code>, <b>3 frames</b>.</p>
+<p><b>FIFO (queue order):</b> faults at 7,0,1,2,3,0,4,2,3,0,1,2,7,0,1 → <b>15 faults</b>.<br>
+Evicts: 7,0,1,2,3,0,4,2,3,0,1,2,7,0,1.</p>
+<p><b>LRU (evict least-recently-used):</b> faults at 7,0,1,2,3,4,2,0,1,0,7 → <b>12 faults</b>
+(evicts 7,1,2,3,0,4,0,3,0,2 in that sense of LRU). Track recency after every hit — that is the hard part.</p>
+<p><b>Optimal (evict page with farthest next use):</b> faults at 7,0,1,2,3,4,0,1,7 → <b>9 faults</b>
+(evicts 7,1,2,4,3,2 at the fault points). Optimal &lt; LRU &lt; FIFO, as expected.</p>
+</div></details>
+
+<div class="box formula"><div class="lbl">Belady's anomaly — a 4-frame FIFO beats 3 frames (or does it?)</div>
+For string <code>0 1 2 3 0 1 4 0 1 2 3 4</code>:<br>
+FIFO with <b>3 frames → 9 faults</b>; FIFO with <b>4 frames → 10 faults</b>.
+<b>Increasing frames increased faults!</b> That is Belady's anomaly, impossible for LRU or Optimal.
+</div>
+
+<h2 id="ib-files">File Systems & Disk I/O<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+<h3 id="files">Files, Directories & Allocation</h3>
+
+<p>A file is data with a name, stored on <b>secondary storage</b> organised into blocks/sectors.
+The <b>inode</b> (Unix) holds a file's metadata and the block pointers that locate its data.</p>
+<table>
+<tr><th>Allocation method</th><th>Pros</th><th>Cons</th></tr>
+<tr><td>Contiguous</td><td>fast, minimal overhead, direct</td><td>external fragmentation, hard to grow</td></tr>
+<tr><td>Linked (chain)</td><td>no external frag, easy growth</td><td>random access slow (must follow links)</td></tr>
+<tr><td>Indexed</td><td>fast random access</td><td>index-block overhead (file table fat)</td></tr>
+</table>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>Disk traps:</b> a single-level directory does not allow the same file name in different subdirectories —
+a two-level (user + file) or hierarchical directory does. FAT/tables are fine, but GATE likes to test whether
+you know <i>linked allocation makes random access O(n)</i> and <i>contiguous allocation causes external
+fragmentation</i>. Also <b>disk sector</b> is the minimum I/O unit, <b>not</b> a byte.
+</div>
+
+<h3 id="disksched">Disk Scheduling — Worked Example</h3>
+
+<div class="box formula"><div class="lbl">Seek strategies on a head at cylinder c</div>
+<b>FCFS</b> = serve in request order · <b>SSTF</b> = nearest cylinder first (may starve far ones, may be non-optimal)<br>
+<b>SCAN (elevator)</b> = move one direction servicing all, then reverse · <b>C-SCAN</b> = service one direction,
+jump back to start (more uniform wait) · <b>LOOK / C-LOOK</b> = SCAN but reverse only as far as requests exist.
+</div>
+
+<details><summary>Worked example — FCFS and SSTF with a head at cylinder 50</summary>
+<div class="dc">
+<p>Head starts at 50. Queue: 90, 20, 75, 35, 60.</p>
+<p><b>FCFS</b> movement: 50→90(40)→20(70)→75(55)→35(40)→60(25) = <b>230</b> head movements.</p>
+<p><b>SSTF</b>: always step to the nearest pending request — 50→60(10)→75(15)→90(15)→35(55)→20(15)
+= <b>110</b> head movements. (SSTF ≈ half of FCFS here, which is typical.)</p>
+<p><b>SCAN</b> moving toward larger then reversing at the highest request: 50→60→75→90 (40 up), then
+95→35(55)→20(15) descending = 40 + 55 + 15 = <b>110</b> — same total, but the served <i>order</i> differs,
+which changes waiting times. SCAN never lets the head dart back and forth; SSTF can.</p>
+</div></details>
+
+<div class="box tip"><div class="lbl">Exam shortcut</div>
+For seek questions, <b>only the absolute |screen| differences matter</b>. List the head position, then add
+each movement; never re-read the queue. SSTF usually gives the smaller total than FCFS, and C-SCAN gives
+uniform waiting at the price of the long return jump.
+</div>
+
+<h2 id="os-formulas">One-Page Formula Sheet (Revise Before Exam)<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<table>
+<tr><th>Area</th><th>Formula / fact</th></tr>
+<tr><td>Waiting time</td><td>WT = Completion − Arrival − Burst</td></tr>
+<tr><td>Turnaround</td><td>Turnaround = Completion − Arrival = WT + Burst</td></tr>
+<tr><td>CPU utilization</td><td>busy / (busy + idle)</td></tr>
+<tr><td>SJF optimality</td><td>non-preemptive &amp; preemptive SJF ⇒ min average waiting time</td></tr>
+<tr><td>RR response</td><td>response improves as quantum q shrinks; overhead grows</td></tr>
+<tr><td>Aging</td><td>fixes starvation in priority / MLFQ</td></tr>
+<tr><td>Semaphore</td><td>P: wait if S=0; V: S←S+1 and wake; S=1 is a mutex; S=k admits k</td></tr>
+<tr><td>Critical section</td><td>mutual exclusion + progress + bounded waiting</td></tr>
+<tr><td>Deadlock</td><td>mutual exclusion + hold-and-wait + no preemption + circular wait</td></tr>
+<tr><td>Banker's</td><td>Need = Max − Alloc; safe if some Need ≤ Work iteratively finishes all</td></tr>
+<tr><td>Page split</td><td>offset bits = log₂(page size); page-number bits = address bits − offset</td></tr>
+<tr><td>TLB EAT</td><td>h·(t+mem) + (1−h)·(t+2mem)</td></tr>
+<tr><td>Page-fault EAT</td><td>(1−p)·t<sub>mem</sub> + p·t<sub>fault</sub></td></tr>
+<tr><td>Page table size</td><td>pages × bytes/entry</td></tr>
+<tr><td>Page replacement</td><td>Optimal &lt; LRU &lt; FIFO typically; FIFO ⇒ Belady's anomaly</td></tr>
+<tr><td>Fragmentation</td><td>paging ⇒ internal; contiguous/segmentation ⇒ external</td></tr>
+<tr><td>Thrashing</td><td>frames &lt; working set ⇒ page-fault storm</td></tr>
+<tr><td>Disk scheduling</td><td>SSTF = nearest first; SCAN = elevator; C-SCAN = one-way + jump back</td></tr>
+<tr><td>File allocation</td><td>contiguous ⇒ external frag; linked ⇒ slow random; indexed ⇒ fast random</td></tr>
+</table>
+
+<h2 id="os-exam">Exam Strategy<label style="float:right;font-size:12px;font-weight:400;color:var(--muted)"><input type="checkbox" class="prog" style="vertical-align:-2px"> done</label></h2>
+
+<div class="box tip"><div class="lbl">Attempt order for OS</div>
+<ol>
+<li><b>Scheduling numerics first</b> (fastest, most reliable marks) — draw the Gantt chart then fill the table.</li>
+<li><b>Page replacement / TLB numerics next</b> — deterministic once you track frames/reference bits.</li>
+<li><b>Deadlock + synchronisation concepts</b> — high accuracy, quick to verify against the four conditions / PV rules.</li>
+<li><b>File I/O, fragmentation, definitions last</b> — know the two-line facts, don't dive into edge cases.</li>
+</ol>
+</div>
+
+<h3>What to skip under time pressure</h3>
+<ul>
+<li><b>Odd multi-process fork() counting</b> and <b>reader–writer code variants</b> with subtle scheduling — high
+time cost, small reward; return only if everything else is done.</li>
+<li>Long <b>Banker's safety runs</b> on 5+ processes if a shorter question is pending — steps are mechanical,
+but they eat minutes; answer the 1-mark version instead.</li>
+<li>Disk SCAN with boundary details if ambiguous — the question usually pins down the direction; if not, state
+your assumption and move on.</li>
+</ul>
+
+<h3>Common time sinks &amp; how to avoid them</h3>
+<ul>
+<li><b>Redrawing tables:</b> keep one extra column for arrival in scheduling — it is the thing you forget.</li>
+<li><b>Re-simulating page replacement:</b> a 20-reference string traced twice wastes 3+ minutes; trace once,
+top-down, and track the frame set in a compact grid.</li>
+<li><b>Ambiguous "which is/which statement is true"</b> — read all four options before choosing; distractors in OS
+are usually one word off (internal vs external, prevention vs avoidance, thread vs process).</li>
+<li>For NAT questions, no negative marking: an educated guess on a numeric (e.g. 8.75, 12) is free — always
+submit <i>something</i> inside the plausible options, never a blank.</li>
+</ul>
+
+<h2 id="quiz">Practice Quiz <span style="font-size:13px;font-weight:400;color:var(--muted)">— instant feedback</span></h2>
+<div class="quiz"><div id="quizbox"></div><div class="score" id="score" style="display:none"></div></div>
+<footer><p><b>Operating Systems</b> — GATE CS 2027 · Operating Systems section (8 marks)</p><p>These notes are AI-generated study material compiled from standard GATE CS references. Concept explanations and formula sheets are reliable, but <b>always verify numerical answers and edge cases against a standard textbook or previous-year official answer key</b> before relying on them.</p></footer></main>
+</div>
+<script>var QUIZ=[{"q": "A system call is actually executed by:", "opts": ["The user process directly", "A kernel routine invoked via a trap on behalf of the user process", "The hardware independently of the OS", "The shell program"], "a": 1, "ex": "System calls are requests to the OS. The process executes a trap instruction, the CPU moves to kernel mode, and a kernel routine performs the operation on the process's behalf."}, {"q": "Which item is NOT stored in a Process Control Block (PCB)?", "opts": ["Program counter", "Process state", "CPU register save area", "The process's source code"], "a": 3, "ex": "A PCB holds the process's runtime context (program counter, registers, state, scheduling/memory info). The source code lives on disk, not in the PCB."}, {"q": "Compared to a process, a thread of the same process:", "opts": ["has its own separate address space", "shares the address space and open files with sibling threads", "cannot share a stack with other threads", "always needs a separate page table"], "a": 1, "ex": "Threads of one process share the address space and resources but each has its own program counter, register set and stack."}, {"q": "Message passing between processes always involves:", "opts": ["a shared-memory region", "a kernel-mediated send/receive facility with buffers", "a hardware interrupt handler", "a monitor"], "a": 1, "ex": "Message passing routes data through kernel buffers/queues via send/receive, unlike shared memory which needs no kernel involvement for the data transfer itself."}, {"q": "Which scheduling decision takes the CPU away from a running process before it has finished its burst?", "opts": ["Non-preemptive SJF", "FCFS", "Preemptive scheduling (e.g. Round Robin)", "Non-preemptive priority"], "a": 2, "ex": "Preemptive scheduling can interrupt a running process (quantum expiry or priority preemption). FCFS, non-preemptive SJF and non-preemptive priority never do."}, {"q": "Processes P1(0,5), P2(1,3), P3(2,1) with (arrival, burst) use FCFS. The average waiting time is:", "opts": ["4.0", "3.0", "3.33", "5.0"], "a": 2, "ex": "FCFS order P1,P2,P3. P1 CT5 WT0; P2 CT8 WT=8−1−3=4; P3 CT9 WT=9−2−1=6. Avg=(0+4+6)/3=10/3≈3.33."}, {"q": "Shortest-Job-First scheduling is optimal with respect to:", "opts": ["maximum turnaround time", "average waiting time", "response time", "CPU utilization"], "a": 1, "ex": "SJF (non-preemptive; SRTF if preemptive) minimises the average waiting time, hence also average turnaround time = avg wait + avg burst."}, {"q": "A counting semaphore S starts at 10. After 8 P (wait) and 5 V (signal) operations its value is:", "opts": ["3", "5", "7", "13"], "a": 2, "ex": "Each successful P decrements by 1 and each V increments by 1, so S = 10 − 8 + 5 = 7."}, {"q": "To enforce mutual exclusion for a critical section, a binary semaphore should be initialised to:", "opts": ["0", "1", "−1", "the number of processes"], "a": 1, "ex": "mutex = 1 lets exactly one process past P(mutex) at a time; the second P blocks until the first executes V(mutex)."}, {"q": "Which is NOT one of the four necessary conditions for deadlock?", "opts": ["Mutual exclusion", "Hold and wait", "No preemption", "Starvation of a process"], "a": 3, "ex": "The four conditions are mutual exclusion, hold-and-wait, no preemption and circular wait. Starvation is a liveness concern, not a deadlock condition."}, {"q": "In the Banker's algorithm, a state is called safe if:", "opts": ["every process can be allocated its maximum instantly", "there exists an order in which each process can finish using available + released resources", "no process is ever placed on a wait queue", "total allocated resources equal total available"], "a": 1, "ex": "Safety means a feasible sequence exists to run all processes to completion; only then is a new allocation guaranteed not to deadlock."}, {"q": "Deadlock can be prevented by eliminating which condition when a process must request all resources before running?", "opts": ["Circular wait", "Hold and wait", "Mutual exclusion", "No preemption"], "a": 1, "ex": "Requiring all resources up front removes the ability to hold one resource and wait for another — it breaks hold-and-wait and therefore prevents deadlock."}, {"q": "With a 32-bit logical address and 4 KB pages, the number of offset bits is:", "opts": ["10", "12", "16", "20"], "a": 1, "ex": "4 KB = 2^12, so the page offset is the low 12 bits. The remaining 32−12 = 20 bits are the page number."}, {"q": "Memory access = 100 ns, TLB access = 20 ns, hit ratio = 0.95 (page always resident). The effective access time is:", "opts": ["120 ns", "125 ns", "130 ns", "135 ns"], "a": 1, "ex": "EAT = 0.95·(20+100) + 0.05·(20+100+100) = 114 + 11 = 125 ns."}, {"q": "Which page replacement algorithm can exhibit Belady's anomaly?", "opts": ["LRU", "Optimal", "FIFO", "All three"], "a": 2, "ex": "FIFO can show more faults with more frames (Belady's anomaly). LRU and Optimal are stack algorithms and never do."}, {"q": "The Optimal page replacement algorithm evicts the frame whose page:", "opts": ["arrived earliest", "has not been used for the longest time", "is used furthest in the future or never again", "is referenced least often"], "a": 2, "ex": "Optimal needs the full reference string and evicts the page needed farthest along; it is a theoretical lower bound and not implementable in practice."}, {"q": "Paging suffers from ___ fragmentation, while contiguous allocation / segmentation suffers from ___ fragmentation.", "opts": ["internal; external", "external; internal", "internal; internal", "external; external"], "a": 0, "ex": "Fixed-size pages waste space only inside the last partially-filled frame (internal). Contiguous/segmented variable-size regions leave unusable holes (external)."}, {"q": "A disk head starts at cylinder 50 with requests 90, 20, 75, 35, 60. The total head movement under SSTF is:", "opts": ["110", "120", "130", "230"], "a": 0, "ex": "50→60(10)→75(15)→90(15)→35(55)→20(15) = 10+15+15+55+15 = 110. (FCFS for the same queue = 230.)"}, {"q": "Thrashing occurs when:", "opts": ["a process requests far more memory than it uses", "the total page-fault overhead dominates — a process spends more time paging than executing", "the CPU is physically idle with nothing ready", "the TLB becomes too small"], "a": 1, "ex": "Thrashing is a page-fault storm caused by a working set larger than the available frames; the process spends more time swapping than doing useful work."}, {"q": "With demand paging, fault service time = 8 ms, memory access = 200 ns, and fault rate = 1 in 10^6. The effective memory access time is nearest to:", "opts": ["200 ns", "208 ns", "220 ns", "8.2 ms"], "a": 1, "ex": "EAT = (1−10^-6)·200 + 10^-6·8·10^6 = 199.9998 + 8 ≈ 208 ns. Faults are rare, so the degradation is small."}];
+
+(function(){
+  var t=localStorage.getItem('gatecs-theme');
+  if(t)document.documentElement.setAttribute('data-theme',t);
+})();
+function toggleTheme(){
+  var d=document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme',d?'light':'dark');
+  localStorage.setItem('gatecs-theme',d?'light':'dark');
+}
+function openAll(){document.querySelectorAll('details').forEach(function(x){x.open=true});}
+function closeAll(){document.querySelectorAll('details').forEach(function(x){x.open=false});}
+function buildQuiz(){
+  var box=document.getElementById('quizbox'); if(!box||typeof QUIZ==='undefined')return;
+  var answered=0, correct=0;
+  QUIZ.forEach(function(item,i){
+    var d=document.createElement('div'); d.className='q';
+    var h='<div class="qt">Q'+(i+1)+'. '+item.q+'</div>';
+    item.opts.forEach(function(o,j){
+      h+='<button class="opt" data-q="'+i+'" data-j="'+j+'">'+String.fromCharCode(65+j)+') '+o+'</button>';
+    });
+    h+='<div class="explain" id="ex'+i+'">'+(item.ex||'')+'</div>';
+    d.innerHTML=h; box.appendChild(d);
+  });
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('.opt'); if(!b||b.disabled)return;
+    var qi=+b.dataset.q, ji=+b.dataset.j, item=QUIZ[qi];
+    var btns=box.querySelectorAll('.opt[data-q="'+qi+'"]');
+    btns.forEach(function(x){x.disabled=true;});
+    if(ji===item.a){b.classList.add('correct');correct++;}
+    else{b.classList.add('wrong');btns[item.a].classList.add('correct');}
+    answered++;
+    document.getElementById('ex'+qi).classList.add('show');
+    if(answered===QUIZ.length){
+      var s=document.getElementById('score');
+      var pct=Math.round(correct/QUIZ.length*100);
+      var msg=pct>=80?'🔥 Strong. Revise only the misses.':pct>=60?'👍 Decent. Re-read the weak sections above.':pct>=40?'📖 Needs another pass — go back to the concept boxes.':'🎯 Start over slowly. This topic needs a full re-read.';
+      s.style.display='block';
+      s.innerHTML='Score: <b>'+correct+' / '+QUIZ.length+'</b> ('+pct+'%)<br><span style="font-weight:400;font-size:14px">'+msg+'</span>';
+      s.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded',function(){
+  buildQuiz();
+  // section progress
+  var chk=document.querySelectorAll('input.prog');
+  chk.forEach(function(c,i){
+    var k='gatecs-prog-'+location.pathname+'-'+i;
+    if(localStorage.getItem(k)==='1'){c.checked=true;}
+    c.addEventListener('change',function(){localStorage.setItem(k,c.checked?'1':'0');updateBar();});
+  });
+  updateBar();
+});
+function updateBar(){
+  var chk=document.querySelectorAll('input.prog'); if(!chk.length)return;
+  var n=0; chk.forEach(function(c){if(c.checked)n++;});
+  var bar=document.getElementById('progbar');
+  if(bar)bar.style.width=Math.round(n/chk.length*100)+'%';
+  var lab=document.getElementById('proglab');
+  if(lab)lab.textContent=n+' / '+chk.length+' sections done';
+}
+</script>
+</body>
+</html>

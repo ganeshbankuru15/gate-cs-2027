@@ -1,0 +1,35 @@
+# ---- secrets: NEVER commit ----
+.env
+.env.*
+*.env
+config.yaml
+auth.json
+credentials*.json
+*token*
+*.pem
+*.key
+id_rsa*
+.hermes/
+
+# ---- OS / editor cruft ----
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.vscode/
+.idea/
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# ---- build artifacts (site is committed, these are not) ----
+_site/
+*.log
+
+# ---- large binaries ----
+*.zip

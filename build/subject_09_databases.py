@@ -1,0 +1,724 @@
+# -*- coding: utf-8 -*-
+"""Subject 09 — Databases (8 marks, GATE CS)."""
+
+S = []
+CH = lambda i, t, h: {"id": i, "title": t, "html": h}
+
+# ------------------------------------------------------------ 1. Overview
+S.append({
+    "id": "db-overview", "title": "Overview & Weightage",
+    "html": """
+<div class="kv">
+  <span class="chip">Marks <b>8 / 100</b></span>
+  <span class="chip">Typical Qs <b>5–7</b></span>
+  <span class="chip">Sections <b>9</b></span>
+  <span class="chip">Scoring <b>High yield, formula-driven</b></span>
+</div>
+<p>Databases is one of the most <b>predictable core subjects</b>. Most questions are re-skinned versions of a small
+set of recurring themes: <b>candidate-key hunting, normal-form classification, relational-algebra/SQL output,
+B/B+ tree arithmetic, and transaction-schedule analysis</b>. These five themes account for roughly 70% of the marks
+and are all mechanical once the method is memorised.</p>
+
+<h3>Where the 8 marks usually land</h3>
+<table>
+<tr><th>Topic</th><th>Typical marks</th><th>Difficulty</th><th>Priority</th></tr>
+<tr><td>Normal forms &amp; decomposition</td><td>2–3</td><td>Medium</td><td>★★★★★</td></tr>
+<tr><td>Relational algebra &amp; SQL output</td><td>1–2</td><td>Easy–Med</td><td>★★★★★</td></tr>
+<tr><td>B / B+ tree calculations</td><td>1–2</td><td>Medium (numerical)</td><td>★★★★☆</td></tr>
+<tr><td>Transactions, serialisability, 2PL</td><td>1–2</td><td>Medium</td><td>★★★★☆</td></tr>
+<tr><td>ER model, integrity, file organisation</td><td>1</td><td>Easy</td><td>★★★☆☆</td></tr>
+</table>
+
+<div class="box tip"><div class="lbl">Studying order</div>
+<ol>
+<li><b>Functional dependencies &amp; normalisation first</b> — the single biggest, most mechanical block.</li>
+<li><b>Relational algebra + SQL</b> — small closed syllabus, near-guaranteed marks.</li>
+<li><b>B/B+ trees</b> — 5 formulas unlock every numerical.</li>
+<li><b>Transactions/schedules</b> — precedence graph + 2PL rules.</li>
+<li><b>ER mapping, file organisation</b> — read-only, low effort.</li>
+</ol>
+</div>
+
+<div class="box trap"><div class="lbl">Scoring trap</div>
+Normalisation and B-tree questions are <b>numerical/NAT and immune to guesswork</b> — a memorised method scores,
+a half-remembered one usually lands close but wrong. Practise until the procedure is reflex; do not treat this
+subject as "reading". Students who only read tend to drop the 2–3 marks that are the difference between a rank.
+</div>
+"""})
+
+# ------------------------------------------------------------ 2. ER model
+S.append({
+    "id": "er", "title": "ER Model & Mapping to Relations", "children": [
+     CH("erbase", "ER Concepts & Relationships", """
+<p>The <b>ER model</b> describes a database as <b>entity sets</b>, <b>attributes</b> and <b>relationships</b>.</p>
+<table>
+<tr><th>Element</th><th>Meaning</th></tr>
+<tr><td>Entity set</td><td>collection of real-world objects sharing attributes (a rectangle)</td></tr>
+<tr><td>Attribute</td><td>simple / composite / multi-valued / derived (oval)</td></tr>
+<tr><td>Relationship</td><td>association between entity sets (a diamond)</td></tr>
+<tr><td>Cardinality</td><td>1:1, 1:N, N:1, M:N between participating entity sets</td></tr>
+<tr><td>Key (primary)</td><td>attribute(s) uniquely identifying each entity (underlined)</td></tr>
+<tr><td>Weak entity</td><td>no key of its own; depends on an owner via a <b>total, identifying</b> relationship</td></tr>
+<tr><td>Participation</td><td><b>total</b> (every entity participates, needed for weak) vs <b>partial</b></td></tr>
+</table>
+
+<h4>Mapping cardinality constraints to relations</h4>
+<ul>
+<li><b>1:1</b> — merge into one relation (put the other's key + attributes into one side) OR keep two relations
+with a FK either way.</li>
+<li><b>1:N</b> — put the key of the "one" side as a <b>foreign key</b> in the relation of the "N" side, plus any
+relationship attributes.</li>
+<li><b>M:N</b> — create a <b>separate junction/jackson relation</b> whose key is the combination of both entity keys
+(+ relationship attributes).</li>
+<li><b>Weak entity</b> — its relation's primary key = <b>owner's key + its partial/ discriminator key</b>.</li>
+</ul>
+
+<div class="box tip"><div class="lbl">Quick test for cardinalities</div>
+Ask "can one X have many Y?" in both directions. 1:N = one of A can own many of B but not vice-versa; M:N = both
+directions allow many. Every GATE ER mapping question reduces to picking the ≥2-table rule correctly.
+</div>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Do not confuse <b>cardinality</b> with <b>participation</b>. "One student is enrolled in many courses" is a
+cardinality fact; "every course has at least one student" is a participation (total vs partial) fact. A weak entity
+must have <b>total participation</b> in its identifying relationship — that is the entire basis of the weak-entity rule.
+</div>
+"""),
+     CH("ermap", "ER → Relational Mapping Rules", """
+<div class="box formula"><div class="lbl">Mapping rules (Condensed)</div>
+<ul>
+<li>Each <b>entity set</b> → one relation. Primary key = entity key.</li>
+<li><b>Multi-valued attribute</b> → its own relation with key = (owner's key ∪ attribute).</li>
+<li><b>Composite attribute</b> → flattened into its component simple attributes.</li>
+<li><b>1:1 / 1:N / M:N</b> → rule in the box above.</li>
+<li><b>Specialisation/generalisation</b> → option of overlapping/disjoint; may map each subclass to its own
+relation (with its own extra attributes) sharing the superclass key.</li>
+</ul>
+</div>
+
+<details><summary>Worked example — map a 1:N relationship with attributes</summary>
+<div class="dc">
+<p>Entity sets <b>Employee(EID, Name)</b> and <b>Department(DID, Dname)</b>, relationship <b>Works-in</b> (1:N;
+a department has many employees) with attribute <b>Since</b>.</p>
+<p>Rule for 1:N: put DID (key of the "one" side) into the "many" side relation, plus relationship attributes.</p>
+<p>Result:<br>
+<b>Employee(EID, Name, DID, Since)</b> and <b>Department(DID, Dname)</b>.<br>
+Here DID in Employee is a <b>foreign key</b> referencing Department.</p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+For an M:N relationship students wrongly put a FK into one of the existing relations. That is illegal — it would
+force one-to-many and lose information. The M:N rule <b>always</b> creates a third relation, and its primary key is
+the <b>concatenation</b> of the two entity primary keys. Losing the relationship's own attributes is another classic error.
+</div>
+""")]})
+
+# ------------------------------------------------------------ 3. Relational model & integrity
+S.append({
+    "id": "rel", "title": "Relational Model & Integrity Constraints", "children": [
+     CH("relbase", "Keys in the Relational Model", """
+<p>A relation is a <b>set of tuples</b> (no duplicate rows), each defined over a <b>schema</b> of attributes.</p>
+<table>
+<tr><th>Key type</th><th>Definition</th></tr>
+<tr><td>Superkey</td><td>any set of attributes that uniquely identifies a tuple (may have redundancy)</td></tr>
+<tr><td>Candidate key</td><td>a <b>minimal</b> superkey (no proper subset is a superkey)</td></tr>
+<tr><td>Primary key</td><td>the chosen candidate key; <b>not NULL</b></td></tr>
+<tr><td>Foreign key</td><td>attribute(s) referencing the primary key of another relation</td></tr>
+</table>
+<div class="box formula"><div class="lbl">Finding candidate keys — closure method</div>
+The <b>closure</b> X⁺ of attribute set X under a FD set F is all attributes reachable by repeatedly applying
+each X→Y in F when X ⊆ current set.<br>
+<b>Left-only rule:</b> any attribute appearing <b>only on the left</b> of every FD (never on a right side) must be in
+<b>every</b> candidate key. Compute its closure; if it covers all attributes it is the key.
+</div>
+<details><summary>Worked example — find all candidate keys of R(A,B,C,D,E)</summary>
+<div class="dc">
+<p>FDs: AB→C, C→D, D→B, DE→A.<br>
+Left-only rule: A appears only on a left side, and E appears only in DE (left side), so both must be in every
+candidate key.</p>
+<p>Compute (A,B,E)⁺: start {A,B,E} → apply AB→C ⇒ add C → {A,B,C,E} → apply C→D ⇒ add D → {A,B,C,D,E} = all.
+So {A,B,E} is a candidate key. Minimality: remove B gives {A,E}, whose closure cannot reach B or C or D
+(no FD's left side is a subset of {A,E}), so B is required.</p>
+<p>Answer: <b>{A, B, E}</b>.</p>
+</div></details>
+<div class="box trap"><div class="lbl">GATE trap</div>
+A superkey is NOT a candidate key until you prove <b>minimality</b>. Common error: stopping once the closure covers
+everything and reporting a non-minimal superset. Always check that removing any single attribute breaks the closure.
+Also the left-only rule alone is <b>necessary, not sufficient</b> — you still must close the set to confirm it is a key.
+</div>
+"""),
+     CH("constr", "Integrity & Constraints in SQL", """
+<p><b>Integrity constraints</b> guard the database state:</p>
+<table>
+<tr><th>Constraint</th><th>Meaning</th><th>Violation example</th></tr>
+<tr><td>Entity integrity</td><td>primary key values can never be NULL</td><td>two rows with a NULL PK</td></tr>
+<tr><td>Referential integrity</td><td>every foreign-key value is either NULL or matches an existing primary-key value</td><td>FK = 99 with no PK = 99</td></tr>
+<tr><td>Domain / type</td><td>attribute values come from a fixed domain</td><td>Age = "abc"</td></tr>
+<tr><td>NOT NULL</td><td>attribute can't be NULL</td><td>—</td></tr>
+<tr><td>UNIQUE</td><td>no duplicate values (but NULLs allowed, multiple)</td><td>duplicate email</td></tr>
+<tr><td>CHECK</td><td>arbitrary boolean condition on values</td><td>Age &lt; 0</td></tr>
+</table>
+
+<h4>Referential-integrity actions on delete/update of the referenced row</h4>
+<ul>
+<li><b>NO ACTION / RESTRICT</b> — reject the deletion/update if child rows reference it.</li>
+<li><b>CASCADE</b> — delete/update the child rows too.</li>
+<li><b>SET NULL</b> — set the FK to NULL in child rows.</li>
+<li><b>SET DEFAULT</b> — set FK to its default value.</li>
+</ul>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+In SQL, a foreign key value may be NULL <b>by default</b> — referential integrity only requires non-NULL FKs to
+match. This surprises students who expect every FK to be validated. Also: a UNIQUE column can hold <b>multiple NULLs</b>
+in SQL (unlike primary keys, which cannot be NULL at all).
+</div>
+""")]})
+
+# ------------------------------------------------------------ 4. Relational algebra & calculus
+S.append({
+    "id": "alg", "title": "Relational Algebra & Tuple Calculus", "children": [
+     CH("ralg", "Relational Algebra & Output Prediction", """
+<p>Algebra operators take relations and return a <b>relation</b> (a set — duplicates removed).</p>
+<table>
+<tr><th>Operator</th><th>Symbol</th><th>What it returns</th></tr>
+<tr><td>Selection</td><td>σ<sub>cond</sub>(R)</td><td>row subset (rows matching condition)</td></tr>
+<tr><td>Projection</td><td>π<sub>list</sub>(R)</td><td>column subset, <b>deduplicated</b></td></tr>
+<tr><td>Union</td><td>R ∪ S</td><td>rows in R or S (compatible schemas)</td></tr>
+<tr><td>Set difference</td><td>R − S</td><td>rows in R, not in S</td></tr>
+<tr><td>Intersection</td><td>R ∩ S</td><td>rows in both (≡ R − (R − S))</td></tr>
+<tr><td>Cartesian product</td><td>R × S</td><td>all pairs of rows</td></tr>
+<tr><td>Natural join</td><td>R ⋈ S</td><td>rows joined on <b>equally-named</b> attributes</td></tr>
+<tr><td>Theta join</td><td>R ⋈<sub>θ</sub> S</td><td>join on any condition θ (eq-join = θ equi-join)</td></tr>
+<tr><td>Rename</td><td>ρ</td><td>rename relation or attributes</td></tr>
+<tr><td>Division</td><td>R ÷ S</td><td>all x in R paired with <b>every</b> y of S</td></tr>
+</table>
+<div class="box formula"><div class="lbl">Cost &amp; equivalence facts</div>
+<ul>
+<li>σ<sub>c1∧c2</sub>(R) ≡ σ<sub>c1</sub>(σ<sub>c2</sub>(R)) — cascade selection.</li>
+<li>π<sub>A</sub>(σ<sub>c</sub>(R)); push selection before join to shrink work.</li>
+<li>Selection is <b>commutative</b> and distributes over join: σ<sub>c</sub>(R⋈S) ≡ σ<sub>c</sub>(R)⋈S when c references only R.</li>
+<li>Selection vs projection are <b>not</b> always interchangeable (σ selects rows, π removes columns).</li>
+<li>An M:N relationship query ("suppliers who supply <i>all</i> parts") is the canonical <b>division</b> query.</li>
+</ul>
+</div>
+<details><summary>Worked example — predict the exact output rows</summary>
+<div class="dc">
+<p><b>Employee(EID, Name, Salary, DeptID)</b>:<br>
+(1, Alice, 50000, 10) · (2, Bob, 60000, 10) · (3, Carol, 55000, 20) · (4, Dave, 70000, 20)</p>
+<p>Evaluate <b>π<sub>Name</sub>(σ<sub>Salary&gt;52000 ∧ DeptID=20</sub>(Employee))</b>.</p>
+<p>Selection first: Salary &gt; 52000 → Bob, Carol, Dave; then DeptID = 20 → <b>Carol, Dave</b>.<br>
+Projection on Name → {Carol, Dave}. Because result is a set, order and the count (2 rows) are the deliverable.</p>
+</div></details>
+<div class="box trap"><div class="lbl">GATE trap</div>
+π (projection) <b>removes duplicates</b>, so counting rows in a projection is ≤ the number of matching rows. In output
+prediction, students forget the dedup and over-count. Also note σ before π in this pattern: σ is applied first, then
+π — swapping them usually changes nothing here but order matters when a column condition is on a dropped column.
+</div>
+"""),
+     CH("calc", "Tuple & Domain Relational Calculus", """
+<p><b>Tuple relational calculus (TRC)</b>: declarative — describe the answer as <b>{ t | condition }</b>, "tuples t
+such that…". <b>Domain relational calculus (DRC)</b>: same idea over <b>attribute domains</b> (variables).
+Neither specifies <i>how</i> to compute, only <i>what</i> the result is — this is <b>non-procedural</b>, unlike
+relational algebra.</p>
+<table>
+<tr><th>Feature</th><th>Relational algebra</th><th>Relational calculus</th></tr>
+<tr><td>Nature</td><td>procedural (steps)</td><td>declarative (description)</td></tr>
+<tr><td>Expressive power</td><td>relational-complete</td><td>same (with safe queries)</td></tr>
+<tr><td>Key quantifiers</td><td>—</td><td>∃ (there exists), ∀ (for all)</td></tr>
+</table>
+<div class="box formula"><div class="lbl">Typical TRC patterns</div>
+<ul>
+<li>Exists-style: { t | ∃s ∈ Student (t.Name = s.Name ∧ s.Dept = 'CSE') } — a select-project style query.</li>
+<li>Universal-style ("all": supplies all parts): { s | ∀p ∈ Parts (∃c ∈ Supply (c.SupplierId = s.Id ∧ c.PartId = p.Id)) }.</li>
+<li>A query expressible without ∀/∃ iteration is called a <b>safe</b> query and identifies the division idiom.</li>
+</ul>
+</div>
+<div class="box trap"><div class="lbl">GATE trap</div>
+∀ is the "supplies <b>all</b>" quantifier — not ∃. The single most common calculus mistake is writing ∃ where the
+question asks for "every / all". Also, calculus can be expressed algebraically and vice-versa: the two are
+<b>equivalent in power</b>, so expecting a calculus-only feature is wrong.
+</div>
+""")]})
+
+# ------------------------------------------------------------ 5. SQL
+S.append({
+    "id": "sql", "title": "SQL — Queries & Output", "children": [
+     CH("sqlq", "Select, Aggregation, Joins", """
+<p>SQL query execution order that determines output:</p>
+<ol>
+<li>FROM (tables + joins)</li>
+<li>WHERE (row filter)</li>
+<li>GROUP BY (group rows)</li>
+<li>HAVING (filter <i>groups</i>)</li>
+<li>SELECT (projection / aggregate)</li>
+<li>ORDER BY (sort, last)</li>
+</ol>
+<div class="box formula"><div class="lbl">Aggregates &amp; the NULL subtleties</div>
+COUNT(*), COUNT(col), SUM, AVG, MIN, MAX. <br>
+<ul>
+<li>COUNT(col), SUM, AVG <b>ignore NULLs</b>; COUNT(*) counts <b>all rows including NULL</b>.</li>
+<li>AVG of attr = SUM/COUNT(attr) (NULLs dropped) — not SUM/count of rows.</li>
+<li>If every value of a column is NULL: SUM → NULL, AVG → NULL, COUNT(col) → 0.</li>
+<li>DISTINCT removes duplicates before aggregation: COUNT(DISTINCT dept).</li>
+</ul>
+</div>
+<div class="box tip"><div class="lbl">WHERE vs HAVING quick rule</div>
+WHERE filters <b>rows before grouping</b>; HAVING filters <b>groups after grouping</b>. You cannot use an aggregate in
+WHERE, only in HAVING (or SELECT). A classic error: writing "Salary &gt; AVG(...)" in WHERE.
+</div>
+<table>
+<tr><th>Clause</th><th>Filters</th><th>Aggregates allowed?</th></tr>
+<tr><td>WHERE</td><td>rows (pre-grouping)</td><td>No</td></tr>
+<tr><td>HAVING</td><td>groups (post-grouping)</td><td>Yes</td></tr>
+<tr><td>SELECT</td><td>output columns</td><td>Yes</td></tr>
+<tr><td>ORDER BY</td><td>sorts final result</td><td>Yes-ish</td></tr>
+</table>
+<details><summary>Worked example — GROUP BY + HAVING output</summary>
+<div class="dc">
+<p>Enable table <b>Emp(EID, Dept, Sal)</b>: (1, A, 100), (2, A, 200), (3, B, 300), (4, C, 100).</p>
+<p><b>SELECT Dept, COUNT(*) FROM Emp GROUP BY Dept HAVING COUNT(*) &ge; 1;</b></p>
+<p>Grouping: A→2 rows, B→1, C→1. HAVING COUNT(*)&ge;1 keeps all groups (all have ≥1).<br>
+Output: (A, 2), (B, 1), (C, 1) — three rows, and note <b>no NULL or dedup surprises</b> here.</p>
+</div></details>
+"""),
+     CH("sqln", "Nested, Correlated & Set Queries", """
+<div class="box formula"><div class="lbl">Set operator semantics</div>
+UNION (dedup, default), UNION ALL (keep dupes), INTERSECT (common), EXCEPT / MINUS (in first, not second).
+For set operators the two subqueries must be <b>union-compatible</b> (same arity &amp; compatible types).
+</div>
+<ul>
+<li><b>NOT EXISTS</b> and <b>NOT IN</b> are the classic "division / all" idioms in SQL.</li>
+<li>A <b>correlated subquery</b> references an outer-table column; it is re-evaluated for <b>every outer row</b>
+(expensive, but often the only way to express "per-row" conditions).</li>
+<li><b>EXISTS</b> returned when at least one row satisfies the inner query — that inner query's SELECT list is
+ignored.</li>
+</ul>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<b>NOT IN vs NOT EXISTS differ on NULLs.</b> If the subquery can return NULL, <b>NOT IN</b> evaluates to unknown for those
+rows and may return an <b>empty result</b>, whereas NOT EXISTS behaves correctly. This NULL landmine is a recurring
+SQL question. Prefer NOT EXISTS.
+</div>
+<details><summary>Worked example — correlated subquery (emps with a higher-paid colleague)</summary>
+<div class="dc">
+<p>SELECT e.Name FROM Emp e WHERE e.Sal &gt; (SELECT AVG(s.Sal) FROM Emp s WHERE s.Dept = e.Dept AND s.EID ≠ e.EID);</p>
+<p>The inner AVG is recomputed per outer row e: it averages only the other employees in e's own department. This is
+a correlated query because <b>e.Dept</b> (outer alias) appears inside the subquery. Rows whose salary exceeds their
+colleagues' average are returned.</p>
+</div></details>
+""")]})
+
+# ------------------------------------------------------------ 6. Normalisation
+S.append({
+    "id": "nf", "title": "Functional Dependencies & Normal Forms", "children": [
+     CH("fd", "Functional Dependencies & Keys", """
+<p>An FD X→Y means: any two tuples with equal X must have equal Y. FDs are the raw material for defining keys and
+normal forms.</p>
+<div class="box formula"><div class="lbl">Armstrong's axioms (sound &amp; complete)</div>
+<ul>
+<li><b>Reflexivity:</b> if Y ⊆ X then X→Y.</li>
+<li><b>Augmentation:</b> X→Y ⟹ XZ→YZ.</li>
+<li><b>Transitivity:</b> X→Y and Y→Z ⟹ X→Z.</li>
+</ul>
+Derived: <b>Union</b> (X→Y, X→Z ⟹ X→YZ), <b>Decomposition</b> (X→YZ ⟹ X→Y), <b>Pseudo-transitivity</b>.
+X→Y is <b>trivial</b> if Y ⊆ X. The closure X⁺ = set of all attributes implied by X using the FD set.
+</div>
+<details><summary>Worked example — compute the closure X⁺</summary>
+<div class="dc">
+<p>FDs: AB→C, C→D, D→B, DE→A. Find C⁺.</p>
+<p>Start {C}. Apply C→D → add D ⇒ {C,D}. Apply D→B → add B ⇒ {C,D,B}. Nothing else applies (AB needs A; DE needs E).
+So <b>C⁺ = {C,D,B}</b>. Because C⁺ excludes A and E, C is not a superkey.</p>
+</div></details>
+"""),
+     CH("normform", "Normal Forms — How to Classify", """
+<p>To state the <b>highest normal form</b> of a relation: check each level in order.</p>
+<table>
+<tr><th>Form</th><th>Condition</th><th>Violation that demotes it</th></tr>
+<tr><td>1NF</td><td>atomic (single-valued) attributes</td><td>multi-valued / nested tables</td></tr>
+<tr><td>2NF</td><td>1NF + <b>no partial dependency</b> (no non-prime attr on a proper subset of a candidate key)</td><td>A→B where A ⊂ key, B non-prime</td></tr>
+<tr><td>3NF</td><td>2NF + no transitive dependency (there is no FD X→Y with X not a superkey and Y a non-prime attr)</td><td>key→A and A→B (B non-prime)</td></tr>
+<tr><td>BCNF</td><td>every FD X→Y has X a <b>superkey</b></td><td>any X→Y with X not superkey</td></tr>
+</table>
+<p><b>Prime attributes</b> = attributes that belong to some candidate key. A dependency's left side is checked against
+<b>superkeys</b>, its right side against <b>prime/non-prime</b> status.</p>
+
+<div class="box formula"><div class="lbl">Classification shortcuts</div>
+<ul>
+<li><b>BCNF ⊂ 3NF ⊂ 2NF ⊂ 1NF.</b> Each is a strict subset.</li>
+<li>2NF failure ⟺ some candidate key is composite and a non-prime attr depends on part of it.</li>
+<li>If every candidate key is a single attribute, the relation is automatically at least <b>2NF</b> (no partial dep possible).</li>
+<li>3NF test per FD: X→Y must have X superkey <b>or</b> Y prime.</li>
+<li>BCNF test per FD: X must be a superkey, no excuses.</li>
+</ul>
+</div>
+
+<details><summary>Worked example — find highest normal form of R(A,B,C)</summary>
+<div class="dc">
+<p>FDs: A→B, B→C. Candidate keys: {A} (A⁺ = {A,B,C}). Prime attr: A. Non-prime: B, C.</p>
+<p>1NF ✓ (atomic). 2NF: no partial dep since the key {A} is a single attribute ✓.<br>
+3NF: check B→C — B not superkey, and C is non-prime; so X→Y with X not superkey and Y non-prime = transitive dep
+<span class="no">→ NOT 3NF</span>. BCNF fails for the same reason.</p>
+<p><b>Answer: highest normal form = 2NF.</b></p>
+</div></details>
+
+<div class="box trap"><div class="lbl">GATE trap</div>
+Students jump straight to BCNF and stop at the first non-superkey FD, mis-labelling a 2NF relation as 3NF. The
+<b>prime-attribute escape</b> matters: if Y is prime, the FD does not violate 3NF (but still violates BCNF). Always
+check 3NF before concluding BCNF — BCNF is the strictest, not the default answer.
+</div>
+"""),
+     CH("decomp", "Decomposition — Lossless & Dependency-Preserving", """
+<p>A decomposition R → {R1, R2, …} must satisfy two independent properties:</p>
+<div class="box formula"><div class="lbl">The two decomposition tests</div>
+<ul>
+<li><b>Lossless (lossless-join):</b> natural-joining R1, R2 … recovers R exactly. For a 2-relation decomposition,
+lossless ⟺ <b>R1 ∩ R2 is a superkey of R1 or R2</b>.</li>
+<li><b>Dependency-preserving:</b> the <b>union of the FDs</b> that hold in each component is equivalent to the
+original FD set (no FD is lost when the tables are separated).</li>
+</ul>
+<b>BCNF always</b> has a lossless decomposition, but it <b>may not preserve dependencies</b>. 3NF has a decomposition
+that is both <b>lossless and dependency-preserving</b>.
+</div>
+<details><summary>Worked example — decompose R(A,B,C), A→B, B→C, to BCNF</summary>
+<div class="dc">
+<p>Key {A}. Violating FD: B→C (B not superkey). Decompose on B→C into <b>R1(B,C)</b> and the remainder <b>R2(A,B)</b>.</p>
+<p>Check lossless: R1 ∩ R2 = {B}; B is the key of R1 → lossless ✓.<br>
+Check dependency-preserving: A→B (in R2) ✓, B→C (in R1) ✓, A→C redundant (derived) ✓ → preserves.</p>
+<p>Both R1 and R2: BCNF (each candidate key single-attribute). <b>Result: R1(B,C), R2(A,B).</b></p>
+</div></details>
+<div class="box trap"><div class="lbl">GATE trap</div>
+<i>If and only if</i> the components overlap on a superkey does the decomposition survive a natural join. A
+decomposition that is dependency-preserving is <b>not</b> automatically lossless, and vice-versa — GATE deliberately
+pairs one theory (lossless, not preserving) against the other (preserving, not lossless). Test them separately.
+</div>
+""")]})
+
+# ------------------------------------------------------------ 7. File organisation
+S.append({
+    "id": "fileorg", "title": "File Organisation & Record Access", "children": [
+     CH("forg", "Heap, Sorted, Hash & Indexed Files", """
+<table>
+<tr><th>Organisation</th><th>Lookup</th><th>Insert</th><th>Notes</th></tr>
+<tr><td>Heap (unordered)</td><td>scan all blocks (O(n))</td><td>append, cheap</td><td>no ordering</td></tr>
+<tr><td>Sorted (sequential)</td><td>binary search O(log n) blocks</td><td>expensive (maintain order)</td><td>good for range/olap</td></tr>
+<tr><td>Hash</td><td>O(1) expected on key</td><td>cheap</td><td>no range queries, good exact-match</td></tr>
+<tr><td>Indexed (B/B+ tree)</td><td>O(log_B n) blocks</td><td>moderate</td><td>range + point queries</td></tr>
+</table>
+<p><b>Blocking factor</b> bfr = ⌊block_size / (record_size)⌋ records per block. Number of blocks for n records =
+⌈n / bfr⌉. These two numbers drive most file-organisation numericals and re-appear in B-tree sizing.</p>
+<div class="box formula"><div class="lbl">Clustered vs unclustered (secondary) index</div>
+<ul>
+<li><b>Clustered (primary) index:</b> file records are physically stored in the key order of the index. Only one
+clustered index per file. Records with equal keys are adjacent → efficient range scans.</li>
+<li><b>Unclustered (secondary) index:</b> separate structure; each index entry points to a record that may be
+anywhere → possibly one block read per matching record.</li>
+<li>Blocking factor and index "order" (pointers per node) are computed the same way in both, but range-query cost
+differs (clustered ≈ number of blocks; unclustered ≈ number of records).</li>
+</ul>
+</div>
+<div class="box trap"><div class="lbl">GATE trap</div>
+For an unclustered index, a range query that returns k records can cost <b>k block reads</b> (one per record), while
+the same query on a clustered index reads about <b>⌈k/bfr⌉ blocks</b>. Swapping these two estimates is a classic
+error. Also remember only <b>one</b> clustered index per file is possible.
+</div>
+""")]})
+
+# ------------------------------------------------------------ 8. Indexing — B and B+ trees
+S.append({
+    "id": "index", "title": "Indexing — B & B+ Trees", "children": [
+     CH("btree", "B-tree Structure & Order Calculations", """
+<p>A B-tree of <b>order m</b> (each node holds at most m pointers) stores keys in both internal and leaf nodes.</p>
+<div class="box formula"><div class="lbl">B-tree sizing rules (order m)</div>
+<ul>
+<li>Max children per node = <b>m</b>; max keys per node = <b>m − 1</b>.</li>
+<li>Non-root internal (and leaf) node: at least <b>⌈m/2⌉</b> children → at least <b>⌈m/2⌉ − 1</b> keys.</li>
+<li>Root: at least 2 children (0 or >0 keys); when full has m−1 keys.</li>
+<li>All leaves at the <b>same depth</b>; every node at least half full.</li>
+<li>Max keys over <b>h levels</b>: <b>m<sup>h</sup> − 1</b>.</li>
+<li>Order from block size: solve m·(block_ptr) + (m−1)·(key_size) ≤ block_size.</li>
+</ul>
+</div>
+<details><summary>Worked example — compute the order from a block size</summary>
+<div class="dc">
+<p>Block = <b>2048</b> bytes. Key size = 9 B, block pointer = 6 B.<br>
+m·6 + (m−1)·9 ≤ 2048 → 6m + 9m − 9 ≤ 2048 → 15m ≤ 2057 → m ≤ 137.13.<br>
+<b>Order m = 137</b> (largest integer satisfying the inequality). Keys per node = 136.</p>
+</div></details>
+<div class="box trap"><div class="lbl">GATE trap</div>
+Two classic slips: (1) taking <b>m</b> (pointers) as the keys per node and off-by-one all parts; (2) forgetting that
+if the <b>record pointer plus key</b> must fit, the leaf computation differs from the internal-node computation.
+Write <i>m×ptr + (m−1)×key ≤ block</i> explicitly every time instead of trusting an instinctive number.
+</div>
+"""),
+     CH("bplus", "B+ Tree — Data in Leaves Only", """
+<p>In a <b>B+ tree</b> (the DBMS-favourite): internal nodes hold <b>only keys and pointers</b> (routing),
+<b>all data records live in the leaves</b>, and leaves are chained for fast range scans.</p>
+<table>
+<tr><th>Feature</th><th>B-tree</th><th>B+ tree</th></tr>
+<tr><td>Data location</td><td>in internal and leaf nodes</td><td><b>leaves only</b></td></tr>
+<tr><td>Leaf chain</td><td>no</td><td>yes (linked leaves)</td></tr>
+<tr><td>Range query</td><td>walk the tree repeatedly</td><td>scan leaf chain</td></tr>
+<tr><td>Space per node</td><td>duplicates keys</td><td>compact internal nodes → higher fan-out</td></tr>
+<tr><td>Height for given data</td><td>usually taller</td><td>usually shorter / shallower</td></tr>
+</table>
+<div class="box formula"><div class="lbl">B+ node-count computations</div>
+<ul>
+<li>Leaf capacity L = ⌊(block − next-leaf-ptr)/(key + record_ptr)⌋ records per leaf.</li>
+<li>Number of leaves = <b>⌈R / L⌉</b>.</li>
+<li>Fan-out (internal order) = solve m·block_ptr + (m−1)·key ≤ block.</li>
+<li>Number of levels (tree height) = ⌈<b>log<sub>m</sub>(#leaves)</b>⌉ + 1.</li>
+<li>Block reads to find one record = tree height.</li>
+</ul>
+</div>
+<details><summary>Worked example — how many block reads for R = 1,000,000 records?</summary>
+<div class="dc">
+<p>Block = 2048 B; key = 9 B; record ptr = 7 B; block ptr = 6 B.</p>
+<p>Leaf capacity L = ⌊(2048 − 6)/(9 + 7)⌋ = ⌊2042/16⌋ = <b>127</b>.<br>
+Leaf count = ⌈1000000/127⌉ = <b>7874</b>.<br>
+Internal order m: 6m + (m−1)·9 ≤ 2048 → 15m ≤ 2057 → m = 137.<br>
+Levels: root + ceiling internal levels = ⌈log<sub>137</sub>(7874)⌉ + 1 = ⌈1.83⌉ + 1 = 2 + 1 = <b>3 levels</b>.<br>
+So fetching one record costs <b>3 block reads</b> (root + 1 internal + 1 leaf).</p>
+</div></details>
+<div class="box trap"><div class="lbl">GATE trap</div>
+B+ questions are about <b>leaves and levels</b>, B-tree questions about <b>keys and order</b>. Reusing the wrong
+formula (e.g. computing B+ leaf count with B-tree's m−1-key rule) produces a sky-high wrong answer. Also remember B+
+range scans walk the <b>leaf chain</b>, not the height — two different cost figures.
+</div>
+""")]})
+
+# ------------------------------------------------------------ 9. Transactions & concurrency
+S.append({
+    "id": "txn", "title": "Transactions, Serialisability & Concurrency", "children": [
+     CH("txnser", "ACID, Schedules & Conflict Serialisability", """
+<p>A <b>transaction</b> is a sequence of operations (r = read, w = write, followed by commit c / abort a). The set
+of all operations of concurrent transactions in execution order is a <b>schedule</b>.</p>
+<div class="box formula"><div class="lbl">ACID</div>
+<b>A</b>tomicity (all-or-nothing) · <b>C</b>onsistency (valid DB state) · <b>I</b>solation (concurrent result equals
+some serial result) · <b>D</b>urability (committed data survives). The "I" is what concurrency control enforces.
+</div>
+<p>Two operations <b>conflict</b> if they belong to different transactions, act on the same data item, and at least
+one is a <b>write</b>. A schedule is <b>conflict serialisable</b> if it can be made serial by swapping adjacent
+non-conflicting operations; equivalently its <b>precedence graph</b> has no cycle.
+<details><summary>Worked example — is this schedule conflict serialisable?</summary>
+<div class="dc">
+<p>Schedule: r1(A); r2(B); w1(B); w2(A);<br>
+Conflicts:
+r1(A) &amp; w2(A) → r1 before w2 ⇒ edge <b>T1→T2</b>.<br>
+r2(B) &amp; w1(B) → r2 before w1 ⇒ edge <b>T2→T1</b>.</p>
+<p>Precedence graph has a <b>cycle T1→T2→T1</b> ⇒ <b>NOT conflict serialisable</b>. (Equivalent to the classic
+"lost/cross write" that confuses the two orders.)</p>
+</div></details>
+<div class="box trap"><div class="lbl">GATE trap</div>
+Only <b>write**vs**write, write-vs-read, read-vs-write</b> pairs on the <b>same</b> data item conflict. Read-read never
+conflicts. Students draw a precedence edge for every touched item (wrong) or forget that even two reads do not
+conflict. Build the graph only from genuine conflicts.
+</div>
+"""),
+     CH("locking", "Locking Protocols & 2PL", """
+<p>Concurrency control restricts interleavings. The classic protocol is <b>locking</b> with shared (S, read) and
+exclusive (X, write) locks. A lock <b>compatibility matrix</b>:</p>
+<table>
+<tr><th>Requested ↓ / Held →</th><th>S</th><th>X</th></tr>
+<tr><td><b>S</b></td><td>grant</td><td>deny</td></tr>
+<tr><td><b>X</b></td><td>deny</td><td>deny</td></tr>
+</table>
+<ul>
+<li><b>2PL (two-phase locking):</b> every transaction has a <b>growing phase</b> (only acquire locks) followed by a
+<b>shrinking phase</b> (only release locks); the two never interleave.</li>
+<li>2PL &nbsp;⟹&nbsp; conflict serialisable, but is <b>not</b> deadlock-free nor cascadeless.</li>
+<li><b>Strict 2PL:</b> release all locks only <b>at commit/abort</b> → avoids <b>cascading aborts</b>.</li>
+<li><b>Rigorous 2PL:</b> hold locks until commit (strongest).</li>
+</ul>
+<div class="box formula"><div class="lbl">Locking tests</div>
+<ul>
+<li>2PL check: locate the first <b>unlock</b> and the last <b>lock</b> of each transaction; if any lock comes after an
+unlock of the same transaction → not 2PL (also if it re-locks after a release).</li>
+<li>Serialisability ⟸ 2PL, not the converse.</li>
+<li>Deadlock possible under 2PL even with compatible matrices properly applied (wait-for cycles).</li>
+</ul>
+</div>
+<details><summary>Worked example — is this schedule 2PL?</summary>
+<div class="dc">
+<p>T1: LOCK(A); r(A); UNLOCK(A); LOCK(B); w(B); UNLOCK(B).</p>
+<p>The first unlock (UNLOCK(A)) occurs <b>before</b> the later LOCK(B). Growing (locks) and shrinking (unlocks) thus
+<b>interleave</b> for T1 ⇒ <b>not 2PL</b>. A valid 2PL schedule would acquire A and B first, then release both in the
+shrinking phase.</p>
+</div></details>
+<div class="box trap"><div class="lbl">GATE trap</div>
+2PL guarantees serialisability but <b>not deadlock freedom</b> and (plain 2PL) <b>not</b> cascadelessness. Students
+answer "yes, deadlock-free" to a 2PL-is-serialisable question. Only <b>strict/rigorous</b> 2PL removes cascading aborts.
+</div>
+"""),
+     CH("recovery", "Isolation Levels, Graphed Schedules & Recovery", """
+<table>
+<tr><th>Isolation level</th><th>Dirty read?</th><th>Non-repeatable read?</th><th>Phantom?</th></tr>
+<tr><td>Read Uncommitted</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Read Committed</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+<tr><td>Repeatable Read</td><td>No</td><td>No</td><td>Yes</td></tr>
+<tr><td>Serializable</td><td>No</td><td>No</td><td>No</td></tr>
+</table>
+<div class="box formula"><div class="lbl">Lock-based rules for these levels</div>
+<ul>
+<li><b>Read Committed</b> = S-locks released on read; X-locks held to commit.</li>
+<li><b>Repeatable Read</b> = S-locks held to commit; X-locks to commit.</li>
+<li><b>Serializable</b> = RR + predicate/range locks to block phantoms.</li>
+<li>Recovery: <b>write-ahead logging (WAL)</b> — a log record must be flushed to disk <i>before</i> the dirty page is.</li>
+</ul>
+</div>
+<div class="box tip"><div class="lbl">Anomaly cheat-sheet</div>
+A <b>phantom</b> is a newly-inserted row appearing inside an already-seen range (kills serialisability at Repeatable
+Read). Dirty read = reading uncommitted data (killed at Read Committed). Non-repeatable read = same row read twice
+with a different value (killed at Repeatable Read).
+</div>
+<div class="box trap"><div class="lbl">GATE trap</div>
+Order of strength is <b>Serializable &gt; RR &gt; RC &gt; RU</b>. "Repeatable Read blocks non-repeatable reads but not
+phantoms" is the fact students most often invert. Also, under WAL the <b>log precedes the data flush</b> — students
+often reverse this single directional point.
+</div>
+""")]})
+
+# ------------------------------------------------------------ 10. Formula sheet
+S.append({
+    "id": "dbf", "title": "One-Page Formula Sheet (Revise Before Exam)",
+    "html": """
+<table>
+<tr><th>Area</th><th>Formula / Fact</th></tr>
+<tr><td>Superkey</td><td>uniquely identifies a tuple; subset that is minimal = candidate key</td></tr>
+<tr><td>Closure</td><td>X⁺ = repeatedly apply X→Y whenever X ⊆ current set; key ⟺ X⁺ = all attributes</td></tr>
+<tr><td>Left-only rule</td><td>attribute only on LHS of all FDs ⇒ in every candidate key</td></tr>
+<tr><td>Armstrong</td><td>reflexive, augmentation, transitive (sound + complete)</td></tr>
+<tr><td>2NF ⇐ 3NF ⇐ BCNF</td><td>strict chain; each a proper subset of the next lower</td></tr>
+<tr><td>3NF test</td><td>X→Y ok if X superkey <b>or</b> Y prime</td></tr>
+<tr><td>BCNF test</td><td>X→Y ok iff X superkey (no prime escape)</td></tr>
+<tr><td>Lossless (2 rels)</td><td>R1 ∩ R2 is a superkey of R1 or R2</td></tr>
+<tr><td>BCNF preservation</td><td>always lossless-decomposable; may lose dependencies</td></tr>
+<tr><td>B-tree order m</td><td>max keys m−1; non-root min ⌈m/2⌉−1 keys; max keys (h levels) = m<sup>h</sup>−1</td></tr>
+<tr><td>B-tree from block</td><td>m·ptr + (m−1)·key ≤ block</td></tr>
+<tr><td>B+ leaves</td><td>leaf capacity L = ⌊(block−next)/ (key+recptr)⌋; leaf count = ⌈R/L⌉; height = ⌈log<sub>m</sub>leaves⌉+1</td></tr>
+<tr><td>Blocking factor</td><td>bfr = ⌊block / record⌋; blocks = ⌈n / bfr⌉</td></tr>
+<tr><td>Conflict</td><td>diff txns · same item · ≥1 write; read-read never conflicts</td></tr>
+<tr><td>Conflict serialisable</td><td>precedence graph acyclic</td></tr>
+<tr><td>2PL</td><td>all locks before any unlock per txn; ⟹ conflict serialisable; NOT deadlock-free / cascadeless</td></tr>
+<tr><td>Strict 2PL</td><td>release all locks at commit ⇒ eliminates cascading aborts</td></tr>
+<tr><td>Lock matrix</td><td>S vs S OK; S vs X and X vs X denied</td></tr>
+<tr><td>Isolation order</td><td>Serializable &gt; RR &gt; RC &gt; RU; RR blocks non-repeatable but not phantoms</td></tr>
+<tr><td>WAL</td><td>log record flushed BEFORE dirty data page</td></tr>
+<tr><td>SQL order</td><td>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY</td></tr>
+<tr><td>Aggregates</td><td>SUM/AVG/COUNT(col) drop NULLs; COUNT(*) counts all rows</td></tr>
+<tr><td>NOT IN vs NOT EXISTS</td><td>≠ on NULLs; NOT EXISTS is NULL-safe</td></tr>
+</table>
+<div class="box tip"><div class="lbl">Exam-day plan for Databases</div>
+Do the <b>normalisation + B/B+</b> numericals first (methodical, reliable marks), then schedule/serialisability graph
+questions, then RA/SQL output, then the easy conceptuals (ER, integrity, indexing differences). Re-check every
+numerical's <b>integer ceiling/dedup</b> once before finalising.
+</div>
+"""})
+
+# ------------------------------------------------------------ 11. Exam strategy
+S.append({
+    "id": "dbstrategy", "title": "Exam Strategy",
+    "html": """
+<h4>Attempt order & time budget (~8 marks, aim ≤ 9 minutes)</h4>
+<table>
+<tr><th>Order</th><th>Topic</th><th>Why first/prefer</th></tr>
+<tr><td>1</td><td>Normal-form classification &amp; key finding</td><td>mechanical, high accuracy</td></tr>
+<tr><td>2</td><td>B/B+ tree numericals</td><td>deterministic formula work</td></tr>
+<tr><td>3</td><td>Schedule / serialisability / 2PL</td><td>graph-based, quick to verify</td></tr>
+<tr><td>4</td><td>RA &amp; SQL output</td><td>fast when method is clear</td></tr>
+<tr><td>5</td><td>ER, integrity, file-orig concepts</td><td>easy last-block points</td></tr>
+</table>
+
+<h4>Where students lose marks & how to avoid it</h4>
+<ul>
+<li><b>B-/B+-tree off-by-one:</b> always state the order from <i>m·ptr + (m−1)·key ≤ block</i>; don't "eyeball" the
+fan-out.</li>
+<li><b>Dedup in π and NULL handling in SQL:</b> COUNT and projection are set-based; re-check what gets dropped.</li>
+<li><b>Skipping the prime-attribute check</b> — the 3NF-prime escape turns a "BCNF" into a "3NF" question.</li>
+<li><b>NOT IN vs NOT EXISTS</b> on NULLs — a single nested query can flip the whole answer.</li>
+</ul>
+
+<h4>What to skip / deprioritise under 25% time pressure</h4>
+<ul>
+<li>Long handwritten relational-algebra derivation if a compact SQL/logic equivalent answers the same mark.</li>
+<li>Tuple-calculus traces on complex ∀/∃ formulas — low frequency, often 0.5-mark, and error-prone.</li>
+<li>Deep file-parameter arithmetic beyond the blocking factor — the ≤1 mark it replaces is better spent
+on B+ tree and normalisation.</li>
+</ul>
+
+<div class="box trap"><div class="lbl">Final GATE trap</div>
+GATE mixes NA-marking into DB: 1-mark MCQs −1/3, 2-mark MCQs −2/3, but <b>numerical/NAT (B-tree levels, leaf count,
+result row counts) has no negative marking</b>. When you can bound a NAT, always attempt; never blind-guess a 2-mark
+MCQ on schedules unless you are confident of the exact precedence graph.
+</div>
+"""})
+
+QUIZ = [
+ {"q":"R(A,B,C,D,E) has FDs AB→C, C→D, D→B, DE→A. Which attribute(s) must appear in every candidate key?",
+  "opts":["A and E","C alone","D and E","A, C and E"],"a":0,
+  "ex":"A appears only on left sides and E appears only in DE (as a left side) — never on any right side, so both must be in every key."},
+ {"q":"R(A,B,C) with FDs A→B, B→C. What is the highest normal form?",
+  "opts":["1NF","2NF","3NF","BCNF"],"a":1,
+  "ex":"Key is {A} (single attribute) so no partial dependency → at least 2NF. But B→C is transitive with non-prime C → not 3NF."},
+ {"q":"Employee(EID, Name, Salary, DeptID) = {(1,Alice,50000,10),(2,Bob,60000,10),(3,Carol,55000,20),(4,Dave,70000,20)}. How many rows does π_Name(σ_Salary>52000 ∧ DeptID=20(Employee)) return?",
+  "opts":["1","2","3","4"],"a":1,
+  "ex":"Selection keeps Carol and Dave (Salary>52000 and DeptID=20); projection on Name yields a set {Carol, Dave} = 2 rows."},
+ {"q":"A B-tree of order m holds at most how many keys in a non-root internal node?",
+  "opts":["⌈m/2⌉−1","m−1","⌈m/2⌉","m"],"a":1,
+  "ex":"Each node has at most m pointers (children), hence at most m−1 keys (max). The minimum is ⌈m/2⌉−1."},
+ {"q":"SELECT Dept FROM Emp GROUP BY Dept HAVING COUNT(*) ≥ 1 on Emp(Dept,Sal) = {(A,100),(A,200),(B,300),(C,100)} returns how many rows?",
+  "opts":["1","2","3","4"],"a":2,
+  "ex":"Groups after grouping: A(2), B(1), C(1); HAVING COUNT(*)≥1 keeps all three ⇒ 3 rows."},
+ {"q":"R(X,Y,Z,W) with FDs X→Y, YZ→W. How many candidate keys does R have?",
+  "opts":["1","2","3","4"],"a":0,
+  "ex":"X and Z appear only on left sides, so both must be in every key. {X,Z}⁺ = {X,Z,Y,W} covers all attributes ⇒ the unique candidate key."},
+ {"q":"Which relational-algebra operation returns a relation whose result never contains duplicate tuples?",
+  "opts":["Union ∪","Selection σ","Projection π","Cartesian product ×"],"a":2,
+  "ex":"Projection produces a set, implicitly removing duplicates. Union/selection/product can still need explicit dedup but projection is the canonical dedup source of off-by-N counts."},
+ {"q":"A decomposition of R into R1, R2 is lossless-join if and only if:",
+  "opts":["R1 ∪ R2 = R","R1 ∩ R2 is a superkey of R1 or R2","their FD sets are the same","R1 and R2 are both in BCNF"],"a":1,
+  "ex":"For a two-relation decomposition, losslessness ⟺ R1 ∩ R2 is a superkey of at least one of them, so the join reproduces R exactly."},
+ {"q":"In SQL, which constraint is violated when a non-NULL foreign key does not match any existing primary key value?",
+  "opts":["Entity integrity","Referential integrity","Domain integrity","NOT NULL"],"a":1,
+  "ex":"Referential integrity requires every non-NULL FK to equal an existing referenced PK; a mismatch (or a bad NULL-vs-NOT NULL combination) violates it."},
+ {"q":"For a B-tree of order m=5, what is the minimum number of keys in a non-root internal node?",
+  "opts":["1","2","3","4"],"a":1,
+  "ex":"Non-root minimum = ⌈m/2⌉−1 = ⌈5/2⌉−1 = 3−1 = 2 keys."},
+ {"q":"In a B+ tree, where are all data records stored?",
+  "opts":["Internal nodes only","Leaf nodes only","Both internal and leaf nodes","In a separate hash table"],"a":1,
+  "ex":"B+ tree stores routing info in internal nodes and ALL records in the leaves, which are linked for range scans."},
+ {"q":"A schedule is conflict serialisable if and only if:",
+  "opts":["its precedence graph is acyclic","it uses only shared locks","it has no dirty reads","all transactions commit"],"a":0,
+  "ex":"The precedence graph constructed from conflicting pairs has no cycle exactly when the schedule is conflict serialisable."},
+ {"q":"Which condition must hold for a transaction's locking to be two-phase (2PL)?",
+  "opts":["it acquires all locks before releasing any","it never re-locks after releasing","its growing then shrinking phases never interleave","it releases all locks at commit"],"a":2,
+  "ex":"2PL = a strictly growing (lock-only) phase followed by a shrinking (unlock-only) phase; the phases must not interleave."},
+ {"q":"Strict 2PL guarantees which property that plain 2PL does not?",
+  "opts":["Conflict serialisability","No cascading aborts","Freedom from deadlock","Read-committed isolation"],"a":1,
+  "ex":"Strict 2PL holds all locks until commit/abort, so a transaction never reads uncommitted (later aborted) data ⇒ no cascading aborts."},
+ {"q":"Which isolation level permits dirty reads?",
+  "opts":["Serializable","Repeatable Read","Read Committed","Read Uncommitted"],"a":3,
+  "ex":"Read Uncommitted places no S-lock discipline and thus allows reading uncommitted (dirty) data."},
+ {"q":"Under write-ahead logging (WAL), which statement is correct?",
+  "opts":["Data page is flushed before its log record","Log record is flushed before the data page","Both are flushed atomically","Logging is optional for undo"],"a":1,
+  "ex":"WAL requires the log record to reach disk before the dirty/data page is flushed, so a crash recovery can always reconstruct."},
+ {"q":"A B+ tree leaf holds at most 100 records. For 10,000 records, what is the minimum number of leaf nodes?",
+  "opts":["100","101","99","10000"],"a":0,
+  "ex":"⌈10000/100⌉ = 100 leaves (each holding ≤100, maximally packed gives a minimal count of 100)."},
+ {"q":"Given A→B and B→C, which functional dependency is implied by transitivity?",
+  "opts":["A→C","C→A","B→A","AB→C only"],"a":0,
+  "ex":"Armstrong transitivity: X→Y and Y→Z ⟹ X→Z, so A→B and B→C give A→C."},
+ {"q":"An M:N relationship between two entity sets is mapped into relations how?",
+  "opts":["a third junction relation whose key is the pair of entity keys","a foreign key in one entity relation","merge both entities into one relation","a foreign key in both entity relations"],"a":0,
+  "ex":"M:N requires a new (junction) relation whose primary key is the concatenation of both participating entity keys; putting a FK in an entity would collapse it to 1:N."},
+ {"q":"Transaction T1 executes: LOCK(A); r(A); UNLOCK(A); LOCK(B); w(B); UNLOCK(B). Is T1's schedule two-phase (2PL)?",
+  "opts":["Yes","No","Only under strict 2PL","Only if B is read before write"],"a":1,
+  "ex":"UNLOCK(A) occurs before LOCK(B), so the growing and shrinking phases interleave ⇒ not 2PL."},
+]
+
+SUBJECT = {
+    "code": "S09",
+    "title": "Databases",
+    "subtitle": "GATE CS 2027 · 8 marks · ER model, relational algebra & SQL, normal forms, B/B+ indexing, transactions & concurrency",
+    "weight_note": "GATE CS 2027 · Databases (8 marks)",
+    "sections": S,
+    "quiz": QUIZ,
+}
